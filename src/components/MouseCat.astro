@@ -1,0 +1,99 @@
+---
+import PixelCat from './PixelCat.astro';
+---
+
+<div id="cat-viewport" class="fixed inset-0 w-screen h-screen pointer-events-none overflow-hidden" style="z-index: 10;">
+  <div id="pixel-cat" class="absolute opacity-0 transition-opacity duration-1000" style="will-change: transform;">
+    <PixelCat />
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const catViewport = document.getElementById('cat-viewport');
+    const catEl = document.getElementById('pixel-cat');
+    if (!catViewport || !catEl) return;
+
+    const catW = 140; // 28 * 5
+    const catH = 85;  // 17 * 5
+
+    // Current cat position (center of viewport initially)
+    let catX = window.innerWidth / 2 - catW / 2;
+    let catY = window.innerHeight / 2 - catH / 2;
+
+    // Target position (mouse)
+    let targetX = catX;
+    let targetY = catY;
+
+    // Slow lerp factor for lazy following
+    const LERP = 0.025;
+
+    // Track if mouse has entered the viewport area
+    let mouseActive = false;
+
+    // Fade in after a short delay
+    setTimeout(() => {
+      catEl.style.opacity = '1';
+    }, 500);
+
+    // Track mouse movement
+    document.addEventListener('mousemove', (e) => {
+      // Only follow when mouse is in the first viewport
+      if (e.clientY + window.scrollY > window.innerHeight) return;
+
+      mouseActive = true;
+      // Offset so cat is near the cursor, not directly on it
+      targetX = e.clientX - catW / 2;
+      targetY = e.clientY - catH / 2;
+    });
+
+    // Hide cat viewport when scrolled past first screen
+    let isVisible = true;
+    const checkScroll = () => {
+      const shouldShow = window.scrollY < window.innerHeight * 0.8;
+      if (shouldShow !== isVisible) {
+        isVisible = shouldShow;
+        catViewport.style.opacity = shouldShow ? '1' : '0';
+        catViewport.style.transition = 'opacity 0.5s ease';
+      }
+    };
+    window.addEventListener('scroll', checkScroll, { passive: true });
+
+    // Flip cat based on movement direction
+    let lastX = catX;
+    const svg = catEl.querySelector('svg');
+
+    function animate() {
+      if (!mouseActive) {
+        requestAnimationFrame(animate);
+        return;
+      }
+
+      // Smooth interpolation
+      catX += (targetX - catX) * LERP;
+      catY += (targetY - catY) * LERP;
+
+      // Clamp to viewport
+      catX = Math.max(0, Math.min(window.innerWidth - catW, catX));
+      catY = Math.max(0, Math.min(window.innerHeight - catH, catY));
+
+      // Apply position
+      catEl.style.transform = `translate(${catX}px, ${catY}px)`;
+
+      // Flip based on horizontal movement direction
+      const dx = catX - lastX;
+      if (svg && Math.abs(dx) > 0.1) {
+        if (dx > 0) {
+          svg.style.transform = 'scaleX(-1)';
+        } else {
+          svg.style.transform = 'scaleX(1)';
+        }
+      }
+      lastX = catX;
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  });
+</script>

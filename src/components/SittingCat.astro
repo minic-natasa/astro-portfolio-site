@@ -1,0 +1,129 @@
+---
+// Pixel art sitting tortoiseshell cat — eye tracking
+// Based on reference: black body, golden patches, bright eyes, pink nose
+// 14×17 grid, 10px per pixel = 140×170px
+
+const S = 10;
+const W = 14;
+const H = 17;
+
+const colors: Record<number, string> = {
+  1: '#141008',  // black body
+  2: '#c89a14',  // golden amber patch
+  3: '#cc7878',  // pink nose
+  4: '#e0c030',  // bright yellow eye iris
+};
+
+// 0 = transparent
+// Golden patch on left face/chest area (cols 0-3), dark body right side
+// Left eye: cols 2-3 rows 3-4 (in golden area)
+// Right eye: cols 9-10 rows 3-4 (in dark area)
+const pixels = [
+  [0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],  // R0:  ear tips
+  [0, 2, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0],  // R1:  ears (left slightly golden)
+  [2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],  // R2:  head top
+  [2, 2, 4, 4, 1, 1, 1, 1, 1, 4, 4, 1, 0, 0],  // R3:  eye sockets
+  [2, 2, 4, 4, 1, 1, 1, 1, 1, 4, 4, 1, 0, 0],  // R4:  eye sockets
+  [2, 2, 2, 2, 3, 1, 1, 1, 1, 1, 1, 1, 0, 0],  // R5:  nose
+  [2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],  // R6:  lower face
+  [0, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],  // R7:  chin / neck
+  [0, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],  // R8:  upper body + tail base
+  [2, 2, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 0],  // R9:  body — golden belly + tail
+  [2, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 2, 1],  // R10: golden belly + tail
+  [1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 2, 1, 0],  // R11: golden belly + tail
+  [1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 0, 2, 0, 0],  // R12: lower belly + tail tip
+  [0, 1, 2, 1, 0, 0, 1, 2, 1, 0, 0, 0, 0, 0],  // R13: upper legs
+  [0, 2, 2, 2, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0],  // R14: golden paws
+  [0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],  // R15: paw line / ground
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  // R16: empty
+];
+
+// Eye socket centers in SVG coords (socket = 2×2 grid cells)
+// Left eye: cols 2-3, rows 3-4 → center x=3*S=30, y=4*S=40
+// Right eye: cols 9-10, rows 3-4 → center x=10*S=100, y=4*S=40
+const leftDefault  = { x: 3 * S - S / 2, y: 4 * S - S / 2 };  // (25, 35)
+const rightDefault = { x: 10 * S - S / 2, y: 4 * S - S / 2 }; // (95, 35)
+---
+
+<svg
+  id="sitting-cat"
+  width={W * S}
+  height={H * S}
+  viewBox={`0 0 ${W * S} ${H * S}`}
+  xmlns="http://www.w3.org/2000/svg"
+  style="image-rendering: pixelated; display: block;"
+  aria-hidden="true"
+>
+  {pixels.flatMap((row, y) =>
+    row.map((cell, x) =>
+      cell !== 0 ? (
+        <rect x={x * S} y={y * S} width={S} height={S} fill={colors[cell]} />
+      ) : null
+    )
+  )}
+  <!-- Pupils — controlled by JavaScript -->
+  <rect id="pupil-left"  x={leftDefault.x}  y={leftDefault.y}  width={S} height={S} fill="#0a0806" />
+  <rect id="pupil-right" x={rightDefault.x} y={rightDefault.y} width={S} height={S} fill="#0a0806" />
+</svg>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const svg = document.getElementById('sitting-cat') as SVGSVGElement | null;
+    const leftPupil  = document.getElementById('pupil-left')  as SVGRectElement | null;
+    const rightPupil = document.getElementById('pupil-right') as SVGRectElement | null;
+    if (!svg || !leftPupil || !rightPupil) return;
+
+    const S = 10;
+    const W = 14;
+    const H = 17;
+    const maxOffset = S / 2; // 5px — keeps pupil within 2×2 socket
+
+    const leftCenter  = { x: 3  * S, y: 4 * S }; // (30, 40)
+    const rightCenter = { x: 10 * S, y: 4 * S }; // (100, 40)
+    const leftDef  = { x: leftCenter.x  - S / 2, y: leftCenter.y  - S / 2 }; // (25, 35)
+    const rightDef = { x: rightCenter.x - S / 2, y: rightCenter.y - S / 2 }; // (95, 35)
+
+    let lx = leftDef.x,  ly = leftDef.y;
+    let rx = rightDef.x, ry = rightDef.y;
+    let tlx = lx, tly = ly;
+    let trx = rx, try_ = ry;
+
+    document.addEventListener('mousemove', (e) => {
+      const rect = svg.getBoundingClientRect();
+      // Map mouse to SVG coordinate space
+      const sx = (W * S) / rect.width;
+      const sy = (H * S) / rect.height;
+      const mx = (e.clientX - rect.left) * sx;
+      const my = (e.clientY - rect.top)  * sy;
+
+      const aim = (center: { x: number; y: number }, def: { x: number; y: number }) => {
+        const dx = mx - center.x;
+        const dy = my - center.y;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        return { x: def.x + (dx / dist) * maxOffset, y: def.y + (dy / dist) * maxOffset };
+      };
+
+      const lt = aim(leftCenter, leftDef);
+      const rt = aim(rightCenter, rightDef);
+      tlx = lt.x; tly = lt.y;
+      trx = rt.x; try_ = rt.y;
+    });
+
+    function animate() {
+      const LERP = 0.1;
+      lx += (tlx - lx) * LERP;
+      ly += (tly - ly) * LERP;
+      rx += (trx - rx) * LERP;
+      ry += (try_ - ry) * LERP;
+
+      leftPupil.setAttribute('x',  String(lx));
+      leftPupil.setAttribute('y',  String(ly));
+      rightPupil.setAttribute('x', String(rx));
+      rightPupil.setAttribute('y', String(ry));
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  });
+</script>

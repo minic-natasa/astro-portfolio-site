@@ -1,0 +1,100 @@
+---
+// Pixel paw prints that appear and fade behind the cursor
+// Only active in the first viewport
+---
+
+<div id="paw-container" class="fixed inset-0 pointer-events-none overflow-hidden" style="z-index: 5;"></div>
+
+<style>
+  @keyframes paw-fade {
+    0%   { opacity: 0.35; }
+    60%  { opacity: 0.2; }
+    100% { opacity: 0; }
+  }
+  .paw-print {
+    position: fixed;
+    pointer-events: none;
+    animation: paw-fade 3s ease-out forwards;
+    transform-origin: center center;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const container = document.getElementById('paw-container');
+    if (!container) return;
+
+    // Pixel paw: 6 wide × 8 tall, 3px per pixel = 18×24px display
+    // Left paw — right paw is scaleX(-1) mirror
+    const S = 3;
+    const PAW = [
+      [0,1,0,1,0,0],
+      [1,1,0,1,1,0],
+      [0,0,0,0,0,0],
+      [0,0,1,1,0,0],
+      [0,1,1,1,1,0],
+      [1,1,1,1,1,1],
+      [1,1,1,1,1,1],
+      [0,1,1,1,1,0],
+    ];
+    const PAW_COLOR = '#e5e5e5';
+    const PAW_W = 6 * S;
+    const PAW_H = 8 * S;
+
+    function makePawSVG(mirror: boolean): string {
+      const rects = PAW.flatMap((row, y) =>
+        row.map((cell, x) => {
+          if (!cell) return '';
+          const rx = mirror ? (PAW_W - (x + 1) * S) : x * S;
+          return `<rect x="${rx}" y="${y * S}" width="${S}" height="${S}" fill="${PAW_COLOR}"/>`;
+        })
+      ).join('');
+
+      return `<svg width="${PAW_W}" height="${PAW_H}" viewBox="0 0 ${PAW_W} ${PAW_H}" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;">${rects}</svg>`;
+    }
+
+    const svgLeft  = makePawSVG(false);
+    const svgRight = makePawSVG(true);
+
+    let lastX = -100;
+    let lastY = -100;
+    let count = 0;
+    const MIN_DIST = 48;
+
+    function spawnPaw(x: number, y: number, angle: number) {
+      const isRight = count % 2 === 1;
+      // Alternate left/right offset perpendicular to movement direction
+      const perp = angle + 90;
+      const perpRad = (perp * Math.PI) / 180;
+      const offsetDist = 7;
+      const ox = Math.cos(perpRad) * offsetDist * (isRight ? 1 : -1);
+      const oy = Math.sin(perpRad) * offsetDist * (isRight ? 1 : -1);
+
+      const el = document.createElement('div');
+      el.className = 'paw-print';
+      el.style.left = `${x + ox - PAW_W / 2}px`;
+      el.style.top  = `${y + oy - PAW_H / 2}px`;
+      el.style.transform = `rotate(${angle}deg)`;
+      el.innerHTML = isRight ? svgRight : svgLeft;
+      container.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+      count++;
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      // Only in first viewport
+      if (window.scrollY + e.clientY > window.innerHeight) return;
+
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist >= MIN_DIST) {
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI) - 90;
+        spawnPaw(e.clientX, e.clientY, angle);
+        lastX = e.clientX;
+        lastY = e.clientY;
+      }
+    });
+  });
+</script>
