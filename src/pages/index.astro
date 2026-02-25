@@ -7,15 +7,17 @@ import Footer from '../components/Footer.astro';
 
 
 const projects = await getCollection('projects');
-const sorted = projects.sort((a, b) => {
-  if (a.data.comingSoon && !b.data.comingSoon) return -1;
-  if (!a.data.comingSoon && b.data.comingSoon) return 1;
-  return b.data.year - a.data.year;
-});
+const sorted = projects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => {
+    if (a.data.comingSoon && !b.data.comingSoon) return -1;
+    if (!a.data.comingSoon && b.data.comingSoon) return 1;
+    return b.data.year - a.data.year;
+  });
 ---
 
 <BaseLayout>
-  <main class="max-w-2xl mx-auto px-6 py-24">
+  <main class="max-w-2xl mx-auto px-6 pt-8 pb-24">
     <About />
 
     <section class="mt-24">
@@ -30,6 +32,7 @@ const sorted = projects.sort((a, b) => {
             tags={project.data.tags}
             year={project.data.year}
             comingSoon={project.data.comingSoon}
+            liveUrl={project.data.liveUrl}
           />
         ))}
       </div>

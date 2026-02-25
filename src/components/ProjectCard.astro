@@ -6,20 +6,28 @@ interface Props {
   tags: string[];
   year: number;
   comingSoon?: boolean;
+  liveUrl?: string;
 }
 
-const { slug, title, description, tags, year, comingSoon = false } = Astro.props;
+const { slug, title, description, tags, year, comingSoon = false, liveUrl } = Astro.props;
 ---
 
 {comingSoon ? (
   <div class="block border-t border-[#1e1e1e] py-7">
     <div class="flex items-baseline justify-between mb-2">
-      <h3 class="text-[#482A32] font-normal text-sm">{title}</h3>
+      <h3 class="text-[#482A32] font-normal text-base" style="font-family: 'Zalando Sans Expanded', sans-serif;">{title}</h3>
       <span class="text-[#482A32] text-[11px] ml-6 shrink-0 border border-[#36151E] px-2 py-0.5 rounded-sm">
-        Coming soon
+        2026
       </span>
     </div>
-    <p class="text-[#482A32] text-xs leading-relaxed">{description}</p>
+    <p class="text-[#482A32] text-sm leading-relaxed mb-4">{description}</p>
+    <div class="flex gap-1.5 flex-wrap">
+      {tags.map((tag) => (
+        <span class="text-[#482A32] text-[11px] border border-[#36151E] px-2 py-0.5 rounded-sm">
+          {tag}
+        </span>
+      ))}
+    </div>
   </div>
 ) : (
   <a
@@ -27,18 +35,31 @@ const { slug, title, description, tags, year, comingSoon = false } = Astro.props
     class="group block border-t border-[#1e1e1e] py-7 hover:border-[#2a2a2a] transition-colors duration-200"
   >
     <div class="flex items-baseline justify-between mb-2">
-      <h3 class="text-[#EFF1F3] font-normal text-sm group-hover:text-white transition-colors duration-200">
+      <h3 class="text-[#EFF1F3] font-normal text-base group-hover:text-white transition-colors duration-200" style="font-family: 'Zalando Sans Expanded', sans-serif;">
         {title}
       </h3>
       <span class="text-[#95757F] text-xs ml-6 shrink-0 tabular-nums">{year}</span>
     </div>
-    <p class="text-[#525252] text-xs leading-relaxed mb-4">{description}</p>
-    <div class="flex gap-1.5 flex-wrap">
-      {tags.map((tag) => (
-        <span class="text-[#95757F] text-[11px] border border-[#1e1e1e] px-2 py-0.5 rounded-sm group-hover:border-[#482A32] transition-colors duration-200">
-          {tag}
-        </span>
-      ))}
+    <p class="text-[#777777] text-sm leading-relaxed mb-4">{description}</p>
+    <div class="flex items-center justify-between">
+      <div class="flex gap-1.5 flex-wrap">
+        {tags.map((tag) => (
+          <span class="text-[#95757F] text-[11px] border border-[#1e1e1e] px-2 py-0.5 rounded-sm group-hover:border-[#482A32] transition-colors duration-200">
+            {tag}
+          </span>
+        ))}
+      </div>
+      {liveUrl && (
+        <a
+          href={liveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-[#482A32] hover:text-[#95757F] text-xs transition-colors duration-200 shrink-0 ml-4"
+          onclick="event.stopPropagation()"
+        >
+          visit ↗
+        </a>
+      )}
     </div>
   </a>
 )}

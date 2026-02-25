@@ -8,6 +8,8 @@ const projects = defineCollection({
     tags: z.array(z.string()),
     year: z.number(),
     comingSoon: z.boolean().optional().default(false),
+    liveUrl: z.string().optional(),
+    featured: z.boolean().optional().default(false),
   }),
 });
 

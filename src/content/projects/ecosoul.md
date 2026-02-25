@@ -3,6 +3,8 @@ title: ECOSOUL
 description: E-commerce platform for herbal tinctures, redesigned and migrated from a legacy system to WordPress with integrated payments and analytics.
 tags: ['WordPress', 'WooCommerce', 'JavaScript', 'Mailchimp']
 year: 2024
+liveUrl: 'https://ecosoul.rs/'
+featured: true
 ---
 
 ## Overview

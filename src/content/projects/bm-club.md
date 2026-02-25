@@ -3,6 +3,8 @@ title: Business Makers Club
 description: Full-stack web platform for a Serbian professional networking community connecting entrepreneurs, creatives, and business leaders.
 tags: ['Laravel', 'PHP', 'Tailwind CSS', 'MySQL']
 year: 2025
+liveUrl: 'https://bmclub.rs/'
+featured: true
 ---
 
 ## Overview

@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Footer from '../components/Footer.astro';
+
+const projects = await getCollection('projects');
+const sorted = projects.sort((a, b) => {
+  if (a.data.comingSoon && !b.data.comingSoon) return 1;
+  if (!a.data.comingSoon && b.data.comingSoon) return -1;
+  return b.data.year - a.data.year;
+});
+---
+
+<BaseLayout title="projects — naca">
+  <main class="max-w-2xl mx-auto px-6 pt-8 pb-24">
+    <h1 class="text-2xl font-light text-[#EFF1F3] tracking-tight mb-16">all work.</h1>
+
+    <div class="border-b border-[#1e1e1e]">
+      {sorted.map((project) => (
+        <ProjectCard
+          slug={project.slug}
+          title={project.data.title}
+          description={project.data.description}
+          tags={project.data.tags}
+          year={project.data.year}
+          comingSoon={project.data.comingSoon}
+          liveUrl={project.data.liveUrl}
+        />
+      ))}
+    </div>
+
+    <Footer />
+  </main>
+</BaseLayout>

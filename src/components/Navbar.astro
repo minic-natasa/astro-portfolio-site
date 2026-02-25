@@ -1,0 +1,14 @@
+---
+const currentPath = Astro.url.pathname;
+const isProjects = currentPath.startsWith('/projects');
+---
+
+<nav class="max-w-2xl mx-auto px-6 py-8 flex justify-end">
+  <a
+    href={isProjects ? '/' : '/projects'}
+    class="text-sm text-[#482A32] hover:text-[#95757F] transition-colors duration-200"
+    style="font-family: 'Zalando Sans Expanded', sans-serif;"
+  >
+    {isProjects ? 'home' : 'projects'}
+  </a>
+</nav>
