@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import SpeedInsights from '@vercel/speed-insights/astro';
 import Navbar from '../components/Navbar.astro';
 
 interface Props {
@@ -44,6 +45,7 @@ const {
   <body class="bg-[#111111] text-[#EFF1F3] antialiased min-h-screen" style="font-family: 'Onest', system-ui, sans-serif; font-weight: 300;">
     <Navbar />
     <slot />
+    <SpeedInsights />
   </body>
 </html>
 
