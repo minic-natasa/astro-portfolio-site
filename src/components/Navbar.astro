@@ -3,12 +3,66 @@ const currentPath = Astro.url.pathname;
 const isProjects = currentPath.startsWith('/projects');
 ---
 
-<nav class="max-w-2xl mx-auto px-6 py-8 flex justify-end">
+<nav class="max-w-2xl mx-auto px-6 py-8 flex items-center justify-between">
+  <!-- Theme toggle -->
+  <button
+    id="theme-toggle"
+    aria-label="Toggle theme"
+    class="transition-colors duration-200"
+    style="color: var(--accent);"
+  >
+    <!-- Sun: shown in dark mode -->
+    <svg id="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+    </svg>
+    <!-- Moon: shown in light mode -->
+    <svg id="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
+
   <a
     href={isProjects ? '/' : '/projects'}
-    class="text-sm text-[#482A32] hover:text-[#95757F] transition-colors duration-200"
-    style="font-family: 'Zalando Sans Expanded', sans-serif;"
+    class="text-sm transition-colors duration-200"
+    style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent); font-size: 16px;"
   >
     {isProjects ? 'home' : 'projects'}
   </a>
 </nav>
+
+<script>
+  function updateIcon() {
+    const isDark = document.documentElement.classList.contains('dark');
+    const sun = document.getElementById('icon-sun');
+    const moon = document.getElementById('icon-moon');
+    if (!sun || !moon) return;
+    sun.style.display = isDark ? 'block' : 'none';
+    moon.style.display = isDark ? 'none' : 'block';
+  }
+
+  function initThemeToggle() {
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+
+    updateIcon();
+
+    btn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      const next = isDark ? 'light' : 'dark';
+      document.documentElement.classList.remove('dark', 'light');
+      document.documentElement.classList.add(next);
+      localStorage.setItem('theme', next);
+      updateIcon();
+    });
+  }
+
+  // Persist theme across ViewTransitions (before page swap, copy theme to new doc)
+  document.addEventListener('astro:before-swap', (e) => {
+    const theme = localStorage.getItem('theme') ?? 'dark';
+    (e as any).newDocument.documentElement.classList.remove('dark', 'light');
+    (e as any).newDocument.documentElement.classList.add(theme);
+  });
+
+  document.addEventListener('astro:page-load', initThemeToggle);
+</script>

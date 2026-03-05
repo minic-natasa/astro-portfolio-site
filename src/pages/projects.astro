@@ -14,9 +14,9 @@ const sorted = projects.sort((a, b) => {
 
 <BaseLayout title="projects — naca">
   <main class="max-w-2xl mx-auto px-6 pt-8 pb-24">
-    <h1 class="text-2xl font-light text-[#EFF1F3] tracking-tight mb-16">all work.</h1>
+    <h1 class="text-[28px] font-light tracking-tight mb-16" style="color: var(--text-1);">all work.</h1>
 
-    <div class="border-b border-[#1e1e1e]">
+    <div class="border-b" style="border-color: var(--border);">
       {sorted.map((project) => (
         <ProjectCard
           slug={project.slug}

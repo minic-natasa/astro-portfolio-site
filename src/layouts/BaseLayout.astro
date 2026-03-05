@@ -14,13 +14,21 @@ const {
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Prevent theme flash -->
+    <script is:inline>
+      const saved = localStorage.getItem('theme');
+      const theme = saved ?? 'dark';
+      document.documentElement.classList.remove('dark', 'light');
+      document.documentElement.classList.add(theme);
+    </script>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -41,16 +49,52 @@ const {
     />
     <ViewTransitions />
   </head>
-  <body class="bg-[#111111] text-[#EFF1F3] antialiased min-h-screen" style="font-family: 'Onest', system-ui, sans-serif; font-weight: 300;">
+  <body style="background-color: var(--bg); color: var(--text-1); font-family: 'Onest', system-ui, sans-serif; font-weight: 300;" class="antialiased min-h-screen">
     <Navbar />
     <slot />
   </body>
 </html>
 
 <style is:global>
+  /* Dark theme (default) */
+  html.dark {
+    --bg: #111111;
+    --text-1: #EFF1F3;
+    --text-2: #777777;
+    --text-3: #95757F;
+    --accent: #482A32;
+    --accent-h: #95757F;
+    --accent-d: #36151E;
+    --border: #1e1e1e;
+    --border-h: #2a2a2a;
+    --code-bg: #0e0e0e;
+    --selection-bg: #36151E;
+    --selection-text: #EFF1F3;
+    --coming-soon: #482A32;
+    --coming-soon-border: #36151E;
+  }
+
+  /* Light theme */
+  html.light {
+    --bg: #F0F5FF;
+    --text-1: #0F172A;
+    --text-2: #475569;
+    --text-3: #94A3B8;
+    --accent: #334155;
+    --accent-h: #64748B;
+    --accent-d: #CBD5E0;
+    --border: #E2E8F0;
+    --border-h: #CBD5E0;
+    --code-bg: #F8FAFC;
+    --selection-bg: #CBD5E0;
+    --selection-text: #0F172A;
+    --coming-soon: #3B7DD8;
+    --coming-soon-border: #BFDBFE;
+  }
+
   ::selection {
-    background-color: #36151E;
-    color: #EFF1F3;
+    background-color: var(--selection-bg);
+    color: var(--selection-text);
   }
 
   html {

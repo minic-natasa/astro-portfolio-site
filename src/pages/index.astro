@@ -21,9 +21,9 @@ const sorted = projects
     <About />
 
     <section class="mt-24">
-      <p class="text-[10px] uppercase tracking-[0.2em] text-[#482A32] mb-4" style="font-family: 'Zalando Sans Expanded', sans-serif;">Selected Work</p>
+      <p class="text-xs uppercase tracking-[0.2em] mb-4" style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent);">Selected Work</p>
 
-      <div class="border-b border-[#1e1e1e]">
+      <div class="border-b" style="border-color: var(--border);">
         {sorted.map((project) => (
           <ProjectCard
             slug={project.slug}

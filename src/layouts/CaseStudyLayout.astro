@@ -11,23 +11,26 @@ interface Props {
 const { title, year, tags } = Astro.props;
 ---
 
-<BaseLayout title={`${title} — Nataša Minić`}>
+<BaseLayout title={`${title} — naca`}>
   <main class="max-w-2xl mx-auto px-6 py-20">
     <a
       href="/"
-      class="text-xs uppercase tracking-widest text-[#482A32] hover:text-[#95757F] transition-colors duration-200 mb-16 inline-block"
+      class="text-base uppercase tracking-widest transition-colors duration-200 mb-16 inline-block"
+      style="color: var(--accent);"
+      onmouseover="this.style.color='var(--accent-h)'"
+      onmouseout="this.style.color='var(--accent)'"
     >
       ← Back
     </a>
 
     <article>
       <header class="mb-12">
-        <h1 class="text-2xl font-light text-white tracking-tight mb-3">{title}</h1>
+        <h1 class="text-[28px] font-light tracking-tight mb-3" style="color: var(--text-1);">{title}</h1>
         <div class="flex items-center gap-4 flex-wrap">
-          <span class="text-[#95757F] text-sm">{year}</span>
+          <span class="text-base" style="color: var(--text-3);">{year}</span>
           <div class="flex gap-2 flex-wrap">
             {tags.map((tag) => (
-              <span class="text-[#95757F] text-xs border border-[#36151E] px-2 py-0.5 rounded-sm">
+              <span class="text-base border px-2 py-0.5 rounded-sm" style="color: var(--text-3); border-color: var(--accent-d);">
                 {tag}
               </span>
             ))}
@@ -35,17 +38,21 @@ const { title, year, tags } = Astro.props;
         </div>
       </header>
 
-      <div class="prose prose-sm max-w-none
-        prose-headings:text-[#EFF1F3] prose-headings:font-light prose-headings:tracking-tight
-        prose-p:text-[#EFF1F3] prose-p:leading-relaxed
-        prose-strong:text-[#EFF1F3] prose-strong:font-medium
-        prose-a:text-[#EFF1F3] prose-a:underline prose-a:decoration-[#482A32] hover:prose-a:decoration-[#EFF1F3]
-        prose-code:text-[#EFF1F3] prose-code:bg-[#0e0e0e] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-normal prose-code:before:content-none prose-code:after:content-none
-        prose-pre:bg-[#0e0e0e] prose-pre:border prose-pre:border-[#1e1e1e] prose-pre:rounded-none
-        prose-hr:border-[#1e1e1e]
-        prose-li:text-[#EFF1F3]
-        prose-ul:marker:text-[#482A32]
-      ">
+      <div class="prose prose-base max-w-none"
+        style="
+          --tw-prose-body: var(--text-2);
+          --tw-prose-headings: var(--text-1);
+          --tw-prose-links: var(--text-1);
+          --tw-prose-bold: var(--text-1);
+          --tw-prose-counters: var(--text-3);
+          --tw-prose-bullets: var(--accent);
+          --tw-prose-hr: var(--border);
+          --tw-prose-quotes: var(--text-2);
+          --tw-prose-code: var(--text-1);
+          --tw-prose-pre-code: var(--text-1);
+          --tw-prose-pre-bg: var(--code-bg);
+        "
+      >
         <slot />
       </div>
     </article>
