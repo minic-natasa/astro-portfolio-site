@@ -21,19 +21,21 @@ const sorted = projects
     <About />
 
     <section class="mt-24">
-      <p class="text-xs uppercase tracking-[0.2em] mb-4" style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent);">Selected Work</p>
+      <p class="text-xs uppercase tracking-[0.2em] mb-4" style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent);">Case Studies</p>
 
-      <div class="border-b" style="border-color: var(--border);">
-        {sorted.map((project) => (
-          <ProjectCard
-            slug={project.slug}
-            title={project.data.title}
-            description={project.data.description}
-            tags={project.data.tags}
-            year={project.data.year}
-            comingSoon={project.data.comingSoon}
-            liveUrl={project.data.liveUrl}
-          />
+      <div>
+        {sorted.map((project, i) => (
+          <div class={i > 0 ? 'border-t' : ''} style="border-color: var(--border);">
+            <ProjectCard
+              slug={project.slug}
+              title={project.data.title}
+              description={project.data.description}
+              tags={project.data.tags}
+              year={project.data.year}
+              comingSoon={project.data.comingSoon}
+              liveUrl={project.data.liveUrl}
+            />
+          </div>
         ))}
       </div>
     </section>
