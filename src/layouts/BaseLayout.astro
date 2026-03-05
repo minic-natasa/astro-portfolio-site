@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import Analytics from '@vercel/analytics/astro';
 import Navbar from '../components/Navbar.astro';
 
 interface Props {
@@ -47,6 +48,7 @@ const {
       href="https://fonts.googleapis.com/css2?family=Onest:wght@100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap"
       rel="stylesheet"
     />
+    <Analytics />
     <ViewTransitions />
   </head>
   <body style="background-color: var(--bg); color: var(--text-1); font-family: 'Onest', system-ui, sans-serif; font-weight: 300;" class="antialiased min-h-screen">
