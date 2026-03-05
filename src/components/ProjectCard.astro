@@ -21,17 +21,19 @@ const { slug, title, description, tags, year, comingSoon = false, liveUrl } = As
       </span>
     </div>
     <p class="text-base leading-relaxed mb-4" style="color: var(--coming-soon);">{description}</p>
-    <div class="flex gap-1.5 flex-wrap">
-      {tags.map((tag) => (
-        <span class="text-xs border px-2 py-0.5 rounded-sm" style="color: var(--coming-soon); border-color: var(--coming-soon-border);">
-          {tag}
-        </span>
-      ))}
+    <div class="flex items-center justify-between border-t pt-4" style="border-color: var(--border);">
+      <div class="flex gap-1.5 flex-wrap">
+        {tags.map((tag) => (
+          <span class="text-xs border px-2 py-0.5 rounded-sm" style="color: var(--coming-soon); border-color: var(--coming-soon-border);">
+            {tag}
+          </span>
+        ))}
+      </div>
     </div>
   </div>
 ) : (
   <a
-    href={`/projects/${slug}`}
+    href={`/case-studies/${slug}`}
     class="group block border-t py-7 transition-colors duration-200"
     style="border-color: var(--border);"
   >

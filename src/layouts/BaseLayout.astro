@@ -109,8 +109,22 @@ const {
     font-family: 'Zalando Sans Expanded', sans-serif;
   }
 
-  * {
+  *, *::before, *::after {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
+  @keyframes fade-out {
+    to { opacity: 0; }
+  }
+  ::view-transition-old(root) {
+    animation: 350ms ease both fade-out;
+  }
+  ::view-transition-new(root) {
+    animation: 350ms ease both fade-in;
   }
 </style>

@@ -7,7 +7,23 @@
       "Bash(git commit:*)",
       "Bash(git remote add:*)",
       "Bash(git branch:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(printf '{ \"\"title\"\": \"\"Omoda & Jaecoo\\\\\\\\nService\"\", \"\"year\"\": 2024, \"\"tags\"\": [] }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Lupa Technology\"\", \"\"year\"\": 2025, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://lupa.technology/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Urologija.net\"\", \"\"year\"\": 2026, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://urologija.net/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Savetovalište Hrast\"\", \"\"year\"\": 2026, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://savetovalistehrast.com/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"WOWA\"\", \"\"year\"\": 2025, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://wowa.rs/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"WaterBank\"\", \"\"year\"\": 2023, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://waterbank.com/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Agenda Global\"\", \"\"year\"\": 2024, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://agenda-global.com/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Harvard Club of Serbia\"\", \"\"year\"\": 2023, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://harvard-serbia.org.rs/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"XanthoSTOP\"\", \"\"year\"\": 2024, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://xanthostop.com/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Omoda & Jaecoo\\\\\\\\nService\"\", \"\"year\"\": 2024, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://service.omodajaecoo.com/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"LG Master Club\"\", \"\"year\"\": 2025, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://www.lgmasterklub.com/\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"LG Service Quiz\"\", \"\"year\"\": 2025, \"\"tags\"\": [], \"\"liveUrl\"\": \"\"https://lgservicequiz.com/\"\", \"\"altUrl\"\": \"\"https://hr.lgservicequiz.com/\"\", \"\"altLabel\"\": \"\"HR\"\" }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Advense\"\", \"\"year\"\": 2026, \"\"tags\"\": [], \"\"comingSoon\"\": true }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"RCL\"\", \"\"year\"\": 2026, \"\"tags\"\": [], \"\"comingSoon\"\": true }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Serbia Inspire\"\", \"\"year\"\": 2026, \"\"tags\"\": [], \"\"comingSoon\"\": true }\\\\n')",
+      "Bash(printf '{ \"\"title\"\": \"\"Business Masters Club\"\", \"\"year\"\": 2025, \"\"tags\"\": [], \"\"caseStudySlug\"\": \"\"bm-club\"\" }\\\\n')"
     ]
   }
 }
