@@ -17,8 +17,8 @@ const { slug, title, description, tags, year, comingSoon = false, liveUrl } = As
     <div class="flex items-baseline justify-between mb-2">
       <h3 class="font-normal text-[20px]" style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--coming-soon);">{title}</h3>
       <span class="text-xs ml-6 shrink-0 border px-2 py-0.5 rounded-sm" style="color: var(--coming-soon); border-color: var(--coming-soon-border);">
-        2026
-      </span>
+        soon
+</span>
     </div>
     <p class="text-base leading-relaxed mb-3" style="color: var(--coming-soon);">{description}</p>
     <div class="flex items-center justify-between">
@@ -32,10 +32,10 @@ const { slug, title, description, tags, year, comingSoon = false, liveUrl } = As
     </div>
   </div>
 ) : (
-  <div class="block py-7">
+  <div class="block py-7 relative">
     <div class="flex items-baseline justify-between mb-2">
       <h3 class="font-normal text-[20px]" style="font-family: 'Zalando Sans Expanded', sans-serif;">
-        <a href={`/case-studies/${slug}`} class="transition-colors duration-200" style="color: var(--text-1);">{title}</a>
+        <a href={`/case-studies/${slug}`} class="transition-colors duration-200 after:absolute after:inset-0" style="color: var(--text-1);">{title}</a>
       </h3>
       <span class="text-xs ml-6 shrink-0 tabular-nums" style="color: var(--text-3);">{year}</span>
     </div>
@@ -53,10 +53,10 @@ const { slug, title, description, tags, year, comingSoon = false, liveUrl } = As
           href={liveUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-xs transition-colors duration-200 shrink-0 ml-4"
+          class="text-xs transition-colors duration-200 shrink-0 ml-4 relative z-10"
           style="color: var(--accent);"
         >
-          visit ↗
+          see live ↗
         </a>
       )}
     </div>

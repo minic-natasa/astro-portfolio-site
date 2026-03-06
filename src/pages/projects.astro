@@ -33,7 +33,7 @@ const work = (await getCollection('work')).sort((a, b) => {
                 {item.data.title}
               </h3>
               {item.data.comingSoon && (
-                <span class="text-xs border px-2 py-0.5 rounded-sm shrink-0 mt-0.5" style="color: var(--coming-soon); border-color: var(--coming-soon-border);">{item.data.year}</span>
+                <span class="text-xs border px-2 py-0.5 rounded-sm shrink-0 mt-0.5" style="color: var(--coming-soon); border-color: var(--coming-soon-border);">soon</span>
               )}
             </div>
 
