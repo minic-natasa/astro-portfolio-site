@@ -1,6 +1,6 @@
 ---
 title: Business Makers Club
-description: Full-stack web platform for a Serbian professional networking community connecting entrepreneurs, creatives, and business leaders.
+description: Membership platform for a Serbian entrepreneurial community. Handles member management, event participation, business matchmaking and role-based access across 40+ companies.
 tags: ['Laravel', 'PHP', 'Tailwind CSS', 'MySQL']
 year: 2025
 liveUrl: 'https://bmclub.rs/'
@@ -9,23 +9,19 @@ featured: true
 
 ## Overview
 
-Business Makers Club is a Serbian professional networking community that brings together entrepreneurs, creatives, and business leaders through events, mentorship, and collaboration. I was brought on to build the platform from the ground up — a full-stack web application that serves as the community's digital hub for member management, event participation, and business matchmaking.
+Business Makers Club is a Serbian professional community built around the belief that entrepreneurs grow faster when they're surrounded by the right people. The club connects business owners, creatives and leaders through events, mentorship and structured collaboration. By the time they came to me, the community had grown past 40 member companies and managing everything manually wasn't sustainable anymore.
 
-My role was purely development. The platform needed to handle a diverse user base, enforce strict access control across roles, and be structured to grow as the club expands.
+My role was development only. Direction and vision were already in place. I was there to build it.
 
-## Problem
+## The Problem
 
-The club was operating without a centralized digital platform. Managing members, publishing activities, and controlling who can access what was being handled manually. As membership grew, this became unsustainable.
+Without a platform, everything was manual. Member lists, event coordination, access control. As the community scaled, that stopped working. The club needed a system where members could manage their own profiles, admins could manage everyone else, and the software enforced the boundaries between those roles rather than relying on people to remember them.
 
-The core challenges were:
-
-- **Role-based access** — different users (members, IT admins, HR admins) needed different views and permissions, without any overlap or privilege escalation
-- **Member directory** — the community needed a searchable, filterable directory with profile management
-- **Scalability** — the architecture had to support continuous growth in membership and events without a full rewrite down the road
+The permission model was the hardest part to get right. Three distinct roles, each with a different scope of what they can see and do, and none of them allowed to step into each other's territory.
 
 ## Architecture
 
-The application follows a modular **MVC architecture** using Laravel 10, with a clear separation between controllers, services, and repositories. This pattern keeps business logic out of controllers and makes individual components independently testable and replaceable.
+The application is built on Laravel 10 with a modular MVC structure and a clear separation between controllers, services and repositories. Business logic lives in the service layer. Data access is abstracted through repositories. Authorization happens at two levels: middleware blocks unauthorized requests before they reach the controllers, and policies handle permissions at the model level. If a user doesn't have access, they don't even reach the data.
 
 ```
 app/
@@ -37,47 +33,49 @@ app/
 └── Policies/            # per-model authorization
 ```
 
-Role-based access is enforced at two levels: middleware intercepts routes before they reach controllers, and policies handle model-level permissions. This means a user with insufficient privileges is blocked at the edge — they never reach the data layer.
+## What I Built
 
-## Key Features Built
+**Authentication and Roles**
 
-**Authentication & Role System**
+Three roles, one clear hierarchy. Regular members can manage their own profiles and data. IT Admins get user management and role assignment on top of that. HR Admins inherit all IT Admin permissions and also own the Activities module, including full event management.
 
-Three roles with a clear privilege hierarchy:
-
-- **User** — profile management and personal data
-- **IT Admin** — extends User with full user management and role assignment
-- **HR Admin** — inherits IT Admin permissions and has full CRUD over the Activities module
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin: 2rem 0;">
+  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+  </div>
+  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+  </div>
+  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+  </div>
+  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+  </div>
+</div>
 
 **Member Directory**
 
-A searchable, filterable directory of 50+ member companies with dashboards tailored to each role. Members can manage their own profiles; admins get an expanded view with management controls.
+A searchable, filterable directory of 50+ member companies with dashboards tailored to each role. What a member sees and what an admin sees are deliberately different.
 
 **Activities Module**
 
-Full CRUD for club events and member engagement, accessible to HR Admins. Displays recent events publicly and tracks member participation.
+Full event management for HR Admins, with public event display and participation tracking. The club can publish events, manage attendance and keep the community active.
 
-**Security Layer**
+**Security**
 
-CSRF protection, validation layers on all inputs, and middleware/policy guards on every protected route. No security logic is left to the frontend.
+CSRF protection, input validation on all forms and permission enforcement at the infrastructure level. Security decisions don't live in the frontend.
 
 ## Tech Stack
 
-- **Backend:** Laravel 10, PHP 8+
-- **Frontend:** Blade templates, Tailwind CSS, Vite
-- **Database:** MySQL
-- **Auth:** Laravel Breeze / Sanctum with custom RBAC
-- **Build:** Composer, NPM, Artisan CLI
-- **Version Control:** Git & GitHub
-- **Architecture:** MVC, Service-Repository pattern
+- Laravel 10, PHP 8+
+- Blade templates, Tailwind CSS, Vite
+- MySQL
+- Laravel Breeze / Sanctum with custom RBAC
+- Composer, NPM, Artisan CLI
+- Git and GitHub
+- MVC with Service-Repository pattern
 
 ## What's Next
 
-The platform is designed to accommodate planned features without structural changes:
-
-- Multilingual support (Serbian / English)
-- In-app messaging between members
-- Gamification — point collection and in-app rewards
-- Member benefits program with reward tracking
-- Analytics dashboard for activity and engagement metrics
-- Real-time notifications for events and updates
+The platform is structured to grow without a rewrite. Planned additions include multilingual support, in-app messaging between members, a gamification layer with points and rewards, and an analytics dashboard for engagement tracking.

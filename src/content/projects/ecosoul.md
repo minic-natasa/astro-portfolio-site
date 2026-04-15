@@ -1,6 +1,6 @@
 ---
 title: ECOSOUL
-description: E-commerce platform for herbal tinctures, redesigned and migrated from a legacy system to WordPress with integrated payments and analytics.
+description: Complete redesign and platform migration for a Serbian natural health supplements brand. Rebuilt on WordPress with WooCommerce, card payments, Mailchimp and analytics set up from scratch.
 tags: ['WordPress', 'WooCommerce', 'JavaScript', 'Mailchimp']
 year: 2024
 liveUrl: 'https://ecosoul.rs/'
@@ -9,51 +9,59 @@ featured: true
 
 ## Overview
 
-ECOSOUL is a Serbian wellness brand selling plant-based herbal tinctures. The project involved a full redesign and platform migration — taking their existing legacy site and rebuilding it on WordPress with a functioning e-commerce store, secure card payments, and proper marketing and analytics infrastructure in place from day one.
+ECOSOUL makes plant-based herbal tinctures from natural ingredients and had been running their store on a legacy platform that was starting to crack. Checkout issues, no analytics, no email marketing setup, and a codebase the client couldn't maintain on their own. The business was growing but the infrastructure wasn't keeping up.
 
-My role covered web design and full WordPress development. I didn't touch the brand identity or product photography — everything else was on me.
+My role covered web design and full WordPress development. Brand identity and product photography were already sorted. Everything else was mine to build.
 
-## Problem
+## The Problem
 
-The existing site couldn't support the business as it was growing. The legacy system was hard to maintain, lacked a reliable payment flow, and had no visibility into how customers were finding or using the site. The client needed a stable, manageable platform they could operate independently, with real e-commerce capability and a foundation for digital marketing.
+The old platform wasn't just outdated, it was actively working against the business. The payment flow had reliability issues, there was no way to run email campaigns, and the client had zero visibility into where their customers were coming from or what was converting. For an e-commerce store trying to grow, that's a real problem.
 
-The key requirements were:
-
-- **Migration without data loss** — move from the legacy system to WordPress cleanly
-- **Secure payments** — integrate a card payment gateway compliant with local banking requirements (Visa Secure, Mastercard ID Check)
-- **Marketing tooling** — connect email marketing so the client could run campaigns from day one
-- **Discoverability** — set up SEO and analytics infrastructure so growth could be tracked and improved over time
+The migration also had to be clean. Moving from a legacy system to a new one without losing products, orders or customer data is never trivial, and getting it wrong has obvious consequences.
 
 ## What I Built
 
 **E-Commerce Store**
 
-Built on WooCommerce with a product catalog of herbal tinctures, cart functionality, user accounts, and a promotional rule for free shipping on orders of 3 or more items. The product pages are clean and focused — imagery, description, price, and a clear purchase path.
+Built on WooCommerce with a full product catalog, cart, user accounts and a free shipping promotion for orders of three or more items. Product pages are clean and focused: imagery, description, price and a direct path to purchase. No distractions.
 
-**Payment Gateway Integration**
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin: 2rem 0;">
+  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+  </div>
+  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+  </div>
+  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+  </div>
+  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+  </div>
+</div>
 
-Integrated a secure card payment gateway supporting Visa and Mastercard, including Visa Secure and Mastercard ID Check for 3D authentication. This was a non-trivial integration given local Serbian banking requirements and the need to configure the gateway to work within the WooCommerce checkout flow.
+**Payment Integration**
 
-**Mailchimp Integration**
+Integrated a card payment gateway supporting Visa and Mastercard, including Visa Secure and Mastercard ID Check for 3D Secure authentication. Serbian banking requirements are specific, and getting this right inside the WooCommerce checkout flow required careful configuration beyond the standard plugin setup. The client needed payments to just work, reliably, from day one.
 
-Connected Mailchimp to capture customer emails and enable the client to run email campaigns independently. Configured signup forms and automated list syncing so new customers feed directly into their mailing list.
+**Mailchimp**
 
-**SEO & Analytics Setup**
+Connected Mailchimp with automated list syncing so every customer who places an order feeds directly into the client's mailing list. Signup forms are in place and the client can run campaigns independently without any developer help.
 
-- Connected **Google Search Console** for indexing oversight and search performance tracking
-- Integrated **Google Analytics** for traffic, conversion, and behavior data
-- Registered the business on **Google Business Profile** for local search visibility
+**Analytics and SEO**
+
+Google Analytics and Google Search Console are both connected. The business is registered on Google Business Profile for local search visibility. The client now has a real picture of traffic sources, conversions and search performance.
 
 ## Tech Stack
 
-- **CMS:** WordPress
-- **E-Commerce:** WooCommerce
-- **Frontend:** HTML, CSS, JavaScript (custom theme work)
-- **Payments:** Card payment gateway (Visa Secure / Mastercard ID Check)
-- **Email Marketing:** Mailchimp
-- **Analytics:** Google Analytics, Google Search Console
-- **Local SEO:** Google Business Profile
+- WordPress
+- WooCommerce
+- HTML, CSS, JavaScript (custom theme)
+- Card payment gateway (Visa Secure / Mastercard ID Check)
+- Mailchimp
+- Google Analytics, Google Search Console
+- Google Business Profile
 
 ## Outcome
 
-The client launched with a fully operational store, secure checkout, and all marketing tools connected and ready to use. They can manage products, orders, and email campaigns without developer involvement. The analytics and Search Console setup gives them a clear picture of where traffic comes from and how the site performs over time.
+The client launched with a working store, a reliable checkout and all marketing tools ready to use. They can manage products, orders and campaigns on their own. Nothing is invisible anymore.

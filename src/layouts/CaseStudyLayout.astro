@@ -14,10 +14,10 @@ const { title, year, tags } = Astro.props;
 
 <BaseLayout title={`${title} — naca`}>
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
-  <main class="max-w-2xl mx-auto px-6 py-20">
+  <main class="max-w-2xl mx-auto px-6 pt-6 pb-20">
     <a
       href="/"
-      class="text-base uppercase tracking-widest transition-colors duration-200 mb-16 inline-block"
+      class="text-base uppercase tracking-widest transition-colors duration-200 mb-8 inline-block"
       style="color: var(--accent);"
       onmouseover="this.style.color='var(--accent-h)'"
       onmouseout="this.style.color='var(--accent)'"
@@ -39,6 +39,10 @@ const { title, year, tags } = Astro.props;
           </div>
         </div>
       </header>
+
+      <div class="w-full rounded-sm mb-12 overflow-hidden" style="aspect-ratio: 16/9; background: var(--border); display: flex; align-items: center; justify-content: center;">
+        <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 12px; letter-spacing: 0.1em; color: var(--text-3);">hero screenshot</span>
+      </div>
 
       <div class="prose prose-base max-w-none"
         style="
