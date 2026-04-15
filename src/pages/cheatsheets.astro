@@ -1,0 +1,910 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from '../components/Footer.astro';
+
+const tabs = ['html', 'css', 'js', 'jquery'] as const;
+type Tab = typeof tabs[number];
+
+interface Group {
+  title: string;
+  note: string;
+  code: string;
+}
+
+// All code as plain strings — Astro auto-escapes {expressions} in templates.
+const snippets = {
+
+  // ─── HTML ────────────────────────────────────────────────────────────────
+
+  htmlSkeleton: `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="..." />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <script src="script.js"><\/script>
+  </body>
+</html>`,
+
+  htmlInputTypes: `<input type="text" />
+<input type="email" />
+<input type="password" />
+<input type="number" min="0" max="100" step="1" />
+<input type="date" />
+<input type="time" />
+<input type="file" accept=".jpg,.png" multiple />
+<input type="range" min="0" max="10" />
+<input type="color" />
+<input type="checkbox" />
+<input type="radio" name="group" value="a" />
+<input type="hidden" name="token" value="secret" />
+<input type="search" />
+<input type="tel" pattern="[0-9]{3}-[0-9]{4}" />
+<input type="url" />`,
+
+  htmlForms: `<form action="/submit" method="POST">
+
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" placeholder="..." required />
+
+  <label for="email">Email</label>
+  <input type="email" id="email" name="email" autocomplete="email" />
+
+  <label for="msg">Message</label>
+  <textarea id="msg" name="msg" rows="4" maxlength="500"></textarea>
+
+  <label for="role">Role</label>
+  <select id="role" name="role">
+    <option value="">-- pick one --</option>
+    <option value="dev">Developer</option>
+    <option value="design">Designer</option>
+  </select>
+
+  <input type="checkbox" id="agree" name="agree" required />
+  <label for="agree">I agree to whatever this is</label>
+
+  <button type="submit">Send it</button>
+  <button type="reset">Never mind</button>
+
+</form>`,
+
+  htmlForget: `<!-- toggle open/close without a single line of JS -->
+<details>
+  <summary>click to expand</summary>
+  <p>surprise, hidden content</p>
+</details>
+
+<!-- native modal dialog -->
+<dialog id="modal">
+  <p>hello from the void</p>
+  <button onclick="this.closest('dialog').close()">close</button>
+</dialog>
+<button onclick="document.getElementById('modal').showModal()">
+  open modal
+</button>
+
+<!-- image with caption -->
+<figure>
+  <img src="cat.jpg" alt="a cat" />
+  <figcaption>she broke the build again</figcaption>
+</figure>
+
+<!-- inline highlight -->
+<p>the word <mark>important</mark> is now yellow</p>
+
+<!-- abbreviation with tooltip on hover -->
+<abbr title="Cascading Style Sheets">CSS</abbr>
+
+<!-- native progress bar -->
+<progress value="70" max="100"></progress>`,
+
+  htmlData: `<!-- set in html -->
+<div data-user-id="42" data-role="admin" data-is-active="true">
+  ...
+</div>
+
+<!-- read in js -->
+const el = document.querySelector('[data-role="admin"]');
+
+el.dataset.userId;    // "42"   ← always a string
+el.dataset.role;      // "admin"
+el.dataset.isActive;  // "true" ← camelCase from kebab-case
+
+// select by data attribute
+document.querySelector('[data-user-id="42"]');
+
+<!-- write in js -->
+el.dataset.status = "verified";
+el.dataset.userId = "99";
+
+<!-- style in css -->
+[data-role="admin"] { border: 1px solid gold; }
+[data-is-active="true"] { opacity: 1; }`,
+
+  // ─── CSS ────────────────────────────────────────────────────────────────
+
+  cssCenter: `/* flex — my personal favourite */
+.parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* grid — one line shorter */
+.parent {
+  display: grid;
+  place-items: center;
+}
+
+/* absolute — the classic, still works */
+.parent { position: relative; }
+.child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* bonus: horizontal only */
+.el { margin-inline: auto; } /* block element with a width */`,
+
+  cssFlex: `/* container */
+.flex {
+  display: flex;
+  flex-direction: row | column | row-reverse | column-reverse;
+  flex-wrap: nowrap | wrap | wrap-reverse;
+  justify-content: flex-start | center | flex-end
+                 | space-between | space-around | space-evenly;
+  align-items:   stretch | center | flex-start | flex-end | baseline;
+  align-content: flex-start | center | space-between; /* multi-line */
+  gap: 1rem;
+  gap: 1rem 0.5rem; /* row-gap  column-gap */
+}
+
+/* items */
+.item {
+  flex: 1;              /* grow shrink basis shorthand */
+  flex: 0 0 200px;      /* fixed 200px, no grow/shrink */
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: auto;
+  align-self: center;   /* override container's align-items */
+  order: 0;             /* lower = earlier, can be negative */
+}`,
+
+  cssGrid: `/* container */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 200px auto 1fr;    /* mixed units */
+  grid-template-rows: auto;
+  gap: 1rem;
+
+  /* named template areas */
+  grid-template-areas:
+    "header header header"
+    "sidebar main   main  "
+    "footer  footer footer";
+}
+
+/* place items in named areas */
+.header  { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+
+/* span across lines */
+.wide {
+  grid-column: 1 / 3;      /* line 1 to line 3 */
+  grid-column: span 2;      /* span 2 columns */
+  grid-row: 1 / -1;         /* first to last row */
+}
+
+/* responsive auto-fill — no media queries needed */
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));`,
+
+  cssVars: `:root {
+  --color-primary: #482A32;
+  --color-bg: #111111;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --radius: 4px;
+}
+
+.element {
+  color: var(--color-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius);
+
+  /* fallback if var is undefined */
+  font-size: var(--font-size-xl, 1.5rem);
+
+  /* use inside calc */
+  margin: calc(var(--spacing-md) * 2);
+}
+
+/* scoped override — only affects .card and its children */
+.card {
+  --color-primary: hotpink;
+}
+
+/* update with javascript */
+document.documentElement.style.setProperty('--color-primary', 'red');
+const val = getComputedStyle(document.documentElement)
+  .getPropertyValue('--color-primary'); // "red"`,
+
+  cssMedia: `/* mobile first (recommended) */
+.element { font-size: 1rem; }
+
+@media (min-width: 640px)  { /* sm */ }
+@media (min-width: 768px)  { /* md */ }
+@media (min-width: 1024px) { /* lg */ }
+@media (min-width: 1280px) { /* xl */ }
+@media (min-width: 1536px) { /* 2xl */ }
+
+/* desktop first (the other way) */
+@media (max-width: 767px) { /* mobile only */ }
+
+/* user preferences — use these more */
+@media (prefers-color-scheme: dark)  { }
+@media (prefers-color-scheme: light) { }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* touch devices */
+@media (hover: none) and (pointer: coarse) { }
+
+/* print */
+@media print { .no-print { display: none; } }`,
+
+  cssPseudo: `/* links — order matters: LVHA */
+a:link    { }  /* unvisited */
+a:visited { }
+a:hover   { }
+a:active  { }  /* being clicked */
+a:focus   { }
+
+/* forms */
+input:focus         { }
+input:focus-visible { outline: 2px solid blue; } /* keyboard only */
+input:disabled      { opacity: 0.5; cursor: not-allowed; }
+input:checked       { }
+input:required      { }
+input:invalid       { border-color: red; }
+input:placeholder-shown { color: gray; }
+
+/* position-based */
+li:first-child      { }
+li:last-child       { }
+li:only-child       { }
+li:nth-child(2)     { }  /* second item */
+li:nth-child(2n)    { }  /* even items */
+li:nth-child(3n+1)  { }  /* every 3rd, starting at 1 */
+li:nth-last-child(1){ }  /* last, counted from end */
+
+/* logic — the good stuff */
+p:not(.special)          { }  /* negate */
+:is(h1, h2, h3)          { }  /* match any */
+:where(h1, h2, h3)       { }  /* like :is but zero specificity */
+div:has(> img)           { }  /* has a direct img child */
+div:has(img.hero)        { }  /* has a matching descendant */`,
+
+  // ─── JS ─────────────────────────────────────────────────────────────────
+
+  jsArrays: `const nums   = [1, 2, 3, 4, 5];
+const people = [{ name: 'naca', age: 28 }, { name: 'bob', age: 25 }];
+
+// transform every item
+nums.map(n => n * 2);                        // [2, 4, 6, 8, 10]
+people.map(p => p.name);                     // ['naca', 'bob']
+
+// keep matching items
+nums.filter(n => n > 2);                     // [3, 4, 5]
+
+// reduce to single value
+nums.reduce((acc, n) => acc + n, 0);         // 15
+people.reduce((acc, p) => ({ ...acc, [p.name]: p.age }), {});
+
+// find first match
+nums.find(n => n > 3);                       // 4
+nums.findIndex(n => n > 3);                  // 3
+people.find(p => p.name === 'naca');         // { name: 'naca', age: 28 }
+
+// check existence
+nums.includes(3);                            // true
+nums.some(n => n > 4);                       // true  (any match)
+nums.every(n => n > 0);                      // true  (all match)
+
+// flatten
+[[1, 2], [3, 4]].flat();                     // [1, 2, 3, 4]
+[[1, [2, [3]]]].flat(Infinity);              // [1, 2, 3]
+[[1, 2], [3]].flatMap(a => a.map(String));   // ['1', '2', '3']
+
+// sort (mutates original!)
+nums.sort((a, b) => a - b);                  // ascending
+nums.sort((a, b) => b - a);                  // descending
+people.sort((a, b) => a.name.localeCompare(b.name));
+
+// deduplicate
+[...new Set([1, 1, 2, 3, 3])];              // [1, 2, 3]`,
+
+  jsAsync: `// basic fetch
+async function getData(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+    return await res.json();
+  } catch (err) {
+    console.error('fetch failed:', err);
+  }
+}
+
+// POST with JSON body
+const res = await fetch('/api/submit', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'naca' }),
+});
+const result = await res.json();
+
+// parallel — both start at the same time
+const [users, posts] = await Promise.all([
+  fetch('/api/users').then(r => r.json()),
+  fetch('/api/posts').then(r => r.json()),
+]);
+
+// first to resolve wins
+const fastest = await Promise.race([slowFetch(), fastFetch()]);
+
+// all settle — doesn't short-circuit on error
+const results = await Promise.allSettled([p1, p2, p3]);
+results.forEach(r => {
+  if (r.status === 'fulfilled') console.log(r.value);
+  else console.error(r.reason);
+});`,
+
+  jsDom: `// select
+const el  = document.querySelector('.class');      // first match
+const all = document.querySelectorAll('ul > li');  // NodeList (not Array!)
+const id  = document.getElementById('my-id');
+
+// create & insert
+const div = document.createElement('div');
+div.textContent = 'hello';
+div.className   = 'card';
+parent.appendChild(div);
+parent.prepend(div);
+el.insertAdjacentHTML('beforeend', '<p>hi</p>');
+// positions: beforebegin | afterbegin | beforeend | afterend
+
+// class manipulation
+el.classList.add('active');
+el.classList.remove('active');
+el.classList.toggle('active');
+el.classList.contains('active');      // boolean
+el.classList.replace('old', 'new');
+
+// attributes
+el.setAttribute('data-id', '42');
+el.getAttribute('data-id');           // "42"
+el.removeAttribute('disabled');
+el.hasAttribute('hidden');            // boolean
+el.dataset.myKey;                     // data-my-key
+
+// events
+el.addEventListener('click', handler);
+el.addEventListener('click', handler, { once: true, passive: true });
+el.removeEventListener('click', handler);
+
+// common events: click, input, change, submit, keydown, keyup,
+//   focus, blur, mouseenter, mouseleave, scroll, resize, load`,
+
+  jsDestruct: `// array destructuring
+const [a, b, c] = [1, 2, 3];
+const [first, , third] = [1, 2, 3];    // skip the second
+const [x, ...rest]     = [1, 2, 3, 4]; // rest → [2, 3, 4]
+const [p = 0, q = 0]   = [1];          // default: q → 0
+
+// swap variables
+let i = 1, j = 2;
+[i, j] = [j, i];
+
+// object destructuring
+const { name, age } = user;
+const { name: fullName }  = user;      // rename to fullName
+const { role = 'user' }   = user;      // with default
+const { a: { b: { c } } } = obj;      // nested
+
+// rest in objects
+const { id, ...rest } = user;          // everything except id
+
+// in function params
+function greet({ name, age = 0, role = 'user' } = {}) {
+  return \`hi \${name}\`;
+}
+
+// from first item of array
+const [{ name: firstName }] = users;`,
+
+  jsSpread: `// copy array (shallow)
+const copy = [...original];
+
+// merge arrays
+const merged    = [...arr1, ...arr2];
+const withExtra = [...arr, newItem, ...more];
+
+// copy object (shallow)
+const clone = { ...obj };
+
+// merge objects — last key wins on conflict
+const config  = { ...defaults, ...overrides };
+const updated = { ...user, role: 'admin' };  // override one field
+
+// spread into function args
+Math.max(...[1, 2, 3]);      // 3
+someFunction(...args);
+
+// string → char array
+[...'hello'];                // ['h','e','l','l','o']
+
+// deduplicate array
+const unique = [...new Set(arr)];
+
+// NodeList or arguments → real Array
+const divs = [...document.querySelectorAll('div')];
+
+// clone and modify in one go
+const olderUser = { ...user, age: user.age + 1 };`,
+
+  // ─── jQuery ─────────────────────────────────────────────────────────────
+
+  jqSelectors: `// basic
+$('#id')             // by id
+$('.class')          // by class
+$('div')             // by tag
+$('h1, h2, h3')      // multiple selectors
+$('ul li')           // descendant
+$('div > p')         // direct child only
+$('p + span')        // adjacent sibling
+
+// attribute
+$('[href]')                // has attribute
+$('[type="text"]')         // exact attribute value
+$('[class^="btn-"]')       // starts with
+$('[name$="email"]')       // ends with
+$('[class*="icon"]')       // contains
+
+// filter
+$('input:checked')
+$('li:first-child')
+$('li:nth-child(2)')
+$('li:not(.skip)')
+$('li:even') /* $('li:odd') */ // 0-indexed!
+
+// traversal
+$(el).parent()
+$(el).parents('.wrapper')
+$(el).closest('.container')  // nearest matching ancestor
+$(el).children('.active')
+$(el).siblings()
+$(el).next() /* .prev() */
+$(el).find('.inner')
+$(el).first() /* .last() */
+$(el).eq(2)                  // by index`,
+
+  jqDom: `// get content
+$('.el').html()           // inner HTML (like innerHTML)
+$('.el').text()           // text only (like textContent)
+$('.el').val()            // input value
+$('.el').attr('href')     // attribute value
+$('.el').prop('checked')  // property (boolean)
+$('.el').css('color')     // computed style value
+$('.el').data('userId')   // data-user-id
+
+// set content
+$('.el').html('<b>hi</b>')
+$('.el').text('safe plain text')
+$('.el').val('new value')
+$('.el').attr('href', '/new')
+$('.el').prop('disabled', true)
+$('.el').css('color', 'red')
+$('.el').css({ color: 'red', fontSize: '16px' })
+$('.el').data('userId', 42)
+
+// classes
+$('.el').addClass('active')
+$('.el').removeClass('active')
+$('.el').toggleClass('active')
+$('.el').hasClass('active')     // boolean
+
+// create & insert
+const $el = $('<div class="box">hi</div>');
+$('.parent').append($el)        // last child
+$('.parent').prepend($el)       // first child
+$el.appendTo('.parent')
+$el.insertBefore('.sibling')
+$el.remove()                    // removes element + unbinds events
+$el.empty()                     // clears children
+
+// show / hide
+$('.el').show() /* .hide() */ /* .toggle() */
+$('.el').fadeIn() /* .fadeOut() */ /* .fadeToggle() */
+$('.el').slideDown() /* .slideUp() */ /* .slideToggle() */`,
+
+  jqEvents: `// bind
+$('.btn').on('click', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  console.log($(this));   // $(this) = the clicked element
+});
+
+// multiple events at once
+$('input').on('focus blur change input', function() { ... });
+
+// unbind
+$('.btn').off('click');
+$('.btn').off('click', namedHandler);
+$('.btn').off();          // remove all events
+
+// shorthand methods
+$('.btn').click(fn);
+$('input').focus(fn).blur(fn).change(fn).keyup(fn);
+$('form').submit(fn);
+$(window).resize(fn).scroll(fn);
+$(document).ready(fn);   // or just: $(fn)
+
+// run only once
+$('.btn').one('click', fn);
+
+// delegated — works on elements added dynamically
+$(document).on('click', '.dynamic-btn', function() { ... });
+$('.list').on('click', 'li', function() { ... });
+
+// hover shorthand
+$('.card').hover(
+  function() { /* mouseenter */ },
+  function() { /* mouseleave */ }
+);
+
+// trigger programmatically
+$('.btn').trigger('click');
+$('.btn').click(); // shorthand`,
+
+  jqAjax: `// shorthand GET
+$.get('/api/users', function(data) {
+  console.log(data);
+});
+
+// shorthand POST
+$.post('/api/submit', { name: 'naca' }, function(res) {
+  console.log(res);
+});
+
+// full control with $.ajax
+$.ajax({
+  url: '/api/data',
+  method: 'GET',               // 'POST', 'PUT', 'DELETE'
+  data: { id: 42 },            // query params or body
+  dataType: 'json',            // expected response format
+  contentType: 'application/json',
+  headers: { 'X-Custom': 'value' },
+  timeout: 5000,
+  beforeSend: function() { /* show loader */ },
+  success: function(data, status) { },
+  error:   function(xhr, status, err) { console.error(err); },
+  complete: function() { /* always runs */ }
+});
+
+// promise-style (jQuery 3+, actually readable)
+$.get('/api/users')
+  .done(data  => console.log(data))
+  .fail(err   => console.error(err))
+  .always(()  => console.log('request finished'));
+
+// load HTML directly into an element
+$('#container').load('/partial.html');
+$('#container').load('/partial.html #section-id');`,
+};
+
+const groups: Record<Tab, Group[]> = {
+  html: [
+    {
+      title: 'the skeleton',
+      note: 'memorize it. burn it into your brain. tattoo it somewhere.',
+      code: snippets.htmlSkeleton,
+    },
+    {
+      title: 'input types',
+      note: 'yes, there are way more than just type="text"',
+      code: snippets.htmlInputTypes,
+    },
+    {
+      title: 'forms (everyone hates them)',
+      note: 'but they pay the bills, so here we are',
+      code: snippets.htmlForms,
+    },
+    {
+      title: 'tags you always forget exist',
+      note: 'details, dialog, figure, mark, progress — all real, all useful, all underused',
+      code: snippets.htmlForget,
+    },
+    {
+      title: 'data attributes',
+      note: 'custom data that lives in the html and travels to js. surprisingly elegant.',
+      code: snippets.htmlData,
+    },
+  ],
+  css: [
+    {
+      title: 'how to center a div',
+      note: "you're welcome. the search is over.",
+      code: snippets.cssCenter,
+    },
+    {
+      title: 'flexbox, explained simply',
+      note: '1d layout. not as scary as it looks once you get it.',
+      code: snippets.cssFlex,
+    },
+    {
+      title: 'grid, because flexbox is not enough',
+      note: '2d layouts. genuinely great. criminally underused.',
+      code: snippets.cssGrid,
+    },
+    {
+      title: 'custom properties (the good vars)',
+      note: 'css variables that actually work everywhere. even in calc().',
+      code: snippets.cssVars,
+    },
+    {
+      title: 'media queries',
+      note: 'responsive design. plus dark mode, print, and reduced motion — use all of them.',
+      code: snippets.cssMedia,
+    },
+    {
+      title: 'pseudo-class starter pack',
+      note: ':hover :nth-child :not :has :is :where — all the colons you need',
+      code: snippets.cssPseudo,
+    },
+  ],
+  js: [
+    {
+      title: 'array methods that actually matter',
+      note: 'map filter reduce and their friends. learn these. use these. love these.',
+      code: snippets.jsArrays,
+    },
+    {
+      title: 'async / await',
+      note: 'promises were a mistake. this is better. fetch, parallel, settle — all here.',
+      code: snippets.jsAsync,
+    },
+    {
+      title: 'dom stuff you need weekly',
+      note: 'select, create, insert, classes, attributes, events. the classic.',
+      code: snippets.jsDom,
+    },
+    {
+      title: 'destructuring cheatsheet',
+      note: 'extract things from arrays and objects like a civilized person',
+      code: snippets.jsDestruct,
+    },
+    {
+      title: 'the spread gospel',
+      note: '...and they saw the spread operator, and it was good',
+      code: snippets.jsSpread,
+    },
+  ],
+  jquery: [
+    {
+      title: 'selectors + traversal',
+      note: 'still kind of nice, honestly. do not tell anyone.',
+      code: snippets.jqSelectors,
+    },
+    {
+      title: 'dom manipulation',
+      note: '.html() .val() .addClass() and the rest of the old gang',
+      code: snippets.jqDom,
+    },
+    {
+      title: 'events',
+      note: '.on() .off() .trigger() — simple, consistent, still decent',
+      code: snippets.jqEvents,
+    },
+    {
+      title: 'ajax the old way',
+      note: "it works. it's still on millions of sites. here we are.",
+      code: snippets.jqAjax,
+    },
+  ],
+};
+---
+
+<BaseLayout title="cheatsheets — naca" description="HTML, CSS, JS and jQuery cheatsheets. The stuff I always google, now in one place.">
+  <main class="max-w-2xl mx-auto px-6 pt-8 pb-24">
+
+    <!-- Header -->
+    <section class="mb-12">
+      <h1 class="text-[28px] font-light tracking-tight mb-4" style="color: var(--text-1);">
+        cheatsheets
+      </h1>
+      <p class="text-[18px] leading-relaxed" style="color: var(--text-2);">
+        things i keep forgetting. saved here so i stop opening 47 tabs.
+        <span style="color: var(--text-3);">use freely. judge silently.</span>
+      </p>
+    </section>
+
+    <!-- Sticky tab bar -->
+    <div class="tab-bar sticky top-0 z-10 py-4 -mx-6 px-6" style="background: var(--bg); border-bottom: 1px solid var(--border);">
+      <div class="flex items-center gap-6">
+        {tabs.map((tab, i) => (
+          <button
+            data-tab={tab}
+            class="tab-btn"
+            data-active={i === 0 ? '' : undefined}
+            style="font-family: 'Zalando Sans Expanded', sans-serif;"
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Sections -->
+    {tabs.map((tab, tabIdx) => (
+      <div id={`tab-${tab}`} class="tab-section" style={tabIdx > 0 ? 'display:none' : ''}>
+
+        {tab === 'jquery' && (
+          <div class="pt-8 pb-2">
+            <p class="text-sm leading-relaxed" style="color: var(--text-3);">
+              because jQuery is on roughly{' '}
+              <span style="color: var(--text-2);">78% of all websites on earth.</span>{' '}
+              knowing it is not embarrassing. it's practical.
+            </p>
+          </div>
+        )}
+
+        {groups[tab].map((group, i) => (
+          <div class={i > 0 ? 'border-t' : 'pt-6'} style="border-color: var(--border);">
+            <div class="py-8">
+              <p
+                class="text-xs uppercase tracking-[0.2em]"
+                style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent);"
+              >
+                {group.title}
+              </p>
+              <p class="text-sm mt-1.5" style="color: var(--text-3);">{group.note}</p>
+              <div class="code-wrapper relative mt-4">
+                <button class="copy-btn" style="font-family: 'Zalando Sans Expanded', sans-serif;">copy</button>
+                <pre class="cheat-pre"><code class="cheat-code">{group.code}</code></pre>
+              </div>
+            </div>
+          </div>
+        ))}
+
+      </div>
+    ))}
+
+    <Footer />
+  </main>
+</BaseLayout>
+
+<style>
+  /* Tab buttons */
+  .tab-btn {
+    font-size: 15px;
+    color: var(--text-3);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    letter-spacing: 0.03em;
+  }
+  .tab-btn:hover {
+    color: var(--text-2);
+  }
+  .tab-btn[data-active] {
+    color: var(--text-1);
+  }
+
+  /* Code blocks */
+  .cheat-pre {
+    margin: 0;
+    padding: 1.25rem 1.25rem 1.25rem 1rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow-x: auto;
+    tab-size: 2;
+  }
+  .cheat-code {
+    font-family: 'Fira Code', 'Cascadia Code', ui-monospace, 'Menlo', monospace;
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--text-1);
+    white-space: pre;
+  }
+
+  /* Copy button */
+  .copy-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+    z-index: 1;
+    opacity: 0.5;
+  }
+  .copy-btn:hover {
+    opacity: 1;
+    border-color: var(--border-h);
+  }
+  .copy-btn.copied {
+    opacity: 1;
+    color: #ffffff;
+    border-color: var(--accent-h);
+  }
+
+  /* Sticky tab bar blur effect */
+  .tab-bar {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+</style>
+
+<script>
+  function initCheatsheets() {
+    const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+    const sections = document.querySelectorAll<HTMLElement>('.tab-section');
+
+    // Tab switching
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+
+        tabBtns.forEach(b => delete b.dataset.active);
+        btn.dataset.active = '';
+
+        sections.forEach(s => {
+          s.style.display = s.id === `tab-${target}` ? '' : 'none';
+        });
+      });
+    });
+
+    // Copy buttons
+    document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wrapper = btn.closest('.code-wrapper');
+        if (!wrapper) return;
+        const code = wrapper.querySelector('code')?.textContent?.trim() ?? '';
+
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = 'copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'copy';
+            btn.classList.remove('copied');
+          }, 1500);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initCheatsheets);
+</script>

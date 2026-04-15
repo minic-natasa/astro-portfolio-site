@@ -1,6 +1,14 @@
 ---
 const currentPath = Astro.url.pathname;
+const isHome = currentPath === '/';
 const isProjects = currentPath.startsWith('/projects');
+const isCheatsheets = currentPath.startsWith('/cheatsheets');
+
+const links = [
+  { href: '/',            label: 'home',        active: isHome },
+  { href: '/projects',    label: 'projects',    active: isProjects },
+  { href: '/cheatsheets', label: 'cheatsheets', active: isCheatsheets },
+].filter(l => !l.active);
 ---
 
 <nav class="max-w-2xl mx-auto px-6 py-8 flex items-center justify-between">
@@ -22,13 +30,19 @@ const isProjects = currentPath.startsWith('/projects');
     </svg>
   </button>
 
-  <a
-    href={isProjects ? '/' : '/projects'}
-    class="text-sm transition-colors duration-200"
-    style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent); font-size: 16px;"
-  >
-    {isProjects ? 'home' : 'projects'}
-  </a>
+  <div class="flex items-center gap-5">
+    {links.map(link => (
+      <a
+        href={link.href}
+        class="transition-colors duration-200"
+        style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent); font-size: 16px;"
+        onmouseover="this.style.color='var(--accent-h)'"
+        onmouseout="this.style.color='var(--accent)'"
+      >
+        {link.label}
+      </a>
+    ))}
+  </div>
 </nav>
 
 <script>
