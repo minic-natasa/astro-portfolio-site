@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Footer from '../components/Footer.astro';
+import SideNav from '../components/SideNav.astro';
 
 const tabs = ['html', 'css', 'js', 'jquery'] as const;
 type Tab = typeof tabs[number];
@@ -728,6 +729,7 @@ const groups: Record<Tab, Group[]> = {
 ---
 
 <BaseLayout title="cheatsheets — naca" description="HTML, CSS, JS and jQuery cheatsheets. The stuff I always google, now in one place.">
+  <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }]} />
   <main class="max-w-2xl mx-auto px-6 pt-8 pb-24">
 
     <!-- Header -->
@@ -737,7 +739,7 @@ const groups: Record<Tab, Group[]> = {
       </h1>
       <p class="text-[18px] leading-relaxed" style="color: var(--text-2);">
         things i keep forgetting. saved here so i stop opening 47 tabs.
-        <span style="color: var(--text-3);">use freely. judge silently.</span>
+        <br /><span style="color: var(--text-3);">use freely. judge silently.</span>
       </p>
     </section>
 

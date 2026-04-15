@@ -1,17 +1,19 @@
 ---
 const currentPath = Astro.url.pathname;
-const isHome = currentPath === '/';
-const isProjects = currentPath.startsWith('/projects');
+const isHome        = currentPath === '/';
+const isProjects    = currentPath.startsWith('/projects');
 const isCheatsheets = currentPath.startsWith('/cheatsheets');
+const isCaseStudy   = currentPath.startsWith('/case-studies');
 
-const links = [
-  { href: '/',            label: 'home',        active: isHome },
-  { href: '/projects',    label: 'projects',    active: isProjects },
+const navItems = [
+  { href: '/',            label: 'home',        active: isHome        },
+  { href: '/projects',    label: 'projects',    active: isProjects    },
   { href: '/cheatsheets', label: 'cheatsheets', active: isCheatsheets },
-].filter(l => !l.active);
+];
 ---
 
 <nav class="max-w-2xl mx-auto px-6 py-8 flex items-center justify-between">
+
   <!-- Theme toggle -->
   <button
     id="theme-toggle"
@@ -19,48 +21,53 @@ const links = [
     class="transition-colors duration-200"
     style="color: var(--accent);"
   >
-    <!-- Sun: shown in dark mode -->
     <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="4"/>
       <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
     </svg>
-    <!-- Moon: shown in light mode -->
     <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
     </svg>
   </button>
 
-  <div class="flex items-center gap-5">
-    {links.map(link => (
-      <a
-        href={link.href}
-        class="transition-colors duration-200"
-        style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent); font-size: 16px;"
-        onmouseover="this.style.color='var(--accent-h)'"
-        onmouseout="this.style.color='var(--accent)'"
-      >
-        {link.label}
-      </a>
+  <!-- Nav links -->
+  <div class="flex items-center gap-5" style={(isHome || isProjects || isCheatsheets || isCaseStudy) ? 'display:none' : ''}>
+    {navItems.map((item, i) => (
+      item.active ? (
+        <span
+          class="nav-item"
+          data-index={i}
+          style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 16px; color: var(--accent); opacity: 0;"
+        >{item.label}</span>
+      ) : (
+        <a
+          href={item.href}
+          class="nav-item"
+          data-index={i}
+          style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 16px; color: var(--text-3); transition: color 0.2s ease; opacity: 0;"
+          onmouseover="this.style.color='var(--accent-h)'"
+          onmouseout="this.style.color='var(--text-3)'"
+        >{item.label}</a>
+      )
     ))}
   </div>
+
 </nav>
 
 <script>
   function updateIcon() {
     const isDark = document.documentElement.classList.contains('dark');
-    const sun = document.getElementById('icon-sun');
+    const sun  = document.getElementById('icon-sun');
     const moon = document.getElementById('icon-moon');
     if (!sun || !moon) return;
-    sun.style.display = isDark ? 'block' : 'none';
-    moon.style.display = isDark ? 'none' : 'block';
+    sun.style.display  = isDark ? 'block' : 'none';
+    moon.style.display = isDark ? 'none'  : 'block';
   }
 
   function initThemeToggle() {
     const btn = document.getElementById('theme-toggle');
     if (!btn) return;
-
     updateIcon();
-
     btn.addEventListener('click', () => {
       const isDark = document.documentElement.classList.contains('dark');
       const next = isDark ? 'light' : 'dark';
@@ -71,12 +78,28 @@ const links = [
     });
   }
 
-  // Persist theme across ViewTransitions (before page swap, copy theme to new doc)
+  function initNavAnimation() {
+    const items = document.querySelectorAll<HTMLElement>('.nav-item');
+    items.forEach((item, i) => {
+      item.style.opacity   = '0';
+      item.style.transform = 'translateX(8px)';
+      item.style.transition = 'opacity 0.3s ease, transform 0.3s ease, color 0.2s ease';
+
+      setTimeout(() => {
+        item.style.opacity   = '1';
+        item.style.transform = 'translateX(0)';
+      }, i * 60);
+    });
+  }
+
   document.addEventListener('astro:before-swap', (e) => {
     const theme = localStorage.getItem('theme') ?? 'dark';
     (e as any).newDocument.documentElement.classList.remove('dark', 'light');
     (e as any).newDocument.documentElement.classList.add(theme);
   });
 
-  document.addEventListener('astro:page-load', initThemeToggle);
+  document.addEventListener('astro:page-load', () => {
+    initThemeToggle();
+    initNavAnimation();
+  });
 </script>

@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Footer from '../components/Footer.astro';
+import SideNav from '../components/SideNav.astro';
 
 const work = (await getCollection('work')).sort((a, b) => {
   if (a.data.comingSoon && !b.data.comingSoon) return 1;
@@ -13,6 +14,7 @@ const work = (await getCollection('work')).sort((a, b) => {
 ---
 
 <BaseLayout title="projects — naca">
+  <SideNav links={[{ href: '/', label: 'home' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
   <main class="pt-8 pb-24">
     <div class="max-w-2xl mx-auto px-6">
       <h1 class="text-[28px] font-light tracking-tight mb-16" style="color: var(--text-1);">all work.</h1>

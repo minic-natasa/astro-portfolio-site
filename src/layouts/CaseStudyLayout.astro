@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Footer from '../components/Footer.astro';
+import SideNav from '../components/SideNav.astro';
 
 interface Props {
   title: string;
@@ -12,6 +13,7 @@ const { title, year, tags } = Astro.props;
 ---
 
 <BaseLayout title={`${title} — naca`}>
+  <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
   <main class="max-w-2xl mx-auto px-6 py-20">
     <a
       href="/"

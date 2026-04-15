@@ -7,11 +7,13 @@ import Navbar from '../components/Navbar.astro';
 interface Props {
   title?: string;
   description?: string;
+  showNav?: boolean;
 }
 
 const {
   title = 'naca',
   description = 'Web developer portfolio of Nataša Minić — building fast, clean, and maintainable things for the web.',
+  showNav = true,
 } = Astro.props;
 ---
 
@@ -53,7 +55,7 @@ const {
     <ViewTransitions />
   </head>
   <body style="background-color: var(--bg); color: var(--text-1); font-family: 'Onest', system-ui, sans-serif; font-weight: 300;" class="antialiased min-h-screen">
-    <Navbar />
+    {showNav && <Navbar />}
     <slot />
     <SpeedInsights />
   </body>
@@ -62,38 +64,38 @@ const {
 <style is:global>
   /* Dark theme (default) */
   html.dark {
-    --bg: #141414;
-    --text-1: #DCE4F0;
-    --text-2: #888888;
-    --text-3: #555555;
+    --bg: #181818;
+    --text-1: #F7F6F6;
+    --text-2: #8E8E93;
+    --text-3: #636366;
     --accent: #5B8DB8;
     --accent-h: #80AECE;
     --accent-d: #1A2430;
-    --border: #222222;
-    --border-h: #333333;
-    --code-bg: #0C0C0C;
+    --border: #2A2A2A;
+    --border-h: #383838;
+    --code-bg: #1F1F1F;
     --selection-bg: #1A2430;
-    --selection-text: #F0F0F0;
+    --selection-text: #F7F6F6;
     --coming-soon: #4A7A9B;
     --coming-soon-border: #1A2D3E;
   }
 
   /* Light theme */
   html.light {
-    --bg: #F0F5FF;
-    --text-1: #0F172A;
-    --text-2: #475569;
-    --text-3: #94A3B8;
-    --accent: #334155;
-    --accent-h: #64748B;
-    --accent-d: #CBD5E0;
-    --border: #E2E8F0;
-    --border-h: #CBD5E0;
-    --code-bg: #F8FAFC;
-    --selection-bg: #CBD5E0;
-    --selection-text: #0F172A;
-    --coming-soon: #3B7DD8;
-    --coming-soon-border: #BFDBFE;
+    --bg: #F7F6F6;
+    --text-1: #121212;
+    --text-2: #3D3D40;
+    --text-3: #8E8E93;
+    --accent: #1E3DAA;
+    --accent-h: #2952C8;
+    --accent-d: #D5DCF8;
+    --border: #D9D9D9;
+    --border-h: #C0C0C4;
+    --code-bg: #FFFFFF;
+    --selection-bg: #D5DCF8;
+    --selection-text: #121212;
+    --coming-soon: #2952C8;
+    --coming-soon-border: #C0CCF5;
   }
 
   ::selection {

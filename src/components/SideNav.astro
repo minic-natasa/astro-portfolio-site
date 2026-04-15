@@ -1,0 +1,54 @@
+---
+interface Props {
+  links: { href: string; label: string }[];
+}
+const { links } = Astro.props;
+---
+
+<nav class="side-nav">
+  {links.map((link, i) => (
+    <>
+      {i > 0 && <span class="side-dot" aria-hidden="true">·</span>}
+      <a
+        href={link.href}
+        class="side-link"
+        onmouseover="this.style.color='var(--accent)'"
+        onmouseout="this.style.color='var(--text-3)'"
+      >{link.label}</a>
+    </>
+  ))}
+</nav>
+
+<style>
+  .side-nav {
+    position: fixed;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    z-index: 40;
+  }
+
+  .side-link {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: 'Zalando Sans Expanded', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    transition: color 0.2s ease;
+  }
+
+  .side-dot {
+    writing-mode: vertical-rl;
+    color: var(--border-h);
+    font-size: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .side-nav { display: none; }
+  }
+</style>

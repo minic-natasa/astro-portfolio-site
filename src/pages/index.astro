@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import About from '../components/About.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Footer from '../components/Footer.astro';
+import SideNav from '../components/SideNav.astro';
 
 
 const projects = await getCollection('projects');
@@ -17,6 +18,7 @@ const sorted = projects
 ---
 
 <BaseLayout>
+  <SideNav links={[{ href: '/projects', label: 'projects' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
   <main class="max-w-2xl mx-auto px-6 pt-8 pb-24">
     <About />
 
