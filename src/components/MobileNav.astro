@@ -1,0 +1,171 @@
+---
+const currentPath = Astro.url.pathname;
+const isHome        = currentPath === '/';
+const isProjects    = currentPath.startsWith('/projects');
+const isCheatsheets = currentPath.startsWith('/cheatsheets');
+const isCaseStudy   = currentPath.startsWith('/case-studies');
+
+const links = [
+  { href: '/',            label: 'home',        active: isHome        },
+  { href: '/projects',    label: 'projects',    active: isProjects    },
+  { href: '/cheatsheets', label: 'cheatsheets', active: isCheatsheets },
+];
+---
+
+<div id="mobile-nav" class="mobile-nav-wrap">
+  <!-- Overlay backdrop -->
+  <div id="mobile-nav-backdrop" class="mobile-backdrop"></div>
+
+  <!-- Panel -->
+  <div id="mobile-nav-panel" class="mobile-panel">
+    {links.map(link => (
+      link.active ? (
+        <span class="mobile-link active">{link.label}</span>
+      ) : (
+        <a href={link.href} class="mobile-link">{link.label}</a>
+      )
+    ))}
+  </div>
+
+  <!-- Toggle button -->
+  <button id="mobile-nav-toggle" class="mobile-toggle" aria-label="Toggle navigation">
+    <span class="toggle-icon open-icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="3" width="12" height="1.5" rx="0.75" fill="currentColor"/>
+        <rect x="2" y="7.25" width="12" height="1.5" rx="0.75" fill="currentColor"/>
+        <rect x="2" y="11.5" width="12" height="1.5" rx="0.75" fill="currentColor"/>
+      </svg>
+    </span>
+    <span class="toggle-icon close-icon" style="display:none;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </span>
+  </button>
+</div>
+
+<style>
+  .mobile-nav-wrap {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-nav-wrap {
+      display: block;
+    }
+
+    .mobile-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 48;
+    }
+
+    .mobile-panel {
+      position: fixed;
+      bottom: 5rem;
+      right: 1.25rem;
+      z-index: 49;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.25rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .mobile-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .mobile-link {
+      font-family: 'Zalando Sans Expanded', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .mobile-link.active {
+      color: var(--accent);
+      border-color: var(--accent-d);
+      cursor: default;
+    }
+
+    .mobile-link:not(.active):hover {
+      color: var(--accent);
+      border-color: var(--border-h);
+    }
+
+    .mobile-toggle {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      z-index: 50;
+      width: 42px;
+      height: 42px;
+      border-radius: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .mobile-toggle:hover {
+      color: var(--accent);
+      border-color: var(--border-h);
+    }
+
+    .toggle-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const toggle    = document.getElementById('mobile-nav-toggle');
+    const panel     = document.getElementById('mobile-nav-panel');
+    const backdrop  = document.getElementById('mobile-nav-backdrop');
+    const openIcon  = toggle?.querySelector('.open-icon') as HTMLElement | null;
+    const closeIcon = toggle?.querySelector('.close-icon') as HTMLElement | null;
+    if (!toggle || !panel || !backdrop) return;
+
+    let open = false;
+
+    function openMenu() {
+      open = true;
+      panel.classList.add('open');
+      backdrop.style.display = 'block';
+      if (openIcon)  openIcon.style.display  = 'none';
+      if (closeIcon) closeIcon.style.display = 'flex';
+    }
+
+    function closeMenu() {
+      open = false;
+      panel.classList.remove('open');
+      backdrop.style.display = 'none';
+      if (openIcon)  openIcon.style.display  = 'flex';
+      if (closeIcon) closeIcon.style.display = 'none';
+    }
+
+    toggle.addEventListener('click', () => open ? closeMenu() : openMenu());
+    backdrop.addEventListener('click', closeMenu);
+  });
+</script>

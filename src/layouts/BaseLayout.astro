@@ -3,6 +3,7 @@ import { ViewTransitions } from 'astro:transitions';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import Navbar from '../components/Navbar.astro';
+import MobileNav from '../components/MobileNav.astro';
 
 interface Props {
   title?: string;
@@ -57,6 +58,7 @@ const {
   <body style="background-color: var(--bg); color: var(--text-1); font-family: 'Onest', system-ui, sans-serif; font-weight: 300;" class="antialiased min-h-screen">
     {showNav && <Navbar />}
     <slot />
+    <MobileNav />
     <SpeedInsights />
   </body>
 </html>
