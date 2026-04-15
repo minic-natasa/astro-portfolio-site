@@ -15,16 +15,16 @@ const work = (await getCollection('work')).sort((a, b) => {
 
 <BaseLayout title="projects — naca">
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
-  <main class="pt-2 md:pt-8 pb-24">
+  <main class="pt-4 md:pt-8 pb-24">
     <div class="max-w-2xl mx-auto px-6">
-      <h1 class="text-[28px] font-light tracking-tight mb-16" style="color: var(--text-1);">all work.</h1>
+      <h1 class="text-[28px] font-light tracking-tight mb-8 md:mb-16" style="color: var(--text-1);">all work.</h1>
     </div>
 
     <div class="max-w-5xl mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-3">
+      <div class="grid grid-cols-2 md:grid-cols-3">
         {work.map((item) => (
           <div
-            class="group flex flex-col justify-between p-6 min-h-[140px] border-b md:border-r md:[&:nth-child(3n)]:border-r-0 [&:last-child]:border-b-0 md:[&:last-child]:border-b md:[&:nth-last-child(-n+3)]:border-b-0"
+            class="group flex flex-col justify-between p-6 min-h-[140px] border-b border-r [&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0 [&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:border-b md:[&:nth-last-child(-n+3)]:border-b-0"
             style="border-color: var(--border); background-color: var(--bg);"
           >
             <div class="flex items-start justify-between gap-2">
@@ -53,11 +53,11 @@ const work = (await getCollection('work')).sort((a, b) => {
                     ))}
                   </div>
                 )}
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-1.5 md:flex-row md:items-center md:justify-between md:gap-0">
                   {item.data.year && (
                     <span class="text-xs tabular-nums" style="color: var(--text-3);">{item.data.year}</span>
                   )}
-                  <div class="flex gap-3 ml-auto">
+                  <div class="flex flex-col gap-1.5 md:flex-row md:gap-3 md:ml-auto">
                     {item.data.caseStudySlug && (
                       <a
                         href={`/case-studies/${item.data.caseStudySlug}`}

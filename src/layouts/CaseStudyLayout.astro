@@ -14,15 +14,16 @@ const { title, year, tags } = Astro.props;
 
 <BaseLayout title={`${title} — naca`}>
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
-  <main class="max-w-2xl mx-auto px-6 pt-2 md:pt-6 pb-20">
+  <main class="max-w-2xl mx-auto px-6 pt-4 md:pt-6 pb-20">
     <a
       href="/"
-      class="text-base uppercase tracking-widest transition-colors duration-200 mb-8 inline-block"
+      onclick="event.preventDefault(); history.length > 1 ? history.back() : window.location.href = '/'"
+      class="text-sm tracking-wide transition-colors duration-200 mb-8 inline-block cursor-pointer"
       style="color: var(--accent);"
       onmouseover="this.style.color='var(--accent-h)'"
       onmouseout="this.style.color='var(--accent)'"
     >
-      ← Back
+      ← go back
     </a>
 
     <article>
