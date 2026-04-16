@@ -23,11 +23,11 @@ const sorted = projects
     <About />
 
     <section class="mt-24">
-      <p class="sr text-xs uppercase tracking-[0.2em] mb-4" style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent);">Case Studies</p>
+      <p class="sr text-xs uppercase tracking-[0.2em] mb-4" style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent); opacity: 0;">Case Studies</p>
 
       <div>
         {sorted.map((project, i) => (
-          <div class={`sr ${i > 0 ? 'border-t' : ''}`} style={`border-color: var(--border); transition-delay: ${i * 80}ms`}>
+          <div class={`sr ${i > 0 ? 'border-t' : ''}`} style={`border-color: var(--border); transition-delay: ${i * 80}ms; opacity: 0;`}>
             <ProjectCard
               slug={project.slug}
               title={project.data.title}
