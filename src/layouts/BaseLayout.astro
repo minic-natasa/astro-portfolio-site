@@ -152,21 +152,10 @@ const {
     body::before { animation: none; }
   }
 
-  /* Scroll reveal */
-  .sr {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
+  /* Scroll reveal — initial state set by JS to avoid FOUC */
   .sr.sr-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media (max-width: 768px) {
-    .sr {
-      transform: translateY(10px);
-    }
+    opacity: 1 !important;
+    transform: translateY(0) !important;
   }
 
   @keyframes fade-in {
@@ -186,6 +175,9 @@ const {
 <script>
   // Scroll reveal
   function initScrollReveal() {
+    const isMobile = window.innerWidth <= 768;
+    const translateY = isMobile ? '10px' : '20px';
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -195,7 +187,12 @@ const {
       });
     }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
 
-    document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+    document.querySelectorAll<HTMLElement>('.sr').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = `translateY(${translateY})`;
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
   }
 
   // Text scramble
