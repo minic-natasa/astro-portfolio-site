@@ -165,9 +165,7 @@ const {
 
   @media (max-width: 768px) {
     .sr {
-      opacity: 1;
-      transform: none;
-      transition: none;
+      transform: translateY(10px);
     }
   }
 
@@ -221,8 +219,16 @@ const {
     }, 28);
   }
 
+  function initHaptics() {
+    if (!('vibrate' in navigator)) return;
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('click', () => navigator.vibrate(8));
+    });
+  }
+
   document.addEventListener('astro:page-load', () => {
     initScrollReveal();
+    initHaptics();
     document.querySelectorAll<HTMLElement>('[data-scramble]').forEach(el => {
       setTimeout(() => scramble(el), 120);
     });

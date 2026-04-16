@@ -58,6 +58,7 @@ const role = 'Web Developer';
     ];
 
     let currentIndex = 0;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
     function makeSpans(text: string): HTMLSpanElement[] {
       return text.split('').map(char => {
@@ -94,6 +95,22 @@ const role = 'Web Developer';
       setTimeout(onDone, spans.length * 15 + 450);
     }
 
+    function showPhraseMobile(index: number) {
+      container.style.transition = 'opacity 0.35s ease';
+      container.style.opacity = '0';
+      setTimeout(() => {
+        container.textContent = phrases[index];
+        container.style.opacity = '1';
+        setTimeout(() => {
+          container.style.opacity = '0';
+          setTimeout(() => {
+            currentIndex = (currentIndex + 1) % phrases.length;
+            showPhraseMobile(currentIndex);
+          }, 350);
+        }, 3200);
+      }, 350);
+    }
+
     function showPhrase(index: number) {
       container.innerHTML = '';
       const spans = makeSpans(phrases[index]);
@@ -114,6 +131,10 @@ const role = 'Web Developer';
       }, inDuration + 3000);
     }
 
-    showPhrase(0);
+    if (isMobile) {
+      showPhraseMobile(0);
+    } else {
+      showPhrase(0);
+    }
   });
 </script>
