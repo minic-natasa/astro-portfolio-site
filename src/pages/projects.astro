@@ -20,18 +20,18 @@ const work = (await getCollection('work')).sort((a, b) => {
       <h1 class="text-[28px] font-light tracking-tight mb-8 md:mb-16" data-scramble style="color: var(--text-1);">all work.</h1>
     </div>
 
-    <div class="max-w-5xl mx-auto px-4 md:px-6">
+    <div class="max-w-5xl mx-auto px-0 md:px-6">
       <div class="grid grid-cols-2 md:grid-cols-3">
         {work.map((item, i) => (
           <div
-            class="group sr flex flex-col justify-between pt-6 px-6 pb-4 border-b border-r [&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0 [&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:border-b md:[&:nth-last-child(-n+3)]:border-b-0"
+            class="group sr flex flex-col justify-between pt-6 px-3 md:px-6 pb-4 border-b border-r [&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0 [&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:border-b md:[&:nth-last-child(-n+3)]:border-b-0"
             style={`border-color: var(--border); background-color: var(--bg); transition-delay: ${Math.min(i * 50, 300)}ms;`}
             data-preview-title={!item.data.comingSoon ? item.data.title.replace(/\n/g, ' ') : undefined}
             data-preview-year={!item.data.comingSoon ? item.data.year : undefined}
             data-preview-tags={!item.data.comingSoon ? (item.data.tags ?? []).join(',') : undefined}
             data-preview-img={!item.data.comingSoon ? "" : undefined}
           >
-            <div class="flex items-start justify-between gap-2">
+            <div class="flex items-start justify-between gap-4">
               <h3
                 class="text-[15px] font-normal leading-snug"
                 style={`font-family: 'Zalando Sans Expanded', sans-serif; color: ${item.data.comingSoon ? 'var(--coming-soon)' : 'var(--text-1)'}; white-space: pre-line;`}
@@ -55,10 +55,10 @@ const work = (await getCollection('work')).sort((a, b) => {
             {!item.data.comingSoon && (
               <div class="info-body mt-7 mb-1 opacity-0 md:opacity-0 pointer-events-none md:pointer-events-auto md:group-hover:opacity-100 transition-opacity duration-300">
                 {item.data.tags && item.data.tags.length > 0 && (
-                  <div class="flex gap-1.5 flex-wrap mb-5">
+                  <div class="flex gap-1 md:gap-1.5 flex-wrap mb-5">
                     {item.data.tags.map((tag) => (
                       <span
-                        class="text-xs border px-2 py-0.5 rounded-sm"
+                        class="text-[10px] md:text-xs border px-1.5 md:px-2 py-0.5 rounded-sm"
                         style="color: var(--text-3); border-color: var(--border);"
                       >
                         {tag}
@@ -171,21 +171,21 @@ const work = (await getCollection('work')).sort((a, b) => {
     }
 
     /* Mobile info toggle */
-    .info-toggle {
-      background: transparent;
-      border: none;
-      padding: 2px;
-      cursor: pointer;
-      color: var(--text-3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.2s ease;
-    }
     .info-toggle.is-active {
       color: var(--accent);
     }
     @media (max-width: 767px) {
+      .info-toggle {
+        background: transparent;
+        border: none;
+        padding: 2px;
+        cursor: pointer;
+        color: var(--text-3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
+      }
       .info-body.is-open {
         opacity: 1 !important;
         pointer-events: auto !important;
