@@ -25,11 +25,11 @@ const work = (await getCollection('work')).sort((a, b) => {
         {work.map((item, i) => (
           <div
             class="group sr flex flex-col justify-between p-6 min-h-[140px] border-b border-r [&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0 [&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:border-b md:[&:nth-last-child(-n+3)]:border-b-0"
-            style={`border-color: var(--border); background-color: var(--bg); transition-delay: ${Math.min(i * 50, 300)}ms; opacity: 0;`}
-            data-preview-title={item.data.title.replace(/\n/g, ' ')}
-            data-preview-year={item.data.year}
-            data-preview-tags={(item.data.tags ?? []).join(',')}
-            data-preview-img=""
+            style={`border-color: var(--border); background-color: var(--bg); transition-delay: ${Math.min(i * 50, 300)}ms;`}
+            data-preview-title={!item.data.comingSoon ? item.data.title.replace(/\n/g, ' ') : undefined}
+            data-preview-year={!item.data.comingSoon ? item.data.year : undefined}
+            data-preview-tags={!item.data.comingSoon ? (item.data.tags ?? []).join(',') : undefined}
+            data-preview-img={!item.data.comingSoon ? "" : undefined}
           >
             <div class="flex items-start justify-between gap-2">
               <h3

@@ -875,6 +875,18 @@ const groups: Record<Tab, Group[]> = {
     const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
     const sections = document.querySelectorAll<HTMLElement>('.tab-section');
 
+    function animateSection(el: HTMLElement) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(12px)';
+      el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      });
+    }
+
     // Tab switching
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -884,7 +896,12 @@ const groups: Record<Tab, Group[]> = {
         btn.dataset.active = '';
 
         sections.forEach(s => {
-          s.style.display = s.id === `tab-${target}` ? '' : 'none';
+          if (s.id === `tab-${target}`) {
+            s.style.display = '';
+            animateSection(s);
+          } else {
+            s.style.display = 'none';
+          }
         });
       });
     });
