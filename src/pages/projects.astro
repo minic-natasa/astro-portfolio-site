@@ -20,7 +20,7 @@ const work = (await getCollection('work')).sort((a, b) => {
       <h1 class="text-[28px] font-light tracking-tight mb-8 md:mb-16" data-scramble style="color: var(--text-1);">all work.</h1>
     </div>
 
-    <div class="max-w-5xl mx-auto px-0 md:px-6">
+    <div class="max-w-5xl mx-auto px-6">
       <div class="grid grid-cols-2 md:grid-cols-3">
         {work.map((item, i) => (
           <div
@@ -70,7 +70,7 @@ const work = (await getCollection('work')).sort((a, b) => {
                   {item.data.year && (
                     <span class="text-xs tabular-nums" style="color: var(--text-3);">{item.data.year}</span>
                   )}
-                  <div class="flex flex-col gap-1.5 md:flex-row md:gap-3 md:ml-auto">
+                  <div class="flex flex-row justify-between md:justify-start md:gap-3 md:ml-auto">
                     {item.data.caseStudySlug && (
                       <a href={`/case-studies/${item.data.caseStudySlug}`} class="text-xs link-accent">
                         case study →
@@ -195,15 +195,13 @@ const work = (await getCollection('work')).sort((a, b) => {
 
   <script>
     document.addEventListener('astro:page-load', () => {
-      // Equalize all card heights to the tallest card (desktop only)
-      if (window.innerWidth >= 768) {
-        const grid = document.querySelector<HTMLElement>('.grid.grid-cols-2');
-        if (grid) {
-          const cards = Array.from(grid.children) as HTMLElement[];
-          cards.forEach(c => c.style.minHeight = '');
-          const maxH = Math.max(...cards.map(c => c.offsetHeight));
-          cards.forEach(c => c.style.minHeight = maxH + 'px');
-        }
+      // Equalize all card heights to the tallest card
+      const grid = document.querySelector<HTMLElement>('.grid.grid-cols-2');
+      if (grid) {
+        const cards = Array.from(grid.children) as HTMLElement[];
+        cards.forEach(c => c.style.minHeight = '');
+        const maxH = Math.max(...cards.map(c => c.offsetHeight));
+        cards.forEach(c => c.style.minHeight = maxH + 'px');
       }
 
       // Mobile info toggle
