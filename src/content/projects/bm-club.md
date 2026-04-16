@@ -1,5 +1,6 @@
 ---
 title: Business Makers Club
+displayTitle: BMC
 description: Membership platform for a Serbian entrepreneurial community. Handles member management, event participation, business matchmaking and role-based access across 40+ companies.
 tags: ['Laravel', 'PHP', 'Tailwind CSS', 'MySQL']
 year: 2025

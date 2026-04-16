@@ -26,6 +26,15 @@ const role = 'Web Developer';
     opacity: 1;
     transform: translateY(0);
   }
+
+  @media (max-width: 768px) {
+    .about-enter {
+      transform: none;
+    }
+    .about-enter.is-visible {
+      transform: none;
+    }
+  }
 </style>
 
 <script>

@@ -15,7 +15,7 @@ const { Content } = await project.render();
 ---
 
 <CaseStudyLayout
-  title={project.data.title}
+  title={project.data.displayTitle ?? project.data.title}
   year={project.data.year}
   tags={project.data.tags}
 >
