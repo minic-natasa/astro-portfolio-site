@@ -4,6 +4,7 @@ import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import Navbar from '../components/Navbar.astro';
 import MobileNav from '../components/MobileNav.astro';
+import Cursor from '../components/Cursor.astro';
 
 interface Props {
   title?: string;
@@ -59,6 +60,7 @@ const {
     {showNav && <Navbar />}
     <slot />
     <MobileNav />
+    <Cursor />
     <SpeedInsights />
   </body>
 </html>
@@ -80,6 +82,7 @@ const {
     --selection-text: #F7F6F6;
     --coming-soon: #4A7A9B;
     --coming-soon-border: #1A2D3E;
+    --nav-bg: rgba(24, 24, 24, 0.82);
   }
 
   /* Light theme */
@@ -98,6 +101,7 @@ const {
     --selection-text: #121212;
     --coming-soon: #2E6B9E;
     --coming-soon-border: #C0DCF0;
+    --nav-bg: rgba(247, 246, 246, 0.82);
   }
 
   ::selection {
@@ -119,6 +123,46 @@ const {
     transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
   }
 
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    z-index: 9997;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    opacity: 0.035;
+    animation: grain 0.8s steps(2) infinite;
+  }
+
+  @keyframes grain {
+    0%   { transform: translate(0,    0);  }
+    20%  { transform: translate(-2%,  1%); }
+    40%  { transform: translate(1%,  -2%); }
+    60%  { transform: translate(-1%,  2%); }
+    80%  { transform: translate(2%,  -1%); }
+    100% { transform: translate(0,    0);  }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
+  }
+
+  /* Scroll reveal */
+  .sr {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease !important;
+  }
+  .sr.sr-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   @keyframes fade-in {
     from { opacity: 0; }
   }
@@ -132,3 +176,47 @@ const {
     animation: 350ms ease both fade-in;
   }
 </style>
+
+<script>
+  // Scroll reveal
+  function initScrollReveal() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('sr-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+    document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+  }
+
+  // Text scramble
+  const CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  function scramble(el: HTMLElement) {
+    const original = el.dataset.originalText ?? el.textContent ?? '';
+    el.dataset.originalText = original;
+    let iteration = 0;
+    clearInterval((el as any)._si);
+    (el as any)._si = setInterval(() => {
+      el.textContent = original.split('').map((char, i) => {
+        if (/[^a-zA-Z0-9]/.test(char)) return char;
+        if (i < Math.floor(iteration)) return original[i];
+        return CHARS[Math.floor(Math.random() * CHARS.length)];
+      }).join('');
+      iteration += 0.35;
+      if (iteration > original.length) {
+        el.textContent = original;
+        clearInterval((el as any)._si);
+      }
+    }, 28);
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initScrollReveal();
+    document.querySelectorAll<HTMLElement>('[data-scramble]').forEach(el => {
+      setTimeout(() => scramble(el), 120);
+    });
+  });
+</script>
