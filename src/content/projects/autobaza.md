@@ -2,7 +2,7 @@
 title: Autobaza
 description: Automotive marketplace for buying, selling and bidding on vehicles. Advanced filtering, detailed listings, seller verification and tiered advertising packages.
 tags: ['WordPress', 'Custom Development', 'Marketplace']
-year: 2025
+year: 2024
 featured: true
 ---
 

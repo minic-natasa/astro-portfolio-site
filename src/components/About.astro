@@ -7,11 +7,11 @@ const role = 'Web Developer';
   <h1 class="text-[28px] font-light tracking-tight mb-8 about-enter" style="color: var(--text-1);">hey, i'm naca. i build things for the web.</h1>
 
   <div id="bio-wrapper" class="py-2">
-    <div id="rotating-phrase" class="h-6 overflow-hidden text-base mb-4 about-enter" style="color: var(--text-3); --enter-delay: 120ms;"></div>
-    <p class="text-[18px] leading-relaxed about-enter" style="color: var(--text-2); --enter-delay: 240ms;">
+    <div id="rotating-phrase" class="h-6 overflow-hidden text-base mb-4" style="color: var(--text-3);"></div>
+    <p id="bio-text" class="text-[18px] leading-relaxed" style="color: var(--text-2);">
       detail-obsessed, results-driven and genuinely interested in performance. web metrics, personal growth, all of it. small things compound, so i take them seriously. i also maintain one (1) cat.<!--
       --><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-left:3px;opacity:0.7;"><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.26A9.06 9.06 0 0 1 12 5Z"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/></svg>
-      she ships no features but consistently breaks builds by walking on the keyboard. <a href="/projects" style="color: var(--accent); transition: color 0.2s ease;" onmouseover="this.style.color='var(--accent-h)'" onmouseout="this.style.color='var(--accent)'">the work</a> ships anyway. i made <a href="/cheatsheets" style="color: var(--accent); transition: color 0.2s ease;" onmouseover="this.style.color='var(--accent-h)'" onmouseout="this.style.color='var(--accent)'">cheatsheets</a> to stay ahead of the damage. it works. she does not care.
+      she ships no features but consistently breaks builds by walking on the keyboard. <a href="/projects" class="link-accent">the work</a> ships anyway. i made <a href="/cheatsheets" class="link-accent">cheatsheets</a> to stay ahead of the damage. it works. she does not care.
     </p>
   </div>
 </section>
@@ -38,13 +38,15 @@ const role = 'Web Developer';
 
 <script>
   document.addEventListener('astro:page-load', () => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // h1 entrance
     document.querySelectorAll<HTMLElement>('.about-enter').forEach(el => {
-      const delay = el.style.getPropertyValue('--enter-delay') || '0ms';
-      setTimeout(() => {
-        el.classList.add('is-visible');
-      }, parseInt(delay) || 0);
+      if (reducedMotion) { el.classList.add('is-visible'); return; }
+      setTimeout(() => el.classList.add('is-visible'), 0);
     });
 
+    // ── A: Rotating phrase — blur focus pull ──────────────────────────
     const container = document.getElementById('rotating-phrase');
     if (!container) return;
 
@@ -59,8 +61,13 @@ const role = 'Web Developer';
 
     let currentIndex = 0;
 
-    // hide until first phrase is ready to avoid empty-container flash
-    container.style.opacity = '0';
+    if (reducedMotion) {
+      container.style.opacity = '1';
+    } else {
+      container.style.opacity = '0';
+      container.style.filter = 'blur(8px)';
+      container.style.transition = 'opacity 0.5s ease, filter 0.5s ease';
+    }
 
     function makeSpans(text: string): HTMLSpanElement[] {
       return text.split('').map(char => {
@@ -97,14 +104,27 @@ const role = 'Web Developer';
       setTimeout(onDone, spans.length * 15 + 450);
     }
 
-    function showPhrase(index: number) {
+    function showPhrase(index: number, first = false) {
+      if (reducedMotion) {
+        container.textContent = phrases[index];
+        container.style.opacity = '1';
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % phrases.length;
+          showPhrase(currentIndex);
+        }, 3500);
+        return;
+      }
+
       container.innerHTML = '';
       const spans = makeSpans(phrases[index]);
       spans.forEach(s => container.appendChild(s));
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          container.style.opacity = '1';
+          if (first) {
+            container.style.opacity = '1';
+            container.style.filter = 'blur(0px)';
+          }
           animateIn(spans);
         });
       });
@@ -118,6 +138,67 @@ const role = 'Web Developer';
       }, inDuration + 3000);
     }
 
-    showPhrase(0);
+    setTimeout(() => showPhrase(0, true), reducedMotion ? 0 : 200);
+
+    // ── B: Bio paragraph — word cascade ──────────────────────────────
+    const bio = document.getElementById('bio-text');
+    if (!bio) return;
+
+    if (reducedMotion) return; // skip word cascade, text is already visible
+
+    const wordSpans: HTMLElement[] = [];
+
+    function wrapWords(node: Node): HTMLElement[] {
+      const spans: HTMLElement[] = [];
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent ?? '';
+        const parts = text.split(/(\s+)/);
+        const frag = document.createDocumentFragment();
+        parts.forEach(part => {
+          if (/^\s+$/.test(part) || part === '') {
+            frag.appendChild(document.createTextNode(part));
+          } else {
+            const span = document.createElement('span');
+            span.style.display = 'inline-block';
+            span.style.opacity = '0';
+            span.style.transform = 'translateY(8px)';
+            span.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            span.textContent = part;
+            frag.appendChild(span);
+            spans.push(span);
+          }
+        });
+        node.parentNode?.replaceChild(frag, node);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as HTMLElement;
+        const tag = el.tagName.toLowerCase();
+        if (tag === 'a' || tag === 'svg') {
+          // treat as a single animated unit
+          const wrapper = document.createElement('span');
+          wrapper.style.display = 'inline-block';
+          wrapper.style.opacity = '0';
+          wrapper.style.transform = 'translateY(8px)';
+          wrapper.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+          el.parentNode?.insertBefore(wrapper, el);
+          wrapper.appendChild(el);
+          spans.push(wrapper);
+        } else {
+          const children = Array.from(el.childNodes);
+          children.forEach(child => spans.push(...wrapWords(child)));
+        }
+      }
+      return spans;
+    }
+
+    wordSpans.push(...wrapWords(bio));
+
+    setTimeout(() => {
+      wordSpans.forEach((span, i) => {
+        setTimeout(() => {
+          span.style.opacity = '1';
+          span.style.transform = 'translateY(0)';
+        }, i * 18);
+      });
+    }, 300);
   });
 </script>

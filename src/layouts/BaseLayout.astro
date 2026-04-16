@@ -158,6 +158,26 @@ const {
     transform: translateY(0) !important;
   }
 
+  /* Accessibility: focus-visible ring for keyboard users */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Accent links — hover + focus handled via CSS, no inline handlers */
+  .link-accent {
+    color: var(--accent);
+    transition: color 0.2s ease;
+  }
+  .link-accent:hover,
+  .link-accent:focus-visible {
+    color: var(--accent-h);
+  }
+
   @keyframes fade-in {
     from { opacity: 0; }
   }
@@ -170,11 +190,25 @@ const {
   ::view-transition-new(root) {
     animation: 350ms ease both fade-in;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
 </style>
 
 <script>
   // Scroll reveal
   function initScrollReveal() {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      // just make everything visible immediately
+      document.querySelectorAll<HTMLElement>('.sr').forEach(el => el.classList.add('sr-visible'));
+      return;
+    }
+
     const isMobile = window.innerWidth <= 768;
     const translateY = isMobile ? '10px' : '20px';
 

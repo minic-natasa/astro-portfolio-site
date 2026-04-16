@@ -28,7 +28,7 @@ const links = [
   </div>
 
   <!-- Toggle button -->
-  <button id="mobile-nav-toggle" class="mobile-toggle" aria-label="Toggle navigation">
+  <button id="mobile-nav-toggle" class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav-panel">
     <span class="toggle-icon open-icon">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="2" y="3" width="12" height="1.5" rx="0.75" fill="currentColor"/>
@@ -149,10 +149,14 @@ const links = [
 
     let open = false;
 
+    const panelLinks = panel.querySelectorAll<HTMLElement>('a');
+
     function openMenu() {
       open = true;
       panel.classList.add('open');
       backdrop.style.display = 'block';
+      toggle.setAttribute('aria-expanded', 'true');
+      panelLinks.forEach(l => l.removeAttribute('tabindex'));
       if (openIcon)  openIcon.style.display  = 'none';
       if (closeIcon) closeIcon.style.display = 'flex';
     }
@@ -161,9 +165,14 @@ const links = [
       open = false;
       panel.classList.remove('open');
       backdrop.style.display = 'none';
+      toggle.setAttribute('aria-expanded', 'false');
+      panelLinks.forEach(l => l.setAttribute('tabindex', '-1'));
       if (openIcon)  openIcon.style.display  = 'flex';
       if (closeIcon) closeIcon.style.display = 'none';
     }
+
+    // Initially hide links from tab order
+    panelLinks.forEach(l => l.setAttribute('tabindex', '-1'));
 
     toggle.addEventListener('click', () => open ? closeMenu() : openMenu());
     backdrop.addEventListener('click', closeMenu);

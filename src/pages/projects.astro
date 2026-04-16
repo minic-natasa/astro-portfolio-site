@@ -24,7 +24,7 @@ const work = (await getCollection('work')).sort((a, b) => {
       <div class="grid grid-cols-2 md:grid-cols-3">
         {work.map((item, i) => (
           <div
-            class="group sr flex flex-col justify-between p-6 min-h-[140px] border-b border-r [&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0 [&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:border-b md:[&:nth-last-child(-n+3)]:border-b-0"
+            class="group sr flex flex-col justify-between pt-6 px-6 pb-4 border-b border-r [&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0 [&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:border-b md:[&:nth-last-child(-n+3)]:border-b-0"
             style={`border-color: var(--border); background-color: var(--bg); transition-delay: ${Math.min(i * 50, 300)}ms;`}
             data-preview-title={!item.data.comingSoon ? item.data.title.replace(/\n/g, ' ') : undefined}
             data-preview-year={!item.data.comingSoon ? item.data.year : undefined}
@@ -33,7 +33,7 @@ const work = (await getCollection('work')).sort((a, b) => {
           >
             <div class="flex items-start justify-between gap-2">
               <h3
-                class="text-[18px] font-normal leading-snug"
+                class="text-[15px] font-normal leading-snug"
                 style={`font-family: 'Zalando Sans Expanded', sans-serif; color: ${item.data.comingSoon ? 'var(--coming-soon)' : 'var(--text-1)'}; white-space: pre-line;`}
               >
                 {item.data.title}
@@ -44,9 +44,9 @@ const work = (await getCollection('work')).sort((a, b) => {
             </div>
 
             {!item.data.comingSoon && (
-              <div class="mt-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+              <div class="mt-7 mb-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                 {item.data.tags && item.data.tags.length > 0 && (
-                  <div class="flex gap-1.5 flex-wrap mb-3">
+                  <div class="flex gap-1.5 flex-wrap mb-5">
                     {item.data.tags.map((tag) => (
                       <span
                         class="text-xs border px-2 py-0.5 rounded-sm"
@@ -63,33 +63,17 @@ const work = (await getCollection('work')).sort((a, b) => {
                   )}
                   <div class="flex flex-col gap-1.5 md:flex-row md:gap-3 md:ml-auto">
                     {item.data.caseStudySlug && (
-                      <a
-                        href={`/case-studies/${item.data.caseStudySlug}`}
-                        class="text-xs"
-                        style="color: var(--accent);"
-                      >
+                      <a href={`/case-studies/${item.data.caseStudySlug}`} class="text-xs link-accent">
                         case study →
                       </a>
                     )}
                     {item.data.liveUrl && (
-                      <a
-                        href={item.data.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-xs"
-                        style="color: var(--accent);"
-                      >
+                      <a href={item.data.liveUrl} target="_blank" rel="noopener noreferrer" class="text-xs link-accent">
                         see live ↗
                       </a>
                     )}
                     {item.data.altUrl && (
-                      <a
-                        href={item.data.altUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-xs"
-                        style="color: var(--accent);"
-                      >
+                      <a href={item.data.altUrl} target="_blank" rel="noopener noreferrer" class="text-xs link-accent">
                         {item.data.altLabel ?? 'alt'} ↗
                       </a>
                     )}
@@ -180,6 +164,15 @@ const work = (await getCollection('work')).sort((a, b) => {
 
   <script>
     document.addEventListener('astro:page-load', () => {
+      // Equalize all card heights to the tallest card
+      const grid = document.querySelector<HTMLElement>('.grid.grid-cols-2');
+      if (grid) {
+        const cards = Array.from(grid.children) as HTMLElement[];
+        cards.forEach(c => c.style.minHeight = '');
+        const maxH = Math.max(...cards.map(c => c.offsetHeight));
+        cards.forEach(c => c.style.minHeight = maxH + 'px');
+      }
+
       const preview    = document.getElementById('work-preview');
       const wpTitle    = document.getElementById('wp-title');
       const wpYear     = document.getElementById('wp-year');

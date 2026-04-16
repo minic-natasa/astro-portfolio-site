@@ -19,10 +19,7 @@ const { title, year, tags } = Astro.props;
     <a
       href="/"
       onclick="event.preventDefault(); history.length > 1 ? history.back() : window.location.href = '/'"
-      class="text-sm tracking-wide transition-colors duration-200 mb-8 inline-block cursor-pointer"
-      style="color: var(--accent);"
-      onmouseover="this.style.color='var(--accent-h)'"
-      onmouseout="this.style.color='var(--accent)'"
+      class="back-link text-sm tracking-wide mb-8 inline-block cursor-pointer"
     >
       ← go back
     </a>
@@ -86,6 +83,15 @@ const { title, year, tags } = Astro.props;
       height: 3px;
       transition: none;
     }
+  }
+
+  .back-link {
+    color: var(--accent);
+    transition: color 0.2s ease;
+  }
+  .back-link:hover,
+  .back-link:focus-visible {
+    color: var(--accent-h);
   }
 </style>
 

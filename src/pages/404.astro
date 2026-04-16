@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="404 / naca" description="page not found.">
+  <main class="max-w-2xl mx-auto px-6 pt-4 md:pt-8 pb-24 min-h-[70vh] flex flex-col justify-center">
+    <p class="text-xs uppercase tracking-[0.2em] mb-4" style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent);">404</p>
+    <h1 class="text-[28px] font-light tracking-tight mb-6" data-scramble style="color: var(--text-1);">
+      nothing here.
+    </h1>
+    <p class="text-[18px] leading-relaxed mb-10" style="color: var(--text-2);">
+      whatever you were looking for, it doesn't exist. or it did and i moved it. either way, this isn't it.
+    </p>
+    <a href="/" class="link-accent text-sm" style="font-family: 'Zalando Sans Expanded', sans-serif; letter-spacing: 0.06em;">
+      ← go home
+    </a>
+    <Footer />
+  </main>
+</BaseLayout>

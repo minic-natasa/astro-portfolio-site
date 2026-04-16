@@ -42,17 +42,26 @@ const navItems = [
       ) : (
         <a
           href={item.href}
-          class="nav-item"
+          class="nav-item nav-link"
           data-index={i}
-          style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 16px; color: var(--text-3); transition: color 0.2s ease; opacity: 0;"
-          onmouseover="this.style.color='var(--accent-h)'"
-          onmouseout="this.style.color='var(--text-3)'"
+          style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 16px; opacity: 0;"
         >{item.label}</a>
       )
     ))}
   </div>
 
 </nav>
+
+<style>
+  .nav-link {
+    color: var(--text-3);
+    transition: color 0.2s ease;
+  }
+  .nav-link:hover,
+  .nav-link:focus-visible {
+    color: var(--accent-h);
+  }
+</style>
 
 <script>
   function updateIcon() {
