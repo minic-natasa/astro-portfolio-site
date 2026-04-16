@@ -41,10 +41,19 @@ const work = (await getCollection('work')).sort((a, b) => {
               {item.data.comingSoon && (
                 <span class="text-xs border px-2 py-0.5 rounded-sm shrink-0 mt-0.5" style="color: var(--coming-soon); border-color: var(--coming-soon-border);">soon</span>
               )}
+              {!item.data.comingSoon && (
+                <button class="info-toggle md:hidden shrink-0 mt-0.5" aria-label="Show project details" aria-expanded="false">
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="1.1"/>
+                    <line x1="7.5" y1="7" x2="7.5" y2="10.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+                    <circle cx="7.5" cy="4.8" r="0.65" fill="currentColor"/>
+                  </svg>
+                </button>
+              )}
             </div>
 
             {!item.data.comingSoon && (
-              <div class="mt-7 mb-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+              <div class="info-body mt-7 mb-1 opacity-0 md:opacity-0 pointer-events-none md:pointer-events-auto md:group-hover:opacity-100 transition-opacity duration-300">
                 {item.data.tags && item.data.tags.length > 0 && (
                   <div class="flex gap-1.5 flex-wrap mb-5">
                     {item.data.tags.map((tag) => (
@@ -160,18 +169,56 @@ const work = (await getCollection('work')).sort((a, b) => {
     @media (max-width: 768px) {
       #work-preview { display: none; }
     }
+
+    /* Mobile info toggle */
+    .info-toggle {
+      background: transparent;
+      border: none;
+      padding: 2px;
+      cursor: pointer;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease;
+    }
+    .info-toggle.is-active {
+      color: var(--accent);
+    }
+    @media (max-width: 767px) {
+      .info-body.is-open {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+    }
   </style>
 
   <script>
     document.addEventListener('astro:page-load', () => {
-      // Equalize all card heights to the tallest card
-      const grid = document.querySelector<HTMLElement>('.grid.grid-cols-2');
-      if (grid) {
-        const cards = Array.from(grid.children) as HTMLElement[];
-        cards.forEach(c => c.style.minHeight = '');
-        const maxH = Math.max(...cards.map(c => c.offsetHeight));
-        cards.forEach(c => c.style.minHeight = maxH + 'px');
+      // Equalize all card heights to the tallest card (desktop only)
+      if (window.innerWidth >= 768) {
+        const grid = document.querySelector<HTMLElement>('.grid.grid-cols-2');
+        if (grid) {
+          const cards = Array.from(grid.children) as HTMLElement[];
+          cards.forEach(c => c.style.minHeight = '');
+          const maxH = Math.max(...cards.map(c => c.offsetHeight));
+          cards.forEach(c => c.style.minHeight = maxH + 'px');
+        }
       }
+
+      // Mobile info toggle
+      document.querySelectorAll<HTMLElement>('.info-toggle').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = btn.closest<HTMLElement>('[data-preview-title]');
+          if (!card) return;
+          const body = card.querySelector<HTMLElement>('.info-body');
+          if (!body) return;
+          const isOpen = body.classList.toggle('is-open');
+          btn.classList.toggle('is-active', isOpen);
+          btn.setAttribute('aria-expanded', String(isOpen));
+        });
+      });
 
       const preview    = document.getElementById('work-preview');
       const wpTitle    = document.getElementById('wp-title');
