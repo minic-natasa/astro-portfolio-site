@@ -13,7 +13,7 @@ interface Props {
 
 const {
   title = 'naca',
-  description = 'Web developer portfolio of Nataša Minić — building fast, clean, and maintainable things for the web.',
+  description = 'portfolio of Nataša Minić, web developer. fast, clean and maintainable. the kind of work that holds up.',
   showNav = true,
 } = Astro.props;
 ---
@@ -35,17 +35,17 @@ const {
       document.documentElement.classList.add(theme);
     </script>
 
+    <meta name="author" content="Nataša Minić" />
+
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/og-image.png" />
 
     <!-- Twitter / X -->
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="/og-image.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
