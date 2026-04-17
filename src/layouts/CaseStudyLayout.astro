@@ -21,7 +21,7 @@ const { title, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, 
 <BaseLayout title={`${title} / naca`}>
   <div id="reading-progress" aria-hidden="true"></div>
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
-  <main class="max-w-2xl mx-auto px-6 pt-4 md:pt-6 flex-1">
+  <main class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-6 flex-1">
     <a
       href="/"
       onclick="event.preventDefault(); history.length > 1 ? history.back() : window.location.href = '/'"

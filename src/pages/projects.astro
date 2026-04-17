@@ -197,12 +197,16 @@ const work = (await getCollection('work')).sort((a, b) => {
     document.addEventListener('astro:page-load', () => {
       // Equalize all card heights to the tallest card
       const grid = document.querySelector<HTMLElement>('.grid.grid-cols-2');
-      if (grid) {
+      function equalizeCards() {
+        if (!grid) return;
         const cards = Array.from(grid.children) as HTMLElement[];
         cards.forEach(c => c.style.minHeight = '');
         const maxH = Math.max(...cards.map(c => c.offsetHeight));
         cards.forEach(c => c.style.minHeight = maxH + 'px');
       }
+      equalizeCards();
+      const ro = new ResizeObserver(equalizeCards);
+      if (grid) ro.observe(grid);
 
       // Mobile info toggle
       document.querySelectorAll<HTMLElement>('.info-toggle').forEach(btn => {
