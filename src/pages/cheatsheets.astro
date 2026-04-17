@@ -129,20 +129,20 @@ el.dataset.userId = "99";
 
   // ─── CSS ────────────────────────────────────────────────────────────────
 
-  cssCenter: `/* flex — my personal favourite */
+  cssCenter: `/* flex. my personal favourite */
 .parent {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* grid — one line shorter */
+/* grid. one line shorter */
 .parent {
   display: grid;
   place-items: center;
 }
 
-/* absolute — the classic, still works */
+/* absolute. the classic, still works */
 .parent { position: relative; }
 .child {
   position: absolute;
@@ -204,7 +204,7 @@ el.dataset.userId = "99";
   grid-row: 1 / -1;         /* first to last row */
 }
 
-/* responsive auto-fill — no media queries needed */
+/* responsive auto-fill. no media queries needed */
 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));`,
 
   cssVars: `:root {
@@ -228,7 +228,7 @@ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));`,
   margin: calc(var(--spacing-md) * 2);
 }
 
-/* scoped override — only affects .card and its children */
+/* scoped override. only affects .card and its children */
 .card {
   --color-primary: hotpink;
 }
@@ -250,7 +250,7 @@ const val = getComputedStyle(document.documentElement)
 /* desktop first (the other way) */
 @media (max-width: 767px) { /* mobile only */ }
 
-/* user preferences — use these more */
+/* user preferences. use these more */
 @media (prefers-color-scheme: dark)  { }
 @media (prefers-color-scheme: light) { }
 
@@ -267,7 +267,7 @@ const val = getComputedStyle(document.documentElement)
 /* print */
 @media print { .no-print { display: none; } }`,
 
-  cssPseudo: `/* links — order matters: LVHA */
+  cssPseudo: `/* links. order matters: LVHA */
 a:link    { }  /* unvisited */
 a:visited { }
 a:hover   { }
@@ -292,7 +292,7 @@ li:nth-child(2n)    { }  /* even items */
 li:nth-child(3n+1)  { }  /* every 3rd, starting at 1 */
 li:nth-last-child(1){ }  /* last, counted from end */
 
-/* logic — the good stuff */
+/* logic. the good stuff */
 p:not(.special)          { }  /* negate */
 :is(h1, h2, h3)          { }  /* match any */
 :where(h1, h2, h3)       { }  /* like :is but zero specificity */
@@ -302,11 +302,11 @@ div:has(img.hero)        { }  /* has a matching descendant */`,
   // ─── JS ─────────────────────────────────────────────────────────────────
 
   jsArrays: `const nums   = [1, 2, 3, 4, 5];
-const people = [{ name: 'naca', age: 28 }, { name: 'bob', age: 25 }];
+const people = [{ name: 'naca', age: 28 }, { name: 'kiki', age: 5 }];
 
 // transform every item
 nums.map(n => n * 2);                        // [2, 4, 6, 8, 10]
-people.map(p => p.name);                     // ['naca', 'bob']
+people.map(p => p.name);                     // ['naca', 'kiki']
 
 // keep matching items
 nums.filter(n => n > 2);                     // [3, 4, 5]
@@ -357,7 +357,7 @@ const res = await fetch('/api/submit', {
 });
 const result = await res.json();
 
-// parallel — both start at the same time
+// parallel. both start at the same time
 const [users, posts] = await Promise.all([
   fetch('/api/users').then(r => r.json()),
   fetch('/api/posts').then(r => r.json()),
@@ -366,7 +366,7 @@ const [users, posts] = await Promise.all([
 // first to resolve wins
 const fastest = await Promise.race([slowFetch(), fastFetch()]);
 
-// all settle — doesn't short-circuit on error
+// all settle. doesn't short-circuit on error
 const results = await Promise.allSettled([p1, p2, p3]);
 results.forEach(r => {
   if (r.status === 'fulfilled') console.log(r.value);
@@ -446,7 +446,7 @@ const withExtra = [...arr, newItem, ...more];
 // copy object (shallow)
 const clone = { ...obj };
 
-// merge objects — last key wins on conflict
+// merge objects. last key wins on conflict
 const config  = { ...defaults, ...overrides };
 const updated = { ...user, role: 'admin' };  // override one field
 
@@ -566,7 +566,7 @@ $(document).ready(fn);   // or just: $(fn)
 // run only once
 $('.btn').one('click', fn);
 
-// delegated — works on elements added dynamically
+// delegated. works on elements added dynamically
 $(document).on('click', '.dynamic-btn', function() { ... });
 $('.list').on('click', 'li', function() { ... });
 
@@ -635,7 +635,7 @@ const groups: Record<Tab, Group[]> = {
     },
     {
       title: 'tags you always forget exist',
-      note: 'details, dialog, figure, mark, progress — all real, all useful, all underused',
+      note: 'details, dialog, figure, mark, progress. all real, all useful, all underused.',
       code: snippets.htmlForget,
     },
     {
@@ -667,12 +667,12 @@ const groups: Record<Tab, Group[]> = {
     },
     {
       title: 'media queries',
-      note: 'responsive design. plus dark mode, print, and reduced motion — use all of them.',
+      note: 'responsive design. plus dark mode, print, and reduced motion. use all of them.',
       code: snippets.cssMedia,
     },
     {
       title: 'pseudo-class starter pack',
-      note: ':hover :nth-child :not :has :is :where — all the colons you need',
+      note: ':hover :nth-child :not :has :is :where. all the colons you need.',
       code: snippets.cssPseudo,
     },
   ],
@@ -684,7 +684,7 @@ const groups: Record<Tab, Group[]> = {
     },
     {
       title: 'async / await',
-      note: 'promises were a mistake. this is better. fetch, parallel, settle — all here.',
+      note: 'promises were a mistake. this is better. fetch, parallel, settle. all here.',
       code: snippets.jsAsync,
     },
     {
@@ -716,7 +716,7 @@ const groups: Record<Tab, Group[]> = {
     },
     {
       title: 'events',
-      note: '.on() .off() .trigger() — simple, consistent, still decent',
+      note: '.on() .off() .trigger(). simple, consistent, still decent.',
       code: snippets.jqEvents,
     },
     {
@@ -730,7 +730,7 @@ const groups: Record<Tab, Group[]> = {
 
 <BaseLayout title="cheatsheets / naca" description="HTML, CSS, JS and jQuery cheatsheets. The stuff I always google, now in one place.">
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }]} />
-  <main class="max-w-2xl mx-auto px-6 pt-4 md:pt-8 pb-24">
+  <main class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-8 flex-1">
 
     <!-- Header -->
     <section class="mb-12">
@@ -744,7 +744,7 @@ const groups: Record<Tab, Group[]> = {
     </section>
 
     <!-- Sticky tab bar -->
-    <div class="tab-bar sticky top-0 z-10 py-4 -mx-6 px-6" style="background: var(--bg); border-bottom: 1px solid var(--border);">
+    <div class="tab-bar sticky top-0 z-10 py-4" style="background: var(--bg); border-bottom: 1px solid var(--border);">
       <div class="flex items-center gap-6">
         {tabs.map((tab, i) => (
           <button
@@ -768,7 +768,8 @@ const groups: Record<Tab, Group[]> = {
             <p class="text-sm leading-relaxed" style="color: var(--text-3);">
               because jQuery is on roughly{' '}
               <span style="color: var(--text-2);">78% of all websites on earth.</span>{' '}
-              knowing it is not embarrassing. it's practical.
+              knowing it is not embarrassing.
+              <br />it's practical.
             </p>
           </div>
         )}
@@ -785,7 +786,7 @@ const groups: Record<Tab, Group[]> = {
               <p class="text-sm mt-1.5" style="color: var(--text-3);">{group.note}</p>
               <div class="code-wrapper relative mt-4">
                 <button class="copy-btn" style="font-family: 'Zalando Sans Expanded', sans-serif;">copy</button>
-                <pre class="cheat-pre"><code class="cheat-code">{group.code}</code></pre>
+                <pre class="cheat-pre" style="display:block;width:100%;box-sizing:border-box;"><code class="cheat-code">{group.code}</code></pre>
               </div>
             </div>
           </div>
@@ -796,10 +797,42 @@ const groups: Record<Tab, Group[]> = {
 
     <Footer />
   </main>
+
+  <button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    ↑
+  </button>
 </BaseLayout>
 
 <style>
-  /* Tab buttons */
+  #back-to-top {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 40;
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  #back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #back-to-top:hover {
+    color: var(--accent);
+    border-color: var(--border-h);
+  }
+
   .tab-btn {
     font-size: 15px;
     color: var(--text-3);
@@ -817,7 +850,6 @@ const groups: Record<Tab, Group[]> = {
     color: var(--text-1);
   }
 
-  /* Code blocks */
   .cheat-pre {
     margin: 0;
     padding: 1.25rem 1.25rem 1.25rem 1rem;
@@ -826,6 +858,8 @@ const groups: Record<Tab, Group[]> = {
     border-radius: 4px;
     overflow-x: auto;
     tab-size: 2;
+    width: 100%;
+    box-sizing: border-box;
   }
   .cheat-code {
     font-family: 'Fira Code', 'Cascadia Code', ui-monospace, 'Menlo', monospace;
@@ -835,7 +869,6 @@ const groups: Record<Tab, Group[]> = {
     white-space: pre;
   }
 
-  /* Copy button */
   .copy-btn {
     position: absolute;
     top: 0.6rem;
@@ -862,8 +895,12 @@ const groups: Record<Tab, Group[]> = {
     color: var(--accent-h);
     border-color: var(--accent-h);
   }
+  .copy-btn.error {
+    opacity: 1;
+    color: #e05c5c;
+    border-color: #e05c5c;
+  }
 
-  /* Sticky tab bar blur effect */
   .tab-bar {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -874,6 +911,9 @@ const groups: Record<Tab, Group[]> = {
   function initCheatsheets() {
     const tabBtns = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
     const sections = document.querySelectorAll<HTMLElement>('.tab-section');
+
+    const tabBar = document.querySelector<HTMLElement>('.tab-bar');
+    const scrollTarget = tabBar ? tabBar.getBoundingClientRect().top + window.scrollY : 0;
 
     function animateSection(el: HTMLElement) {
       el.style.opacity = '0';
@@ -887,7 +927,6 @@ const groups: Record<Tab, Group[]> = {
       });
     }
 
-    // Tab switching
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const target = btn.dataset.tab;
@@ -903,10 +942,11 @@ const groups: Record<Tab, Group[]> = {
             s.style.display = 'none';
           }
         });
+
+        window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
       });
     });
 
-    // Copy buttons
     document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const wrapper = btn.closest('.code-wrapper');
@@ -920,10 +960,25 @@ const groups: Record<Tab, Group[]> = {
             btn.textContent = 'copy';
             btn.classList.remove('copied');
           }, 1500);
+        }).catch(() => {
+          btn.textContent = 'failed';
+          btn.classList.add('error');
+          setTimeout(() => {
+            btn.textContent = 'copy';
+            btn.classList.remove('error');
+          }, 1500);
         });
       });
     });
   }
 
-  document.addEventListener('astro:page-load', initCheatsheets);
+  document.addEventListener('astro:page-load', () => {
+    initCheatsheets();
+    const btn = document.getElementById('back-to-top');
+    if (btn) {
+      window.addEventListener('scroll', () => {
+        btn.classList.toggle('visible', window.scrollY > 400);
+      }, { passive: true });
+    }
+  });
 </script>

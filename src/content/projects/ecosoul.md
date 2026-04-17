@@ -1,7 +1,7 @@
 ---
 title: ECOSOUL
 description: Complete redesign and platform migration for a Serbian natural health supplements brand. Rebuilt on WordPress with WooCommerce, card payments, Mailchimp and analytics set up from scratch.
-tags: ['WordPress', 'WooCommerce', 'JavaScript', 'Mailchimp']
+tags: ['WooCommerce', 'Mailchimp', 'GA4', 'GSC', 'Card Payments', 'Google Business']
 year: 2024
 liveUrl: 'https://ecosoul.rs/'
 featured: true

@@ -15,7 +15,7 @@ const work = (await getCollection('work')).sort((a, b) => {
 
 <BaseLayout title="projects / naca">
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
-  <main class="pt-4 md:pt-8 pb-24">
+  <main class="pt-4 md:pt-8 flex-1">
     <div class="max-w-2xl mx-auto px-6">
       <h1 class="text-[28px] font-light tracking-tight mb-8 md:mb-16" data-scramble style="color: var(--text-1);">all work.</h1>
     </div>
@@ -42,7 +42,7 @@ const work = (await getCollection('work')).sort((a, b) => {
                 <span class="text-xs border px-2 py-0.5 rounded-sm shrink-0 mt-0.5" style="color: var(--coming-soon); border-color: var(--coming-soon-border);">soon</span>
               )}
               {!item.data.comingSoon && (
-                <button class="info-toggle md:hidden shrink-0 mt-0.5" aria-label="Show project details" aria-expanded="false">
+                <button class="info-toggle md:hidden shrink-0 mt-0.5" aria-label="Show project details" aria-expanded="false" aria-controls={`info-body-${item.id}`}>
                   <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="1.1"/>
                     <line x1="7.5" y1="7" x2="7.5" y2="10.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
@@ -53,7 +53,7 @@ const work = (await getCollection('work')).sort((a, b) => {
             </div>
 
             {!item.data.comingSoon && (
-              <div class="info-body mt-7 mb-1 opacity-0 md:opacity-0 pointer-events-none md:pointer-events-auto md:group-hover:opacity-100 transition-opacity duration-300">
+              <div id={`info-body-${item.id}`} class="info-body mt-7 mb-1 opacity-0 md:opacity-0 pointer-events-none md:pointer-events-auto md:group-hover:opacity-100 transition-opacity duration-300">
                 {item.data.tags && item.data.tags.length > 0 && (
                   <div class="flex gap-1 md:gap-1.5 flex-wrap mb-5">
                     {item.data.tags.map((tag) => (
@@ -68,7 +68,7 @@ const work = (await getCollection('work')).sort((a, b) => {
                 )}
                 <div class="flex flex-col gap-1.5 md:flex-row md:items-center md:justify-between md:gap-0">
                   {item.data.year && (
-                    <span class="text-xs tabular-nums" style="color: var(--text-3);">{item.data.year}</span>
+                    <time class="text-xs tabular-nums" datetime={String(item.data.year)} style="color: var(--text-3);">{item.data.year}</time>
                   )}
                   <div class="flex flex-row justify-between md:justify-start md:gap-3 md:ml-auto">
                     {item.data.caseStudySlug && (
@@ -115,7 +115,7 @@ const work = (await getCollection('work')).sort((a, b) => {
     #work-preview {
       position: fixed;
       pointer-events: none;
-      z-index: 200;
+      z-index: 60;
       background: var(--bg);
       border: 1px solid var(--border-h);
       border-radius: 4px;
