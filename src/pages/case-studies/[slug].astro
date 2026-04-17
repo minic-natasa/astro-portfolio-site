@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await project.render();
-const wordCount = project.body.split(/\s+/).filter(Boolean).length;
+const wordCount = (project.body ?? '').split(/\s+/).filter(Boolean).length;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
 const order = ['serbia-inspire', 'bm-club', 'ecosoul', 'autobaza', 'omoda-espana'];
