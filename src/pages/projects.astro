@@ -29,7 +29,7 @@ const work = (await getCollection('work')).sort((a, b) => {
             data-preview-title={!item.data.comingSoon ? item.data.title.replace(/\n/g, ' ') : undefined}
             data-preview-year={!item.data.comingSoon ? item.data.year : undefined}
             data-preview-tags={!item.data.comingSoon ? (item.data.tags ?? []).join(',') : undefined}
-            data-preview-img={!item.data.comingSoon ? "" : undefined}
+            data-preview-img={!item.data.comingSoon ? (item.data.image ?? "") : undefined}
           >
             <div class="flex items-start justify-between gap-4">
               <h3

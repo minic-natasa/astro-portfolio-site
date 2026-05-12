@@ -25,6 +25,7 @@ const work = defineCollection({
     altLabel: z.string().optional(),
     comingSoon: z.boolean().optional().default(false),
     caseStudySlug: z.string().optional(),
+    image: z.string().optional(),
   }),
 });
 
