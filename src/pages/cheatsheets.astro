@@ -730,7 +730,7 @@ const groups: Record<Tab, Group[]> = {
 
 <BaseLayout title="cheatsheets / naca" description="HTML, CSS, JS and jQuery cheatsheets. The stuff I always google, now in one place.">
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }]} />
-  <main class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-8 flex-1">
+  <main class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-8 flex-1 flex flex-col">
 
     <!-- Header -->
     <section class="mb-12">
@@ -742,6 +742,21 @@ const groups: Record<Tab, Group[]> = {
         <br /><span style="color: var(--text-3);">use freely. judge silently.</span>
       </p>
     </section>
+
+    <!-- Search -->
+    <div class="mb-6">
+      <div class="search-field">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="cheat-search" type="search" placeholder="search snippets" autocomplete="off" spellcheck="false" />
+        <button id="search-clear" class="search-clear" aria-label="Clear search" style="display:none;">×</button>
+      </div>
+      <div id="search-pills" class="search-pills" style="display:none;">
+        {tabs.map(tab => (
+          <button class="pill-btn" data-pill={tab} data-active="">{tab}</button>
+        ))}
+      </div>
+      <p id="search-status"></p>
+    </div>
 
     <!-- Sticky tab bar -->
     <div class="tab-bar sticky top-0 z-10 py-4" style="background: var(--bg); border-bottom: 1px solid var(--border);">
@@ -760,6 +775,10 @@ const groups: Record<Tab, Group[]> = {
     </div>
 
     <!-- Sections -->
+    <div class="flex-1">
+    <div id="no-results-msg" style="display:none; padding-top: 3rem; color: var(--text-3); font-size: 13px; font-family: 'Zalando Sans Expanded', sans-serif; letter-spacing: 0.04em;">
+      kiki (the cat) has no idea what you're looking for.<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-left:4px;opacity:0.7;"><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.26A9.06 9.06 0 0 1 12 5Z"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/></svg>
+    </div>
     {tabs.map((tab, tabIdx) => (
       <div id={`tab-${tab}`} class="tab-section" style={tabIdx > 0 ? 'display:none' : ''}>
 
@@ -775,15 +794,15 @@ const groups: Record<Tab, Group[]> = {
         )}
 
         {groups[tab].map((group, i) => (
-          <div class={i > 0 ? 'border-t' : 'pt-6'} style="border-color: var(--border);">
+          <div class={i > 0 ? 'border-t' : 'pt-6'} style="border-color: var(--border);" data-group data-tab-name={tab}>
             <div class="py-8">
               <p
-                class="text-xs uppercase tracking-[0.2em]"
+                class="group-title text-xs uppercase tracking-[0.2em]"
                 style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent);"
               >
                 {group.title}
               </p>
-              <p class="text-sm mt-1.5" style="color: var(--text-3);">{group.note}</p>
+              <p class="group-note text-sm mt-1.5" style="color: var(--text-3);">{group.note}</p>
               <div class="code-wrapper relative mt-4">
                 <button class="copy-btn" style="font-family: 'Zalando Sans Expanded', sans-serif;">copy</button>
                 <pre class="cheat-pre" style="display:block;width:100%;box-sizing:border-box;"><code class="cheat-code">{group.code}</code></pre>
@@ -794,6 +813,7 @@ const groups: Record<Tab, Group[]> = {
 
       </div>
     ))}
+    </div>
 
     <Footer />
   </main>
@@ -905,6 +925,102 @@ const groups: Record<Tab, Group[]> = {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
+
+  .search-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    color: var(--text-3);
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+  #cheat-search {
+    width: 100%;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.6rem 2.25rem 0.6rem 2.25rem;
+    font-size: 13px;
+    font-family: 'Zalando Sans Expanded', sans-serif;
+    letter-spacing: 0.03em;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 0.2s ease;
+    -webkit-appearance: none;
+  }
+  #cheat-search::placeholder { color: var(--text-3); }
+  #cheat-search:focus { border-color: var(--border-h); }
+  #cheat-search::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  .search-clear {
+    position: absolute;
+    right: 0.6rem;
+    background: none;
+    border: none;
+    color: var(--text-3);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 4px;
+    transition: color 0.2s ease;
+  }
+  .search-clear:hover { color: var(--text-1); }
+
+  .search-pills {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .pill-btn {
+    font-family: 'Zalando Sans Expanded', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .pill-btn[data-active] {
+    color: var(--accent);
+    border-color: var(--accent-d);
+    background: var(--accent-d);
+  }
+  .pill-btn:not([data-active]):hover {
+    border-color: var(--border-h);
+    color: var(--text-2);
+  }
+  .pill-btn[data-disabled] {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .pill-btn[data-disabled]:hover {
+    border-color: var(--border);
+    color: var(--text-3);
+  }
+
+  #search-status {
+    font-size: 11px;
+    font-family: 'Zalando Sans Expanded', sans-serif;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-top: 0.5rem;
+    min-height: 1rem;
+  }
+  .search-hl {
+    background: var(--accent-d);
+    color: var(--accent-h);
+    font-style: normal;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
 </style>
 
 <script>
@@ -914,6 +1030,7 @@ const groups: Record<Tab, Group[]> = {
 
     const tabBar = document.querySelector<HTMLElement>('.tab-bar');
     const scrollTarget = tabBar ? tabBar.getBoundingClientRect().top + window.scrollY : 0;
+    let currentTab = document.querySelector<HTMLButtonElement>('.tab-btn[data-active]')?.dataset.tab ?? tabs[0];
 
     function animateSection(el: HTMLElement) {
       el.style.opacity = '0';
@@ -927,21 +1044,191 @@ const groups: Record<Tab, Group[]> = {
       });
     }
 
+    // ── Search ─────────────────────────────────────────────────────────────
+    const searchInput   = document.getElementById('cheat-search') as HTMLInputElement | null;
+    const searchClear   = document.getElementById('search-clear') as HTMLButtonElement | null;
+    const searchPills   = document.getElementById('search-pills');
+    const searchStatus  = document.getElementById('search-status');
+    const noResultsMsg  = document.getElementById('no-results-msg');
+    const tabBarEl      = document.querySelector<HTMLElement>('.tab-bar');
+    const allGroups     = document.querySelectorAll<HTMLElement>('[data-group]');
+    const pillBtns      = document.querySelectorAll<HTMLButtonElement>('.pill-btn');
+
+    function esc(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+    function highlight(text: string, q: string) {
+      return text.replace(new RegExp(esc(q), 'gi'), m =>
+        `<mark style="background:var(--accent-d);color:var(--accent-h);border-radius:2px;padding:0 2px;font-style:normal;">${m}</mark>`
+      );
+    }
+    function activePills() {
+      return [...pillBtns].filter(b => b.hasAttribute('data-active')).map(b => b.dataset.pill ?? '');
+    }
+    function restoreGroup(g: HTMLElement) {
+      const t = g.querySelector<HTMLElement>('.group-title');
+      const n = g.querySelector<HTMLElement>('.group-note');
+      const c = g.querySelector<HTMLElement>('.cheat-code');
+      if (t?.dataset.orig) { t.innerHTML = t.dataset.orig; delete t.dataset.orig; }
+      if (n?.dataset.orig) { n.innerHTML = n.dataset.orig; delete n.dataset.orig; }
+      if (c?.dataset.orig) { c.innerHTML = c.dataset.orig; delete c.dataset.orig; }
+    }
+
+    function clearSearch() {
+      allGroups.forEach(g => { g.style.display = ''; g.style.borderTop = ''; g.style.paddingTop = ''; restoreGroup(g); });
+      sections.forEach(s => { s.style.display = s.id === `tab-${currentTab}` ? '' : 'none'; });
+      tabBtns.forEach(b => { if (b.dataset.tab === currentTab) b.setAttribute('data-active', ''); else delete b.dataset.active; });
+      if (searchStatus) searchStatus.innerHTML = '';
+      if (noResultsMsg) noResultsMsg.style.display = 'none';
+      if (searchPills)  searchPills.style.display = 'none';
+      if (searchClear)  searchClear.style.display = 'none';
+      if (tabBarEl)     tabBarEl.style.display = '';
+      pillBtns.forEach(b => { b.setAttribute('data-active', ''); b.removeAttribute('data-disabled'); });
+    }
+
+    let lastAllCounts: Record<string, number> = {};
+
+    function applyFilter(raw: string, query: string) {
+      const scope  = activePills();
+      const counts: Record<string, number> = {};
+
+      sections.forEach(s => {
+        const name = s.id.replace('tab-', '');
+        s.style.display = scope.includes(name) ? '' : 'none';
+      });
+
+      allGroups.forEach(g => {
+        const tab = g.dataset.tabName ?? '';
+        if (!scope.includes(tab)) { g.style.display = 'none'; restoreGroup(g); return; }
+
+        const titleEl = g.querySelector<HTMLElement>('.group-title');
+        const noteEl  = g.querySelector<HTMLElement>('.group-note');
+        const codeEl  = g.querySelector<HTMLElement>('.cheat-code');
+        const hits = [titleEl, noteEl, codeEl].some(el => el?.textContent?.toLowerCase().includes(query));
+
+        if (hits) {
+          g.style.display = '';
+          g.style.borderTop = 'none';
+          g.style.paddingTop = '0';
+          counts[tab] = (counts[tab] ?? 0) + 1;
+          if (titleEl) {
+            if (!titleEl.dataset.orig) titleEl.dataset.orig = titleEl.innerHTML;
+            titleEl.innerHTML = highlight(titleEl.dataset.orig, raw);
+          }
+          if (noteEl) {
+            if (!noteEl.dataset.orig) noteEl.dataset.orig = noteEl.innerHTML;
+            noteEl.innerHTML = highlight(noteEl.dataset.orig, raw);
+          }
+          if (codeEl) {
+            if (!codeEl.dataset.orig) codeEl.dataset.orig = codeEl.innerHTML;
+            codeEl.innerHTML = highlight(codeEl.dataset.orig, raw);
+          }
+        } else {
+          g.style.display = 'none';
+          restoreGroup(g);
+        }
+      });
+
+      sections.forEach(s => {
+        const name = s.id.replace('tab-', '');
+        if (scope.includes(name) && !counts[name]) s.style.display = 'none';
+      });
+
+      const total = Object.values(counts).reduce((a, b) => a + b, 0);
+      if (noResultsMsg) noResultsMsg.style.display = total === 0 ? '' : 'none';
+      if (searchStatus) {
+        if (total === 0) {
+          searchStatus.innerHTML = '';
+        } else {
+          const parts = Object.entries(counts).map(([t, n]) => `${t} ${n}`);
+          searchStatus.textContent = `${total} result${total !== 1 ? 's' : ''}. ${parts.join(', ')}`;
+        }
+      }
+    }
+
+    function runSearch() {
+      const raw   = searchInput?.value.trim() ?? '';
+      const query = raw.toLowerCase();
+      if (!query) { clearSearch(); return; }
+
+      if (searchPills) searchPills.style.display = 'flex';
+      if (searchClear) searchClear.style.display = '';
+      if (tabBarEl)    tabBarEl.style.display = 'none';
+      tabBtns.forEach(b => delete b.dataset.active);
+
+      // Pass 1: count matches across ALL tabs
+      lastAllCounts = {};
+      allGroups.forEach(g => {
+        const tab = g.dataset.tabName ?? '';
+        const hits = ['.group-title', '.group-note', '.cheat-code'].some(sel =>
+          g.querySelector(sel)?.textContent?.toLowerCase().includes(query)
+        );
+        if (hits) lastAllCounts[tab] = (lastAllCounts[tab] ?? 0) + 1;
+      });
+
+      // Auto-set pills: active only if tab has results, disabled if not
+      pillBtns.forEach(b => {
+        if (lastAllCounts[b.dataset.pill ?? '']) {
+          b.setAttribute('data-active', '');
+          b.removeAttribute('data-disabled');
+        } else {
+          b.removeAttribute('data-active');
+          b.setAttribute('data-disabled', '');
+        }
+      });
+
+      applyFilter(raw, query);
+    }
+
+    searchInput?.addEventListener('input', runSearch);
+
+    pillBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pill = btn.dataset.pill ?? '';
+        if (!lastAllCounts[pill]) return; // no results in this tab, ignore click
+        const active = activePills();
+        if (btn.hasAttribute('data-active') && active.length > 1) {
+          btn.removeAttribute('data-active');
+        } else if (!btn.hasAttribute('data-active')) {
+          btn.setAttribute('data-active', '');
+        }
+        const raw = searchInput?.value.trim() ?? '';
+        applyFilter(raw, raw.toLowerCase());
+      });
+    });
+
+    searchClear?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      clearSearch();
+      searchInput?.focus();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.activeElement === searchInput) {
+        if (searchInput) searchInput.value = '';
+        clearSearch();
+        searchInput?.blur();
+      }
+    });
+
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        const target = btn.dataset.tab;
-
+        const target = btn.dataset.tab ?? '';
+        currentTab = target;
         tabBtns.forEach(b => delete b.dataset.active);
         btn.dataset.active = '';
 
-        sections.forEach(s => {
-          if (s.id === `tab-${target}`) {
-            s.style.display = '';
-            animateSection(s);
-          } else {
-            s.style.display = 'none';
-          }
-        });
+        if (searchInput?.value.trim()) {
+          // scope pills to this tab only and re-run
+          pillBtns.forEach(b => {
+            if (b.dataset.pill === target) b.setAttribute('data-active', '');
+            else b.removeAttribute('data-active');
+          });
+          runSearch();
+        } else {
+          sections.forEach(s => {
+            if (s.id === `tab-${target}`) { s.style.display = ''; animateSection(s); }
+            else s.style.display = 'none';
+          });
+        }
 
         window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
       });
