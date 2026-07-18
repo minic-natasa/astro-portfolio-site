@@ -27,9 +27,12 @@ const linkedin = 'https://www.linkedin.com/in/natasa-minic/';
       </svg>
     </a>
   </div>
-  <a href="/log" class="flex items-center gap-1.5 link-accent">
-    <span style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.08em;">log</span>
-    <span class="text-xs shrink-0">→</span>
-  </a>
+  {/* log hidden for v1 launch — restore this link and rename src/pages/_log back to log to re-enable */}
+  {false && (
+    <a href="/log" class="flex items-center gap-1.5 link-accent">
+      <span style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.08em;">log</span>
+      <span class="text-xs shrink-0">→</span>
+    </a>
+  )}
   </div>
 </footer>
