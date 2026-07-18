@@ -1,9 +1,13 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import Navbar from '../components/Navbar.astro';
 import MobileNav from '../components/MobileNav.astro';
+import '@fontsource-variable/onest';
+import '@fontsource-variable/zalando-sans-expanded';
+import onestWoff2 from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
+import zalandoWoff2 from '@fontsource-variable/zalando-sans-expanded/files/zalando-sans-expanded-latin-wght-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -26,6 +30,8 @@ const {
     <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#181818" />
 
     <!-- Prevent theme flash -->
     <script is:inline>
@@ -33,6 +39,8 @@ const {
       const theme = saved ?? 'dark';
       document.documentElement.classList.remove('dark', 'light');
       document.documentElement.classList.add(theme);
+      const tc = document.querySelector('meta[name="theme-color"]');
+      if (tc) tc.setAttribute('content', theme === 'dark' ? '#181818' : '#F7F6F6');
     </script>
 
     <meta name="author" content="Nataša Minić" />
@@ -49,16 +57,14 @@ const {
     <meta property="og:image:height" content="630" />
 
     <!-- Twitter / X -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL('/og-image.png', Astro.site).href} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Onest:wght@100..900&family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap"
-      rel="stylesheet"
-    />
+
+    <!-- Self-hosted fonts (fontsource) — preload the latin variable files -->
+    <link rel="preload" as="font" type="font/woff2" href={onestWoff2} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={zalandoWoff2} crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Person",
@@ -72,9 +78,10 @@ const {
       ]
     })} />
     <Analytics />
-    <ViewTransitions />
+    <ClientRouter />
   </head>
-  <body style="background-color: var(--bg); color: var(--text-1); font-family: 'Onest', system-ui, sans-serif; font-weight: 300;" class="antialiased min-h-screen flex flex-col">
+  <body style="background-color: var(--bg); color: var(--text-1); font-family: var(--font-sans); font-weight: 300;" class="antialiased min-h-screen flex flex-col">
+    <a href="#main" class="skip-link">skip to content</a>
     {showNav && <Navbar />}
     <slot />
     <MobileNav />
@@ -83,6 +90,11 @@ const {
 </html>
 
 <style is:global>
+  :root {
+    --font-sans: 'Onest Variable', system-ui, sans-serif;
+    --font-display: 'Zalando Sans Expanded Variable', sans-serif;
+  }
+
   /* Dark theme (default) */
   html.dark {
     --bg: #181818;
@@ -113,7 +125,7 @@ const {
     --accent-d: #D0E4F0;
     --border: #D9D9D9;
     --border-h: #C0C0C4;
-    --code-bg: #FFFFFF;
+    --code-bg: #EDECEA;
     --selection-bg: #D0E4F0;
     --selection-text: #121212;
     --coming-soon: #2E6B9E;
@@ -131,13 +143,39 @@ const {
   }
 
   h1 {
-    font-family: 'Zalando Sans Expanded', sans-serif;
+    font-family: var(--font-display);
   }
 
   *, *::before, *::after {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+  }
+
+  /* Theme cross-fade — only while the toggle flips the theme, so hovers and
+     repaints elsewhere stay instant */
+  html.theme-switching *,
+  html.theme-switching *::before,
+  html.theme-switching *::after {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease !important;
+  }
+
+  /* Skip link — hidden until keyboard focus */
+  .skip-link {
+    position: fixed;
+    top: -100%;
+    left: 1rem;
+    z-index: 9999;
+    padding: 0.5rem 0.9rem;
+    background: var(--bg);
+    color: var(--accent);
+    border: 1px solid var(--border-h);
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: var(--font-display);
+    letter-spacing: 0.04em;
+  }
+  .skip-link:focus {
+    top: 1rem;
   }
 
   /* Grain overlay */
@@ -167,6 +205,11 @@ const {
   }
 
   @media (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
+  }
+
+  /* Static grain on mobile — the animated 200% layer costs GPU/battery there */
+  @media (max-width: 768px) {
     body::before { animation: none; }
   }
 
@@ -214,6 +257,19 @@ const {
     ::view-transition-new(root) {
       animation: none;
     }
+  }
+
+  /* Shiki dual-theme syntax highlighting */
+  html.dark .astro-code  { background-color: var(--code-bg) !important; }
+  html.light .astro-code { background-color: var(--code-bg) !important; }
+
+  html.dark .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: transparent !important;
+  }
+  html.light .astro-code span {
+    color: var(--shiki-light) !important;
+    background-color: transparent !important;
   }
 </style>
 

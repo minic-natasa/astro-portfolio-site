@@ -1,0 +1,82 @@
+---
+const PASSWORD = 'kikikraljica';
+---
+
+<div id="log-gate" class="log-gate">
+  <div class="log-gate-box">
+    <p style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 300; color: var(--text-1);">this part's private</p>
+    <p class="text-sm mt-1 mb-5" style="color: var(--text-3);">enter the password to continue.</p>
+    <form id="log-gate-form" class="flex gap-2">
+      <input
+        id="log-gate-input"
+        type="password"
+        placeholder="password"
+        autocomplete="off"
+        class="flex-1 text-sm px-3 py-2 rounded-sm border"
+        style="background: var(--bg); color: var(--text-1); border-color: var(--border);"
+      />
+      <button
+        type="submit"
+        class="text-sm px-3 py-2 rounded-sm border link-accent"
+        style="border-color: var(--border);"
+      >enter</button>
+    </form>
+    <p id="log-gate-error" class="text-xs mt-3 hidden" style="color: #C0524B;">wrong password.</p>
+  </div>
+</div>
+
+<div id="log-content" style="display:none;">
+  <slot />
+</div>
+
+<style>
+  .log-gate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+  }
+
+  .log-gate-box {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+  }
+
+  .log-gate-box form {
+    text-align: left;
+  }
+</style>
+
+<script define:vars={{ PASSWORD }}>
+  document.addEventListener('astro:page-load', () => {
+    const gate    = document.getElementById('log-gate');
+    const content = document.getElementById('log-content');
+    const form    = document.getElementById('log-gate-form');
+    const input   = document.getElementById('log-gate-input');
+    const error   = document.getElementById('log-gate-error');
+    if (!gate || !content || !form || !input) return;
+
+    function unlock() {
+      gate.style.display    = 'none';
+      content.style.display = '';
+    }
+
+    if (localStorage.getItem('log-unlocked') === 'true') {
+      unlock();
+      return;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value === PASSWORD) {
+        localStorage.setItem('log-unlocked', 'true');
+        unlock();
+      } else {
+        error?.classList.remove('hidden');
+        input.value = '';
+        input.focus();
+      }
+    });
+  });
+</script>

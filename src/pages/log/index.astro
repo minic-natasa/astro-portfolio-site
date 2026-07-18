@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Footer from '../../components/Footer.astro';
+import SideNav from '../../components/SideNav.astro';
+import LogGate from '../../components/LogGate.astro';
+
+const entries = (await getCollection('log'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const categories = [...new Set(entries.map(e => e.data.category))].sort();
+
+function formatDate(d: Date) {
+  return d.toISOString().slice(0, 10);
+}
+---
+
+<BaseLayout title="log / naca" description="dev notes, things I learned, tips worth writing down.">
+  <SideNav links={[
+    { href: '/',            label: 'home'        },
+    { href: '/projects',    label: 'projects'    },
+    { href: '/cheatsheets', label: 'cheatsheets' },
+  ]} />
+
+  <main id="main" tabindex="-1" class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-8 flex-1 flex flex-col">
+    <LogGate>
+    <div class="flex-1">
+
+      <div class="sr mb-10">
+        <h1 data-scramble style="font-family: var(--font-display); font-size: 1.75rem; font-weight: 300; color: var(--text-1);">log</h1>
+        <p class="text-sm mt-2" style="color: var(--text-3);">things i learned, noticed, or want to remember. no structure, no schedule.</p>
+      </div>
+
+      <!-- category filters -->
+      <div id="filter-bar" class="flex flex-wrap gap-2 mb-6">
+        <button
+          class="filter-pill active text-xs border px-2 py-0.5 rounded-sm"
+          data-cat="all"
+          style="color: var(--text-1); border-color: var(--border-h); cursor: pointer; background: none;"
+        >all</button>
+        {categories.map(cat => (
+          <button
+            class="filter-pill text-xs border px-2 py-0.5 rounded-sm"
+            data-cat={cat}
+            style="color: var(--text-3); border-color: var(--border); cursor: pointer; background: none;"
+          >{cat}</button>
+        ))}
+      </div>
+
+      <div id="entries-list" class="border-t" style="border-color: var(--border);">
+        {entries.map((entry, i) => (
+          <a
+            href={`/log/${entry.slug}`}
+            class="sr log-entry flex flex-col gap-1 py-3 border-b group"
+            data-cat={entry.data.category}
+            style={`border-color: var(--border); transition-delay: ${i * 60}ms;`}
+          >
+            <div class="flex items-center gap-2">
+              <time
+                class="text-xs tabular-nums shrink-0"
+                datetime={entry.data.date.toISOString()}
+                style="color: var(--text-3); font-family: monospace;"
+              >{formatDate(entry.data.date)}</time>
+              <span class="text-xs border px-2 py-0.5 rounded-sm shrink-0" style="color: var(--text-3); border-color: var(--border);">{entry.data.category}</span>
+            </div>
+            <div class="flex items-baseline justify-between gap-4">
+              <span class="text-sm" style="color: var(--text-1);">{entry.data.title}</span>
+              <span class="text-xs shrink-0 link-accent">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <p id="no-results" class="text-sm mt-8 hidden" style="color: var(--text-3);">nothing in this category yet.</p>
+
+    </div>
+
+    <Footer />
+    </LogGate>
+  </main>
+</BaseLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const pills   = document.querySelectorAll<HTMLElement>('.filter-pill');
+    const entries = document.querySelectorAll<HTMLElement>('.log-entry');
+    const noRes   = document.getElementById('no-results');
+    let active    = 'all';
+
+    function setActive(cat: string) {
+      active = cat;
+
+      pills.forEach(p => {
+        const isActive = p.dataset.cat === cat;
+        p.style.color       = isActive ? 'var(--text-1)'   : 'var(--text-3)';
+        p.style.borderColor = isActive ? 'var(--border-h)' : 'var(--border)';
+      });
+
+      let visible = 0;
+      entries.forEach(entry => {
+        const show = cat === 'all' || entry.dataset.cat === cat;
+        entry.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      if (noRes) noRes.classList.toggle('hidden', visible > 0);
+    }
+
+    pills.forEach(p => {
+      p.addEventListener('click', () => setActive(p.dataset.cat ?? 'all'));
+    });
+  });
+</script>

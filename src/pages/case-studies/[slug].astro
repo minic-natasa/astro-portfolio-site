@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro';
+import { imageForSlug } from '../../lib/images';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -26,10 +27,17 @@ const allProjects = (await getCollection('projects'))
 const idx = allProjects.findIndex(p => p.slug === project.slug);
 const prevProject = idx > 0 ? allProjects[idx - 1] : null;
 const nextProject = idx < allProjects.length - 1 ? allProjects[idx + 1] : null;
+
+const work = await getCollection('work');
+// ecosoul's only available image is thumbnail-res and looks soft blown up full-width —
+// hold the placeholder here until a proper hero screenshot exists
+const heroImage = project.slug === 'ecosoul' ? undefined : imageForSlug(work, project.slug);
 ---
 
 <CaseStudyLayout
   title={project.data.displayTitle ?? project.data.title}
+  slug={project.slug}
+  image={heroImage}
   year={project.data.year}
   tags={project.data.tags}
   liveUrl={project.data.liveUrl}

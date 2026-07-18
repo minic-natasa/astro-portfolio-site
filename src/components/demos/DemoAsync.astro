@@ -1,0 +1,133 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="async" class="as">
+
+    <div class="demo-row">
+      <span class="demo-row-label">try / catch</span>
+      <button class="demo-pill as-run" data-mode="resolve">await it</button>
+      <button class="demo-pill as-run" data-mode="reject">make it fail</button>
+    </div>
+    <div class="demo-readout as-status" aria-live="polite">a fake request. 800ms. no network was harmed.</div>
+
+    <div class="as-bars" aria-hidden="true">
+      <div class="as-bar" style="--d: 400ms"><i></i><span>400ms</span></div>
+      <div class="as-bar" style="--d: 800ms"><i></i><span>800ms</span></div>
+      <div class="as-bar" style="--d: 1200ms"><i></i><span>1200ms</span></div>
+    </div>
+    <div class="demo-row">
+      <span class="demo-row-label">combinators</span>
+      <button class="demo-pill as-combo" data-mode="all">Promise.all</button>
+      <button class="demo-pill as-combo" data-mode="race">Promise.race</button>
+    </div>
+    <div class="demo-readout as-combo-status" aria-live="polite">three promises, three speeds. race them or wait for all.</div>
+
+  </div>
+</DemoPanel>
+
+<style>
+  .as-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-top: 1.1rem;
+  }
+  .as-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .as-bar i {
+    display: block;
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--code-bg);
+    overflow: hidden;
+    position: relative;
+  }
+  .as-bar i::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 0;
+    background: var(--accent);
+    transition: width var(--d) linear;
+  }
+  .as-bar.go i::after { width: 100%; }
+  .as-bar span {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    min-width: 44px;
+    text-align: right;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .as-bar i::after { transition: none; }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-demo="async"]');
+    if (!root) return;
+
+    // ── try/catch on a fake request ─────────────────────────────────────
+    const status = root.querySelector<HTMLElement>('.as-status');
+    const fake = (fail: boolean) =>
+      new Promise((resolve, reject) => {
+        setTimeout(() => (fail ? reject(new Error('nope')) : resolve({ ok: true })), 800);
+      });
+
+    root.querySelectorAll<HTMLButtonElement>('.as-run').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const fail = btn.dataset.mode === 'reject';
+        root.querySelectorAll<HTMLButtonElement>('.as-run').forEach(b => (b.disabled = true));
+        if (status) status.textContent = 'awaiting… (800ms)';
+        try {
+          const res = await fake(fail);
+          if (status) status.textContent = `✓ resolved: ${JSON.stringify(res)}`;
+        } catch (err) {
+          if (status) status.textContent = `✗ caught: Error: ${(err as Error).message}`;
+        } finally {
+          root.querySelectorAll<HTMLButtonElement>('.as-run').forEach(b => (b.disabled = false));
+        }
+      });
+    });
+
+    // ── Promise.all vs Promise.race ─────────────────────────────────────
+    const comboStatus = root.querySelector<HTMLElement>('.as-combo-status');
+    const bars = root.querySelectorAll<HTMLElement>('.as-bar');
+    const delays = [400, 800, 1200];
+
+    root.querySelectorAll<HTMLButtonElement>('.as-combo').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const mode = btn.dataset.mode === 'race' ? 'race' : 'all';
+        root.querySelectorAll<HTMLButtonElement>('.as-combo').forEach(b => (b.disabled = true));
+
+        // reset bars, force reflow so the transition restarts
+        bars.forEach(b => b.classList.remove('go'));
+        void root.offsetWidth;
+        bars.forEach(b => b.classList.add('go'));
+
+        const promises = delays.map(d => new Promise(r => setTimeout(() => r(d), d)));
+        if (comboStatus) comboStatus.textContent = `Promise.${mode}(…) pending…`;
+        const t0 = performance.now();
+        await (mode === 'race' ? Promise.race(promises) : Promise.all(promises));
+        const ms = Math.round(performance.now() - t0);
+        if (comboStatus) {
+          comboStatus.textContent =
+            mode === 'race'
+              ? `Promise.race → settled after ~${ms}ms. first one wins, the rest keep running.`
+              : `Promise.all → settled after ~${ms}ms. waits for the slowest.`;
+        }
+
+        setTimeout(() => {
+          root.querySelectorAll<HTMLButtonElement>('.as-combo').forEach(b => (b.disabled = false));
+        }, Math.max(0, 1200 - ms));
+      });
+    });
+  });
+</script>

@@ -1,0 +1,75 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="dataattrs">
+    <div class="da-box" data-role="user" data-is-active="true">
+      <span class="da-box-text">the div in question</span>
+    </div>
+
+    <div class="demo-row" data-attr="role">
+      <span class="demo-row-label">data-role</span>
+      <button class="demo-pill" data-value="user" data-active aria-pressed="true">user</button>
+      <button class="demo-pill" data-value="admin" aria-pressed="false">admin</button>
+    </div>
+    <div class="demo-row" data-attr="isActive">
+      <span class="demo-row-label">data-is-active</span>
+      <button class="demo-pill" data-value="true" data-active aria-pressed="true">true</button>
+      <button class="demo-pill" data-value="false" aria-pressed="false">false</button>
+    </div>
+
+    <div class="demo-readout da-readout" aria-live="polite"></div>
+  </div>
+</DemoPanel>
+
+<style>
+  .da-box {
+    border: 1px solid var(--border-h);
+    border-radius: 4px;
+    padding: 1rem;
+    transition: border-color 0.25s ease, opacity 0.25s ease;
+  }
+  .da-box-text {
+    font-size: 13px;
+    color: var(--text-2);
+  }
+
+  /* css reacting to data attributes — exactly what the snippet promises */
+  .da-box[data-role='admin'] { border-color: #b08d2f; }
+  .da-box[data-is-active='false'] { opacity: 0.4; }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-demo="dataattrs"]');
+    if (!root) return;
+    const box = root.querySelector<HTMLElement>('.da-box');
+    const readout = root.querySelector<HTMLElement>('.da-readout');
+    if (!box || !readout) return;
+
+    function render() {
+      readout.textContent =
+        `el.dataset.role      // "${box!.dataset.role}"\n` +
+        `el.dataset.isActive  // "${box!.dataset.isActive}"`;
+    }
+
+    root.querySelectorAll<HTMLElement>('.demo-row[data-attr]').forEach(row => {
+      const attr = row.dataset.attr ?? '';
+      row.querySelectorAll<HTMLButtonElement>('.demo-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          row.querySelectorAll('.demo-pill').forEach(b => {
+            b.removeAttribute('data-active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.setAttribute('data-active', '');
+          btn.setAttribute('aria-pressed', 'true');
+          box.dataset[attr] = btn.dataset.value ?? '';
+          render();
+        });
+      });
+    });
+
+    render();
+  });
+</script>

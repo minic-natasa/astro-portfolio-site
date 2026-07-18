@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Footer from '../components/Footer.astro';
 import SideNav from '../components/SideNav.astro';
+import WorkPreview from '../components/WorkPreview.astro';
 
 const work = (await getCollection('work')).sort((a, b) => {
   if (a.data.comingSoon && !b.data.comingSoon) return 1;
@@ -11,20 +12,45 @@ const work = (await getCollection('work')).sort((a, b) => {
   if (yearDiff !== 0) return yearDiff;
   return a.data.title.localeCompare(b.data.title);
 });
+
+// Exact per-item border removal (last column / last row of each breakpoint's
+// grid), computed from the real item count instead of nth-child(3n) math —
+// that assumes the total is divisible by the column count, which breaks the
+// grid lines whenever it isn't.
+function gridBorderClasses(index: number, total: number) {
+  const pos = index + 1;
+  const mobileCols = 2, desktopCols = 3;
+  const mobileLastRowStart  = (Math.ceil(total / mobileCols)  - 1) * mobileCols  + 1;
+  const desktopLastRowStart = (Math.ceil(total / desktopCols) - 1) * desktopCols + 1;
+
+  const mobileNoRight  = pos % mobileCols === 0  || pos === total;
+  const mobileNoBottom = pos >= mobileLastRowStart;
+  const desktopNoRight  = pos % desktopCols === 0 || pos === total;
+  const desktopNoBottom = pos >= desktopLastRowStart;
+
+  const right = mobileNoRight
+    ? (desktopNoRight ? 'border-r-0' : 'border-r-0 md:border-r')
+    : (desktopNoRight ? 'md:border-r-0' : '');
+  const bottom = mobileNoBottom
+    ? (desktopNoBottom ? 'border-b-0' : 'border-b-0 md:border-b')
+    : (desktopNoBottom ? 'md:border-b-0' : '');
+
+  return [right, bottom].filter(Boolean).join(' ');
+}
 ---
 
 <BaseLayout title="projects / naca">
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
-  <main class="pt-4 md:pt-8 flex-1">
+  <main id="main" tabindex="-1" class="pt-4 md:pt-8 flex-1">
     <div class="max-w-2xl mx-auto px-6">
       <h1 class="text-[28px] font-light tracking-tight mb-8 md:mb-16" data-scramble style="color: var(--text-1);">all work.</h1>
     </div>
 
     <div class="max-w-5xl mx-auto px-6">
-      <div class="grid grid-cols-2 md:grid-cols-3">
+      <div class="grid grid-cols-2 md:grid-cols-3 auto-rows-fr">
         {work.map((item, i) => (
           <div
-            class="group sr flex flex-col justify-between pt-6 px-3 md:px-6 pb-4 border-b border-r [&:nth-child(2n)]:border-r-0 md:[&:nth-child(2n)]:border-r md:[&:nth-child(3n)]:border-r-0 [&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:border-b md:[&:nth-last-child(-n+3)]:border-b-0"
+            class={`group sr flex flex-col justify-between pt-6 px-3 md:px-6 pb-4 border-b border-r ${gridBorderClasses(i, work.length)}`}
             style={`border-color: var(--border); background-color: var(--bg); transition-delay: ${Math.min(i * 50, 300)}ms;`}
             data-preview-title={!item.data.comingSoon ? item.data.title.replace(/\n/g, ' ') : undefined}
             data-preview-year={!item.data.comingSoon ? item.data.year : undefined}
@@ -34,7 +60,7 @@ const work = (await getCollection('work')).sort((a, b) => {
             <div class="flex items-start justify-between gap-4">
               <h3
                 class="text-[15px] font-normal leading-snug"
-                style={`font-family: 'Zalando Sans Expanded', sans-serif; color: ${item.data.comingSoon ? 'var(--coming-soon)' : 'var(--text-1)'}; white-space: pre-line;`}
+                style={`font-family: var(--font-display); color: ${item.data.comingSoon ? 'var(--coming-soon)' : 'var(--text-1)'}; white-space: pre-line;`}
               >
                 {item.data.title}
               </h3>
@@ -101,75 +127,9 @@ const work = (await getCollection('work')).sort((a, b) => {
   </main>
 
   <!-- Hover preview -->
-  <div id="work-preview" aria-hidden="true">
-    <div id="wp-image">
-      <span id="wp-image-label"></span>
-    </div>
-    <div id="wp-meta">
-      <p id="wp-title"></p>
-      <p id="wp-year"></p>
-    </div>
-  </div>
+  <WorkPreview />
 
   <style>
-    #work-preview {
-      position: fixed;
-      pointer-events: none;
-      z-index: 60;
-      background: var(--bg);
-      border: 1px solid var(--border-h);
-      border-radius: 4px;
-      width: 220px;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(6px) scale(0.97);
-      transition: opacity 0.18s ease, transform 0.18s ease;
-    }
-    #work-preview.is-visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-    #wp-image {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    #wp-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    #wp-image-label {
-      font-family: 'Zalando Sans Expanded', sans-serif;
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      color: var(--text-3);
-    }
-    #wp-meta {
-      padding: 10px 12px;
-    }
-    #wp-title {
-      font-family: 'Zalando Sans Expanded', sans-serif;
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--text-1);
-      line-height: 1.4;
-    }
-    #wp-year {
-      font-size: 11px;
-      color: var(--text-3);
-      margin-top: 3px;
-      font-variant-numeric: tabular-nums;
-    }
-    @media (max-width: 768px) {
-      #work-preview { display: none; }
-    }
-
     /* Mobile info toggle */
     .info-toggle.is-active {
       color: var(--accent);
@@ -195,19 +155,6 @@ const work = (await getCollection('work')).sort((a, b) => {
 
   <script>
     document.addEventListener('astro:page-load', () => {
-      // Equalize all card heights to the tallest card
-      const grid = document.querySelector<HTMLElement>('.grid.grid-cols-2');
-      function equalizeCards() {
-        if (!grid) return;
-        const cards = Array.from(grid.children) as HTMLElement[];
-        cards.forEach(c => c.style.minHeight = '');
-        const maxH = Math.max(...cards.map(c => c.offsetHeight));
-        cards.forEach(c => c.style.minHeight = maxH + 'px');
-      }
-      equalizeCards();
-      const ro = new ResizeObserver(equalizeCards);
-      if (grid) ro.observe(grid);
-
       // Mobile info toggle
       document.querySelectorAll<HTMLElement>('.info-toggle').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -219,62 +166,6 @@ const work = (await getCollection('work')).sort((a, b) => {
           const isOpen = body.classList.toggle('is-open');
           btn.classList.toggle('is-active', isOpen);
           btn.setAttribute('aria-expanded', String(isOpen));
-        });
-      });
-
-      const preview    = document.getElementById('work-preview');
-      const wpTitle    = document.getElementById('wp-title');
-      const wpYear     = document.getElementById('wp-year');
-      const wpImage    = document.getElementById('wp-image');
-      const wpImageLbl = document.getElementById('wp-image-label');
-      if (!preview || !wpTitle || !wpYear || !wpImage || !wpImageLbl) return;
-      if (!window.matchMedia('(hover: hover)').matches) return;
-
-      let cursorX = 0, cursorY = 0;
-
-      document.addEventListener('mousemove', (e) => {
-        cursorX = e.clientX;
-        cursorY = e.clientY;
-        if (preview.classList.contains('is-visible')) {
-          const x = Math.min(cursorX + 20, window.innerWidth - 240);
-          const y = Math.max(cursorY - preview.offsetHeight - 12, 10);
-          preview.style.left = x + 'px';
-          preview.style.top  = y + 'px';
-        }
-      });
-
-      document.querySelectorAll<HTMLElement>('[data-preview-title]').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-          const title   = card.dataset.previewTitle ?? '';
-          const year    = card.dataset.previewYear  ?? '';
-          const imgSrc  = card.dataset.previewImg   ?? '';
-
-          wpTitle.textContent = title;
-          wpYear.textContent  = year;
-
-          // Image or placeholder
-          const existing = wpImage.querySelector('img');
-          if (existing) existing.remove();
-          if (imgSrc) {
-            const img = document.createElement('img');
-            img.src = imgSrc;
-            img.alt = title;
-            wpImage.insertBefore(img, wpImageLbl);
-            wpImageLbl.style.display = 'none';
-          } else {
-            wpImageLbl.textContent = title;
-            wpImageLbl.style.display = '';
-          }
-
-          const x = Math.min(cursorX + 20, window.innerWidth - 240);
-          const y = Math.max(cursorY - preview.offsetHeight - 12, 10);
-          preview.style.left = x + 'px';
-          preview.style.top  = y + 'px';
-          preview.classList.add('is-visible');
-        });
-
-        card.addEventListener('mouseleave', () => {
-          preview.classList.remove('is-visible');
         });
       });
     });

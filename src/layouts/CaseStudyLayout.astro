@@ -5,6 +5,8 @@ import SideNav from '../components/SideNav.astro';
 
 interface Props {
   title: string;
+  slug?: string;
+  image?: string;
   year: number;
   tags: string[];
   liveUrl?: string;
@@ -15,16 +17,16 @@ interface Props {
   nextTitle?: string;
 }
 
-const { title, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.props;
+const { title, slug, image, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.props;
 ---
 
 <BaseLayout title={`${title} / naca`}>
   <div id="reading-progress" aria-hidden="true"></div>
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
-  <main class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-6 flex-1">
+  <main id="main" tabindex="-1" class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-6 flex-1">
     <a
       href="/"
-      onclick="event.preventDefault(); history.length > 1 ? history.back() : window.location.href = '/'"
+      id="back-link"
       class="back-link text-sm tracking-wide mb-8 inline-block cursor-pointer"
     >
       ← go back
@@ -32,7 +34,7 @@ const { title, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, 
 
     <article>
       <header class="mb-12">
-        <h1 class="text-[28px] font-light tracking-tight mb-3" data-scramble style="color: var(--text-1);">{title}</h1>
+        <h1 class="text-[28px] font-light tracking-tight mb-3" style="color: var(--text-1);" transition:name={slug ? `cs-title-${slug}` : undefined}>{title}</h1>
         <div class="flex items-center gap-4 flex-wrap">
           <time class="text-base" datetime={String(year)} style="color: var(--text-3);">{year}</time>
           {readingTime && (
@@ -51,9 +53,22 @@ const { title, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, 
         </div>
       </header>
 
-      <div class="w-full rounded-sm mb-12 overflow-hidden" style="aspect-ratio: 16/9; background: var(--border); display: flex; align-items: center; justify-content: center;">
-        <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 12px; letter-spacing: 0.1em; color: var(--text-3);">hero screenshot</span>
-      </div>
+      {image ? (
+        <div class="w-full rounded-sm mb-12 overflow-hidden" style="aspect-ratio: 16/9; background: var(--border);">
+          <img
+            src={image}
+            alt={`${title} screenshot`}
+            width="1280"
+            height="720"
+            fetchpriority="high"
+            style="width: 100%; height: 100%; object-fit: cover; display: block;"
+          />
+        </div>
+      ) : (
+        <div class="w-full rounded-sm mb-12 overflow-hidden" style="aspect-ratio: 16/9; background: var(--border); display: flex; align-items: center; justify-content: center;">
+          <span style="font-family: var(--font-display); font-size: 12px; letter-spacing: 0.1em; color: var(--text-3);">hero screenshot</span>
+        </div>
+      )}
 
       <div class="prose prose-base max-w-none"
         style="
@@ -118,6 +133,17 @@ const { title, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, 
     }
   }
 
+  /* Case study body sections — fade/rise in as they scroll into view */
+  .cs-reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .cs-reveal.cs-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .back-link {
     color: var(--accent);
     transition: color 0.2s ease;
@@ -129,7 +155,52 @@ const { title, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, 
 </style>
 
 <script>
+  function initSectionReveal() {
+    const prose = document.querySelector<HTMLElement>('.prose');
+    if (!prose) return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Group direct children into per-section wrappers, split at each <h2>
+    const children = Array.from(prose.children) as HTMLElement[];
+    let current: HTMLElement | null = null;
+    const sections: HTMLElement[] = [];
+    children.forEach(child => {
+      if (child.tagName === 'H2' || !current) {
+        current = document.createElement('div');
+        current.className = 'cs-reveal';
+        prose.insertBefore(current, child);
+        sections.push(current);
+      }
+      current!.appendChild(child);
+    });
+
+    if (reducedMotion) {
+      sections.forEach(s => s.classList.add('cs-reveal-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('cs-reveal-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  }
+
   document.addEventListener('astro:page-load', () => {
+    const back = document.getElementById('back-link');
+    back?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (history.length > 1) history.back();
+      else window.location.href = '/';
+    });
+
+    initSectionReveal();
+
     const bar = document.getElementById('reading-progress');
     if (!bar) return;
     function update() {
@@ -146,7 +217,7 @@ const { title, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, 
   .prose h2,
   .prose h3,
   .prose h4 {
-    font-family: 'Zalando Sans Expanded', sans-serif;
+    font-family: var(--font-display);
     font-weight: 300;
   }
 

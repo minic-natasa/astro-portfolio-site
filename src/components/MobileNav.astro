@@ -4,11 +4,13 @@ const isHome        = currentPath === '/';
 const isProjects    = currentPath.startsWith('/projects');
 const isCheatsheets = currentPath.startsWith('/cheatsheets');
 const isCaseStudy   = currentPath.startsWith('/case-studies');
+const isLog         = currentPath.startsWith('/log');
 
 const links = [
   { href: '/',            label: 'home',        active: isHome        },
   { href: '/projects',    label: 'projects',    active: isProjects    },
   { href: '/cheatsheets', label: 'cheatsheets', active: isCheatsheets },
+  { href: '/log',         label: 'log',         active: isLog         },
 ];
 ---
 
@@ -20,7 +22,7 @@ const links = [
   <div id="mobile-nav-panel" class="mobile-panel">
     {links.map(link => (
       link.active ? (
-        <span class="mobile-link active">{link.label}</span>
+        <span class="mobile-link active" aria-current="page">{link.label}</span>
       ) : (
         <a href={link.href} class="mobile-link">{link.label}</a>
       )
@@ -83,7 +85,7 @@ const links = [
     }
 
     .mobile-link {
-      font-family: 'Zalando Sans Expanded', sans-serif;
+      font-family: var(--font-display);
       font-size: 13px;
       letter-spacing: 0.08em;
       padding: 0.5rem 1rem;

@@ -1,0 +1,81 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <form data-demo="forms" class="fm">
+    <label class="fm-field">
+      <span class="fm-lab">name (required)</span>
+      <input type="text" name="name" placeholder="..." required />
+    </label>
+    <label class="fm-field">
+      <span class="fm-lab">email</span>
+      <input type="email" name="email" placeholder="you@example.com" required />
+    </label>
+    <div class="fm-actions">
+      <button type="submit" class="demo-pill">send it</button>
+      <button type="reset" class="demo-pill">never mind</button>
+    </div>
+    <p class="fm-status demo-readout" aria-live="polite">submit empty or with a broken email — the browser complains, not my code.</p>
+  </form>
+</DemoPanel>
+
+<style>
+  .fm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .fm-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .fm-lab {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .fm input {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 0.2s ease;
+    -webkit-appearance: none;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 320px;
+  }
+  .fm input:focus { border-color: var(--border-h); }
+  .fm input::placeholder { color: var(--text-3); }
+
+  /* only complains after you've actually touched the field */
+  .fm input:user-invalid { border-color: #C0524B; }
+  .fm input:user-valid   { border-color: var(--accent-d); }
+
+  .fm-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const form = document.querySelector<HTMLFormElement>('form[data-demo="forms"]');
+    if (!form) return;
+    const status = form.querySelector<HTMLElement>('.fm-status');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // only fires once native validation passes
+      if (status) status.textContent = '✓ valid. nothing was sent anywhere, relax.';
+    });
+    form.addEventListener('reset', () => {
+      if (status) status.textContent = 'submit empty or with a broken email — the browser complains, not my code.';
+    });
+  });
+</script>

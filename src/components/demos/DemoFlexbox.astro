@@ -1,0 +1,101 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="flexbox">
+    <div class="demo-stage fx-stage" aria-hidden="true">
+      <span class="fx-item i1"></span>
+      <span class="fx-item i2"></span>
+      <span class="fx-item i3"></span>
+    </div>
+
+    <div class="demo-row" data-prop="justifyContent">
+      <span class="demo-row-label">justify</span>
+      <button class="demo-pill" data-value="flex-start" data-active aria-pressed="true">start</button>
+      <button class="demo-pill" data-value="center" aria-pressed="false">center</button>
+      <button class="demo-pill" data-value="space-between" aria-pressed="false">between</button>
+      <button class="demo-pill" data-value="flex-end" aria-pressed="false">end</button>
+    </div>
+    <div class="demo-row" data-prop="alignItems">
+      <span class="demo-row-label">align</span>
+      <button class="demo-pill" data-value="flex-start" data-active aria-pressed="true">start</button>
+      <button class="demo-pill" data-value="center" aria-pressed="false">center</button>
+      <button class="demo-pill" data-value="flex-end" aria-pressed="false">end</button>
+    </div>
+    <div class="demo-row" data-prop="flexDirection">
+      <span class="demo-row-label">direction</span>
+      <button class="demo-pill" data-value="row" data-active aria-pressed="true">row</button>
+      <button class="demo-pill" data-value="column" aria-pressed="false">column</button>
+    </div>
+    <div class="demo-row" data-prop="gap">
+      <span class="demo-row-label">gap</span>
+      <button class="demo-pill" data-value="4px" data-active aria-pressed="true">4</button>
+      <button class="demo-pill" data-value="12px" aria-pressed="false">12</button>
+      <button class="demo-pill" data-value="24px" aria-pressed="false">24</button>
+    </div>
+
+    <div class="demo-readout fx-readout" aria-live="polite"></div>
+  </div>
+</DemoPanel>
+
+<style>
+  .fx-stage {
+    display: flex;
+    height: 132px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .fx-item {
+    display: block;
+    width: 26px;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .i1 { height: 26px; opacity: 0.9; }
+  .i2 { height: 44px; opacity: 0.55; }
+  .i3 { height: 34px; opacity: 0.75; }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-demo="flexbox"]');
+    if (!root) return;
+    const stage   = root.querySelector<HTMLElement>('.fx-stage');
+    const readout = root.querySelector<HTMLElement>('.fx-readout');
+    if (!stage || !readout) return;
+
+    const state: Record<string, string> = {
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      gap: '4px',
+    };
+
+    function apply() {
+      Object.assign(stage!.style, state);
+      readout!.textContent =
+        `justify-content: ${state.justifyContent};  align-items: ${state.alignItems};\n` +
+        `flex-direction: ${state.flexDirection};  gap: ${state.gap};`;
+    }
+
+    root.querySelectorAll<HTMLElement>('.demo-row[data-prop]').forEach(row => {
+      const prop = row.dataset.prop ?? '';
+      row.querySelectorAll<HTMLButtonElement>('.demo-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          row.querySelectorAll('.demo-pill').forEach(b => {
+            b.removeAttribute('data-active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.setAttribute('data-active', '');
+          btn.setAttribute('aria-pressed', 'true');
+          state[prop] = btn.dataset.value ?? '';
+          apply();
+        });
+      });
+    });
+
+    apply();
+  });
+</script>

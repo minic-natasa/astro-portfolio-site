@@ -4,6 +4,7 @@ const isHome        = currentPath === '/';
 const isProjects    = currentPath.startsWith('/projects');
 const isCheatsheets = currentPath.startsWith('/cheatsheets');
 const isCaseStudy   = currentPath.startsWith('/case-studies');
+const isLog         = currentPath.startsWith('/log');
 
 const navItems = [
   { href: '/',            label: 'home',        active: isHome        },
@@ -31,20 +32,21 @@ const navItems = [
   </button>
 
   <!-- Nav links -->
-  <div class="flex items-center gap-5" style={(isHome || isProjects || isCheatsheets || isCaseStudy) ? 'display:none' : ''}>
+  <div class="flex items-center gap-5" style={(isHome || isProjects || isCheatsheets || isCaseStudy || isLog) ? 'display:none' : ''}>
     {navItems.map((item, i) => (
       item.active ? (
         <span
           class="nav-item"
           data-index={i}
-          style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 16px; color: var(--accent); opacity: 0;"
+          aria-current="page"
+          style="font-family: var(--font-display); font-size: 16px; color: var(--accent); opacity: 0;"
         >{item.label}</span>
       ) : (
         <a
           href={item.href}
           class="nav-item nav-link"
           data-index={i}
-          style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 16px; opacity: 0;"
+          style="font-family: var(--font-display); font-size: 16px; opacity: 0;"
         >{item.label}</a>
       )
     ))}
@@ -73,6 +75,13 @@ const navItems = [
     moon.style.display = isDark ? 'none'  : 'block';
   }
 
+  let switchTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function setThemeColorMeta(doc: Document, theme: string) {
+    const tc = doc.querySelector('meta[name="theme-color"]');
+    if (tc) tc.setAttribute('content', theme === 'dark' ? '#181818' : '#F7F6F6');
+  }
+
   function initThemeToggle() {
     const btn = document.getElementById('theme-toggle');
     if (!btn) return;
@@ -80,9 +89,14 @@ const navItems = [
     btn.addEventListener('click', () => {
       const isDark = document.documentElement.classList.contains('dark');
       const next = isDark ? 'light' : 'dark';
+      // enable the global cross-fade only for the duration of the switch
+      document.documentElement.classList.add('theme-switching');
+      clearTimeout(switchTimer);
+      switchTimer = setTimeout(() => document.documentElement.classList.remove('theme-switching'), 450);
       document.documentElement.classList.remove('dark', 'light');
       document.documentElement.classList.add(next);
       localStorage.setItem('theme', next);
+      setThemeColorMeta(document, next);
       updateIcon();
     });
   }
@@ -103,8 +117,10 @@ const navItems = [
 
   document.addEventListener('astro:before-swap', (e) => {
     const theme = localStorage.getItem('theme') ?? 'dark';
-    (e as any).newDocument.documentElement.classList.remove('dark', 'light');
-    (e as any).newDocument.documentElement.classList.add(theme);
+    const newDoc = (e as any).newDocument as Document;
+    newDoc.documentElement.classList.remove('dark', 'light');
+    newDoc.documentElement.classList.add(theme);
+    setThemeColorMeta(newDoc, theme);
   });
 
   document.addEventListener('astro:page-load', () => {

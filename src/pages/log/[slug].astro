@@ -1,0 +1,166 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Footer from '../../components/Footer.astro';
+import SideNav from '../../components/SideNav.astro';
+import LogGate from '../../components/LogGate.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('log');
+  return entries.map(entry => ({
+    params: { slug: entry.slug },
+    props:  { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+function formatDate(d: Date) {
+  return d.toISOString().slice(0, 10);
+}
+
+const all = (await getCollection('log'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const idx  = all.findIndex(e => e.slug === entry.slug);
+const prev = all[idx + 1] ?? null;
+const next = all[idx - 1] ?? null;
+---
+
+<BaseLayout title={`${entry.data.title} / log / naca`} description={entry.data.description ?? `dev note: ${entry.data.title}`}>
+  <div id="reading-progress" aria-hidden="true"></div>
+  <SideNav links={[
+    { href: '/',            label: 'home'        },
+    { href: '/projects',    label: 'projects'    },
+    { href: '/cheatsheets', label: 'cheatsheets' },
+  ]} />
+
+  <main id="main" tabindex="-1" class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-6 flex-1">
+    <LogGate>
+    <a
+      href="/log"
+      class="back-link text-sm tracking-wide mb-8 inline-block"
+    >← log</a>
+
+    <article>
+      <header class="mb-10">
+        <div class="flex items-center gap-3 mb-3">
+          <time
+            class="text-xs tabular-nums"
+            datetime={entry.data.date.toISOString()}
+            style="color: var(--text-3); font-family: monospace;"
+          >{formatDate(entry.data.date)}</time>
+          <span class="text-xs" style="color: var(--accent); font-family: monospace;">[{entry.data.category}]</span>
+        </div>
+        <h1
+          class="text-[24px] font-light tracking-tight"
+          style="color: var(--text-1);"
+        >{entry.data.title}</h1>
+      </header>
+
+      <div
+        class="prose prose-base max-w-none"
+        style="
+          --tw-prose-body: var(--text-2);
+          --tw-prose-headings: var(--text-1);
+          --tw-prose-links: var(--accent);
+          --tw-prose-bold: var(--text-1);
+          --tw-prose-counters: var(--text-3);
+          --tw-prose-bullets: var(--accent);
+          --tw-prose-hr: var(--border);
+          --tw-prose-quotes: var(--text-2);
+          --tw-prose-code: var(--text-1);
+          --tw-prose-pre-code: var(--text-1);
+          --tw-prose-pre-bg: var(--code-bg);
+        "
+      >
+        <Content />
+      </div>
+    </article>
+
+    {(prev || next) && (
+      <nav
+        class="flex items-start pt-10 border-t text-sm"
+        style="border-color: var(--border); margin-top: 4rem;"
+      >
+        <div class="w-1/2 pr-4">
+          {prev && (
+            <a href={`/log/${prev.slug}`} class="link-accent flex flex-col gap-0.5">
+              <span style="color: var(--text-3); font-size: 11px;">← older</span>
+              <span>{prev.data.title}</span>
+            </a>
+          )}
+        </div>
+        <div class="w-1/2 pl-4 text-right">
+          {next && (
+            <a href={`/log/${next.slug}`} class="link-accent flex flex-col gap-0.5 items-end">
+              <span style="color: var(--text-3); font-size: 11px;">newer →</span>
+              <span>{next.data.title}</span>
+            </a>
+          )}
+        </div>
+      </nav>
+    )}
+
+    <Footer />
+    </LogGate>
+  </main>
+</BaseLayout>
+
+<style>
+  #reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--accent);
+    z-index: 9995;
+    transition: width 0.1s linear;
+  }
+
+  @media (max-width: 768px) {
+    #reading-progress {
+      height: 3px;
+      transition: none;
+    }
+  }
+
+  .back-link {
+    color: var(--accent);
+    transition: color 0.2s ease;
+  }
+  .back-link:hover,
+  .back-link:focus-visible {
+    color: var(--accent-h);
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const bar = document.getElementById('reading-progress');
+    if (!bar) return;
+    function update() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = docHeight > 0 ? (scrollTop / docHeight * 100) + '%' : '0%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  });
+</script>
+
+<style is:global>
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+  }
+
+  @media (min-width: 768px) {
+    .prose h2 { font-size: 1.1rem; }
+    .prose h3 { font-size: 1rem; }
+    .prose h4 { font-size: 0.9rem; }
+  }
+</style>

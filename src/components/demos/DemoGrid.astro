@@ -1,0 +1,101 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="grid">
+    <div class="demo-stage gr-outer">
+      <div class="gr-stage" aria-hidden="true">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+      </div>
+    </div>
+
+    <div class="demo-row" data-prop="columns">
+      <span class="demo-row-label">columns</span>
+      <button class="demo-pill" data-value="repeat(3, 1fr)" data-active aria-pressed="true">repeat(3, 1fr)</button>
+      <button class="demo-pill" data-value="repeat(2, 1fr)" aria-pressed="false">repeat(2, 1fr)</button>
+      <button class="demo-pill" data-value="100px 1fr 2fr" aria-pressed="false">100px 1fr 2fr</button>
+      <button class="demo-pill" data-value="repeat(auto-fill, minmax(110px, 1fr))" aria-pressed="false">auto-fill</button>
+    </div>
+    <div class="demo-row" data-prop="gap">
+      <span class="demo-row-label">gap</span>
+      <button class="demo-pill" data-value="4px" data-active aria-pressed="true">4</button>
+      <button class="demo-pill" data-value="12px" aria-pressed="false">12</button>
+      <button class="demo-pill" data-value="24px" aria-pressed="false">24</button>
+    </div>
+    <div class="demo-row">
+      <span class="demo-row-label">container</span>
+      <input type="range" class="gr-width" min="35" max="100" value="100" aria-label="container width" />
+      <output class="gr-width-out">100%</output>
+    </div>
+
+    <div class="demo-readout gr-readout" aria-live="polite"></div>
+  </div>
+</DemoPanel>
+
+<style>
+  .gr-stage {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    width: 100%;
+  }
+  .gr-stage span {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--accent-d);
+    border-radius: 3px;
+    padding: 0.55rem 0;
+    text-align: center;
+  }
+  .gr-width { accent-color: var(--accent); max-width: 160px; }
+  .gr-width-out {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-demo="grid"]');
+    if (!root) return;
+    const stage   = root.querySelector<HTMLElement>('.gr-stage');
+    const readout = root.querySelector<HTMLElement>('.gr-readout');
+    const width   = root.querySelector<HTMLInputElement>('.gr-width');
+    const out     = root.querySelector<HTMLElement>('.gr-width-out');
+    if (!stage || !readout || !width) return;
+
+    const state = { columns: 'repeat(3, 1fr)', gap: '4px' };
+
+    function apply() {
+      stage!.style.gridTemplateColumns = state.columns;
+      stage!.style.gap = state.gap;
+      readout!.textContent = `grid-template-columns: ${state.columns};\ngap: ${state.gap};`;
+    }
+
+    root.querySelectorAll<HTMLElement>('.demo-row[data-prop]').forEach(row => {
+      const prop = row.dataset.prop as 'columns' | 'gap';
+      row.querySelectorAll<HTMLButtonElement>('.demo-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          row.querySelectorAll('.demo-pill').forEach(b => {
+            b.removeAttribute('data-active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.setAttribute('data-active', '');
+          btn.setAttribute('aria-pressed', 'true');
+          state[prop] = btn.dataset.value ?? '';
+          apply();
+        });
+      });
+    });
+
+    width.addEventListener('input', () => {
+      stage.style.width = `${width.value}%`;
+      if (out) out.textContent = `${width.value}%`;
+    });
+
+    apply();
+  });
+</script>

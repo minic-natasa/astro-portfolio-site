@@ -1,0 +1,105 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="customprops" class="cp">
+
+    <div class="cp-card">
+      <span class="cp-card-title">a card, allegedly</span>
+      <span class="cp-chip">styled by variables</span>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row-label">--accent</span>
+      <input type="color" class="cp-color" value="#5B8DB8" aria-label="accent color" />
+    </div>
+    <div class="demo-row">
+      <span class="demo-row-label">--radius</span>
+      <input type="range" class="cp-radius" min="0" max="24" value="4" aria-label="border radius" />
+      <output class="cp-radius-out">4px</output>
+    </div>
+
+    <div class="demo-readout cp-readout" aria-live="polite"></div>
+  </div>
+</DemoPanel>
+
+<style>
+  .cp-card {
+    --demo-accent: #5B8DB8;
+    --demo-radius: 4px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: flex-start;
+    border: 1px solid var(--demo-accent);
+    border-radius: var(--demo-radius);
+    background: var(--code-bg);
+    padding: 1rem;
+    max-width: 320px;
+  }
+  .cp-card-title {
+    font-size: 13px;
+    color: var(--text-1);
+  }
+  .cp-chip {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: calc(var(--demo-radius) * 2);
+    background: var(--demo-accent);
+    color: #fff;
+  }
+
+  .cp input[type='color'] {
+    inline-size: 46px;
+    block-size: 28px;
+    padding: 2px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .cp input[type='range'] {
+    accent-color: var(--accent);
+    max-width: 160px;
+  }
+  .cp-radius-out {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-demo="customprops"]');
+    if (!root) return;
+    const card    = root.querySelector<HTMLElement>('.cp-card');
+    const color   = root.querySelector<HTMLInputElement>('.cp-color');
+    const radius  = root.querySelector<HTMLInputElement>('.cp-radius');
+    const out     = root.querySelector<HTMLElement>('.cp-radius-out');
+    const readout = root.querySelector<HTMLElement>('.cp-readout');
+    if (!card || !color || !radius || !readout) return;
+
+    function render() {
+      readout.textContent =
+        `card.style.setProperty('--demo-accent', '${color!.value}');\n` +
+        `card.style.setProperty('--demo-radius', '${radius!.value}px');`;
+    }
+
+    color.addEventListener('input', () => {
+      card.style.setProperty('--demo-accent', color.value);
+      render();
+    });
+    radius.addEventListener('input', () => {
+      card.style.setProperty('--demo-radius', `${radius.value}px`);
+      if (out) out.textContent = `${radius.value}px`;
+      render();
+    });
+
+    render();
+  });
+</script>

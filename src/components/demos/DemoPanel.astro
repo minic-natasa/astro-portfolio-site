@@ -1,0 +1,78 @@
+---
+interface Props {
+  label?: string;
+}
+const { label = 'try it' } = Astro.props;
+---
+
+<div class="demo-panel">
+  <p class="demo-label">{label}</p>
+  <slot />
+</div>
+
+<style>
+  .demo-panel {
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 4px 4px;
+    padding: 0.9rem 1.25rem 1.25rem;
+    font-size: 13px;
+  }
+  .demo-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+
+  /* Shared vocabulary for slotted demo content */
+  .demo-panel :global(.demo-stage) {
+    border: 1px dashed var(--border-h);
+    border-radius: 4px;
+    padding: 0.75rem;
+  }
+  .demo-panel :global(.demo-row) {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.7rem;
+  }
+  .demo-panel :global(.demo-row-label) {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+    min-width: 72px;
+  }
+  .demo-panel :global(.demo-pill) {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .demo-panel :global(.demo-pill:hover) {
+    border-color: var(--border-h);
+    color: var(--text-2);
+  }
+  .demo-panel :global(.demo-pill[data-active]) {
+    color: var(--accent);
+    border-color: var(--accent-d);
+    background: var(--accent-d);
+  }
+  .demo-panel :global(.demo-readout) {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--text-3);
+    margin-top: 0.8rem;
+    white-space: pre-wrap;
+  }
+</style>

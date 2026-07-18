@@ -1,0 +1,181 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="inputs" class="ig">
+
+    <label class="ig-item">
+      <span class="ig-lab">color</span>
+      <input type="color" value="#5B8DB8" />
+    </label>
+
+    <label class="ig-item">
+      <span class="ig-lab">range</span>
+      <span class="ig-range-wrap">
+        <input type="range" min="0" max="10" value="5" class="ig-range" />
+        <output class="ig-range-out">5</output>
+      </span>
+    </label>
+
+    <label class="ig-item">
+      <span class="ig-lab">date</span>
+      <input type="date" />
+    </label>
+
+    <label class="ig-item">
+      <span class="ig-lab">number</span>
+      <input type="number" min="0" max="100" step="1" value="42" />
+    </label>
+
+    <label class="ig-item">
+      <span class="ig-lab">file</span>
+      <input type="file" accept=".jpg,.png" />
+    </label>
+
+    <label class="ig-item">
+      <span class="ig-lab">search</span>
+      <input type="search" placeholder="type, then clear" />
+    </label>
+
+    <div class="ig-item">
+      <span class="ig-lab">checkbox</span>
+      <label class="ig-inline">
+        <input type="checkbox" checked />
+        <span>i agree to whatever this is</span>
+      </label>
+    </div>
+
+    <div class="ig-item">
+      <span class="ig-lab">radio</span>
+      <span class="ig-inline-group">
+        <label class="ig-inline"><input type="radio" name="ig-radio" checked /><span>option a</span></label>
+        <label class="ig-inline"><input type="radio" name="ig-radio" /><span>option b</span></label>
+      </span>
+    </div>
+
+  </div>
+</DemoPanel>
+
+<style>
+  .ig {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+  @media (min-width: 640px) {
+    .ig { grid-template-columns: 1fr 1fr; gap: 0.9rem 1.5rem; }
+  }
+
+  /* native widgets follow the active site theme */
+  :global(html.dark)  .ig { color-scheme: dark; }
+  :global(html.light) .ig { color-scheme: light; }
+
+  .ig-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .ig-lab {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  .ig input { accent-color: var(--accent); }
+
+  .ig input[type='date'],
+  .ig input[type='number'],
+  .ig input[type='search'] {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 0.2s ease;
+    -webkit-appearance: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .ig input[type='date']:focus,
+  .ig input[type='number']:focus,
+  .ig input[type='search']:focus {
+    border-color: var(--border-h);
+  }
+  .ig input[type='search']::placeholder { color: var(--text-3); }
+
+  .ig input[type='color'] {
+    inline-size: 46px;
+    block-size: 30px;
+    padding: 2px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .ig input[type='file'] {
+    font-size: 12px;
+    color: var(--text-3);
+  }
+  .ig input[type='file']::file-selector-button {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-3);
+    cursor: pointer;
+    margin-right: 0.6rem;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .ig input[type='file']::file-selector-button:hover {
+    border-color: var(--border-h);
+    color: var(--text-2);
+  }
+
+  .ig-range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .ig-range { flex: 1; }
+  .ig-range-out {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    min-width: 1.5ch;
+    text-align: right;
+  }
+
+  .ig-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 13px;
+    color: var(--text-2);
+    cursor: pointer;
+  }
+  .ig-inline-group {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-demo="inputs"]');
+    if (!root) return;
+    const range = root.querySelector<HTMLInputElement>('.ig-range');
+    const out   = root.querySelector<HTMLElement>('.ig-range-out');
+    range?.addEventListener('input', () => {
+      if (out) out.textContent = range.value;
+    });
+  });
+</script>

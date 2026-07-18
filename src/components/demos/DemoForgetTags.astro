@@ -1,0 +1,146 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="forget" class="ft">
+
+    <details class="ft-details">
+      <summary>click to expand</summary>
+      <p>surprise, hidden content. zero javascript involved.</p>
+    </details>
+
+    <div class="ft-line">
+      <button class="demo-pill ft-open-dialog">open modal</button>
+      <span class="ft-hint">a real &lt;dialog&gt; — esc closes it</span>
+    </div>
+
+    <div class="ft-line">
+      <button class="demo-pill ft-progress-btn">make progress</button>
+      <progress class="ft-progress" value="30" max="100"></progress>
+    </div>
+
+    <p class="ft-text">
+      the word <mark>important</mark> is highlighted, and hovering
+      <abbr title="Cascading Style Sheets">CSS</abbr> shows a tooltip.
+    </p>
+
+    <dialog class="ft-dialog">
+      <p>hello from the void</p>
+      <form method="dialog">
+        <button class="demo-pill">close</button>
+      </form>
+    </dialog>
+
+  </div>
+</DemoPanel>
+
+<style>
+  .ft {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .ft-details {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .ft-details summary {
+    cursor: pointer;
+    color: var(--text-2);
+    font-size: 13px;
+    transition: color 0.2s ease;
+  }
+  .ft-details summary:hover { color: var(--accent); }
+  .ft-details p { margin-top: 0.5rem; color: var(--text-3); }
+
+  .ft-line {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .ft-hint {
+    font-size: 12px;
+    color: var(--text-3);
+  }
+
+  .ft-progress {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    width: 140px;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--code-bg);
+  }
+  .ft-progress::-webkit-progress-bar {
+    background: var(--code-bg);
+  }
+  .ft-progress::-webkit-progress-value {
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .ft-progress::-moz-progress-bar {
+    background: var(--accent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ft-progress::-webkit-progress-value { transition: none; }
+  }
+
+  .ft-text {
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .ft-text mark {
+    background: var(--accent-d);
+    color: var(--accent-h);
+    border-radius: 2px;
+    padding: 0 3px;
+  }
+  .ft-text abbr {
+    cursor: help;
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+  }
+
+  .ft-dialog {
+    background: var(--bg);
+    color: var(--text-1);
+    border: 1px solid var(--border-h);
+    border-radius: 4px;
+    padding: 1.5rem;
+    max-width: 280px;
+    text-align: center;
+  }
+  .ft-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+  }
+  .ft-dialog p {
+    font-size: 14px;
+    margin-bottom: 1rem;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-demo="forget"]');
+    if (!root) return;
+
+    const dialog = root.querySelector<HTMLDialogElement>('.ft-dialog');
+    root.querySelector<HTMLButtonElement>('.ft-open-dialog')?.addEventListener('click', () => {
+      dialog?.showModal();
+    });
+
+    const progress = root.querySelector<HTMLProgressElement>('.ft-progress');
+    root.querySelector<HTMLButtonElement>('.ft-progress-btn')?.addEventListener('click', () => {
+      if (!progress) return;
+      progress.value = progress.value >= 100 ? 0 : progress.value + 10;
+    });
+  });
+</script>

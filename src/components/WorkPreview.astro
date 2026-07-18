@@ -1,0 +1,135 @@
+---
+// Cursor-following preview card. Attach data-preview-title (required),
+// data-preview-year and data-preview-img (optional) to any element and the
+// card appears next to the cursor on hover. Desktop pointers only.
+---
+
+<div id="work-preview" aria-hidden="true">
+  <div id="wp-image">
+    <span id="wp-image-label"></span>
+  </div>
+  <div id="wp-meta">
+    <p id="wp-title"></p>
+    <p id="wp-year"></p>
+  </div>
+</div>
+
+<style>
+  #work-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 60;
+    background: var(--bg);
+    border: 1px solid var(--border-h);
+    border-radius: 4px;
+    width: 220px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  #work-preview.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  #wp-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  #wp-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #wp-image-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+  }
+  #wp-meta {
+    padding: 10px 12px;
+  }
+  #wp-title {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-1);
+    line-height: 1.4;
+  }
+  #wp-year {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-top: 3px;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 768px) {
+    #work-preview { display: none; }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const preview    = document.getElementById('work-preview');
+    const wpTitle    = document.getElementById('wp-title');
+    const wpYear     = document.getElementById('wp-year');
+    const wpImage    = document.getElementById('wp-image');
+    const wpImageLbl = document.getElementById('wp-image-label');
+    if (!preview || !wpTitle || !wpYear || !wpImage || !wpImageLbl) return;
+    if (!window.matchMedia('(hover: hover)').matches) return;
+
+    let cursorX = 0, cursorY = 0;
+
+    function place() {
+      if (!preview) return;
+      const x = Math.min(cursorX + 20, window.innerWidth - 240);
+      const y = Math.max(cursorY - preview.offsetHeight - 12, 10);
+      preview.style.left = x + 'px';
+      preview.style.top  = y + 'px';
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+      if (preview.classList.contains('is-visible')) place();
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-preview-title]').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        const title  = card.dataset.previewTitle ?? '';
+        const year   = card.dataset.previewYear  ?? '';
+        const imgSrc = card.dataset.previewImg   ?? '';
+
+        wpTitle.textContent = title;
+        wpYear.textContent  = year;
+
+        // Image or placeholder
+        const existing = wpImage.querySelector('img');
+        if (existing) existing.remove();
+        if (imgSrc) {
+          const img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = title;
+          wpImage.insertBefore(img, wpImageLbl);
+          wpImageLbl.style.display = 'none';
+        } else {
+          wpImageLbl.textContent = title;
+          wpImageLbl.style.display = '';
+        }
+
+        place();
+        preview.classList.add('is-visible');
+      });
+
+      card.addEventListener('mouseleave', () => {
+        preview.classList.remove('is-visible');
+      });
+    });
+  });
+</script>

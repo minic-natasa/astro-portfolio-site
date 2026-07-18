@@ -1,0 +1,143 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="pseudo" class="ps">
+
+    <div class="ps-block">
+      <span class="ps-lab">input:valid / :invalid — type an email</span>
+      <span class="ps-email-wrap">
+        <input type="email" class="ps-email" placeholder="you@example.com" required />
+        <span class="ps-state" aria-hidden="true"></span>
+      </span>
+    </div>
+
+    <div class="ps-block">
+      <span class="ps-lab">li:nth-child(2n) — even items tinted, hover any</span>
+      <ul class="ps-list">
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+        <li>four</li>
+        <li>five</li>
+        <li>six</li>
+      </ul>
+    </div>
+
+    <div class="ps-block">
+      <span class="ps-lab">.card:has(:checked) — the parent reacts to its child</span>
+      <label class="ps-card">
+        <input type="checkbox" />
+        <span>check me and watch my parent</span>
+      </label>
+    </div>
+
+    <p class="ps-note">no javascript in this one. it's all css doing the work.</p>
+  </div>
+</DemoPanel>
+
+<style>
+  .ps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .ps-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .ps-lab {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  /* :valid / :invalid */
+  .ps-email-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .ps-email {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text-1);
+    outline: none;
+    -webkit-appearance: none;
+    width: 100%;
+    max-width: 240px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+  .ps-email::placeholder { color: var(--text-3); }
+  .ps-state {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 11px;
+  }
+  .ps-email:not(:placeholder-shown):invalid { border-color: #C0524B; }
+  .ps-email:not(:placeholder-shown):valid   { border-color: var(--accent); }
+  .ps-email:not(:placeholder-shown):invalid ~ .ps-state { color: #C0524B; }
+  .ps-email:not(:placeholder-shown):invalid ~ .ps-state::after { content: ':invalid'; }
+  .ps-email:not(:placeholder-shown):valid ~ .ps-state { color: var(--accent); }
+  .ps-email:not(:placeholder-shown):valid ~ .ps-state::after { content: ':valid'; }
+
+  /* :nth-child + :hover */
+  .ps-list {
+    display: flex;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+  }
+  .ps-list li {
+    font-size: 12px;
+    color: var(--text-3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    cursor: default;
+  }
+  .ps-list li:nth-child(2n) {
+    background: var(--accent-d);
+    color: var(--accent);
+    border-color: var(--accent-d);
+  }
+  .ps-list li:hover {
+    border-color: var(--accent);
+    color: var(--accent-h);
+  }
+
+  /* :has */
+  .ps-card {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.7rem 0.9rem;
+    font-size: 13px;
+    color: var(--text-2);
+    cursor: pointer;
+    max-width: 320px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .ps-card input { accent-color: var(--accent); }
+  .ps-card:has(:checked) {
+    border-color: var(--accent);
+    background: var(--accent-d);
+  }
+  .ps-card:has(:checked) span { color: var(--accent-h); }
+
+  .ps-note {
+    font-size: 12px;
+    color: var(--text-3);
+  }
+</style>

@@ -42,16 +42,16 @@ Three roles, one clear hierarchy. Regular members can manage their own profiles 
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin: 2rem 0;">
   <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+    <span style="font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
   </div>
   <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+    <span style="font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
   </div>
   <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+    <span style="font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
   </div>
   <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-    <span style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
+    <span style="font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
   </div>
 </div>
 

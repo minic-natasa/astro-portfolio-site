@@ -1,0 +1,93 @@
+---
+import DemoPanel from './DemoPanel.astro';
+---
+
+<DemoPanel>
+  <div data-demo="jquery" class="jq">
+
+    <p class="jq-pitch">
+      jquery is on roughly 78% of the web. it arrives on this page
+      <span class="jq-em">only if you press this button.</span>
+    </p>
+
+    <div class="demo-row">
+      <button class="demo-pill jq-load">load jquery</button>
+    </div>
+
+    <div class="jq-controls" style="display: none;">
+      <div class="demo-stage jq-stage">
+        <div class="jq-box">
+          <span>still here since 2006</span>
+        </div>
+      </div>
+      <div class="demo-row">
+        <span class="demo-row-label">animate</span>
+        <button class="demo-pill jq-fade">$(box).fadeToggle()</button>
+        <button class="demo-pill jq-slide">$(box).slideToggle()</button>
+      </div>
+    </div>
+
+    <div class="demo-readout jq-status" aria-live="polite"></div>
+  </div>
+</DemoPanel>
+
+<style>
+  .jq-pitch {
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .jq-em { color: var(--accent); }
+
+  .jq-controls { margin-top: 0.9rem; }
+  .jq-stage { min-height: 64px; }
+  .jq-box {
+    border: 1px solid var(--accent-d);
+    background: var(--accent-d);
+    border-radius: 4px;
+    padding: 0.7rem 0.9rem;
+    font-size: 13px;
+    color: var(--accent-h);
+    max-width: 240px;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector<HTMLElement>('[data-demo="jquery"]');
+    if (!root) return;
+    const loadBtn  = root.querySelector<HTMLButtonElement>('.jq-load');
+    const status   = root.querySelector<HTMLElement>('.jq-status');
+    const controls = root.querySelector<HTMLElement>('.jq-controls');
+    const box      = root.querySelector<HTMLElement>('.jq-box');
+    if (!loadBtn || !status || !controls || !box) return;
+
+    let $: any = null;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const dur = reduced ? 0 : 350;
+
+    loadBtn.addEventListener('click', async () => {
+      if ($) return;
+      loadBtn.disabled = true;
+      loadBtn.textContent = 'loading…';
+      try {
+        // code-split chunk — jquery is only fetched when this runs
+        const mod = await import('jquery');
+        $ = mod.default;
+        controls.style.display = '';
+        loadBtn.closest('.demo-row')?.remove();
+        status.textContent = `jquery ${$.fn.jquery} loaded. it's fine. nobody saw.`;
+      } catch {
+        loadBtn.disabled = false;
+        loadBtn.textContent = 'load jquery';
+        status.textContent = 'failed to load. honestly, maybe for the best.';
+      }
+    });
+
+    root.querySelector('.jq-fade')?.addEventListener('click', () => {
+      if ($) $(box).fadeToggle(dur);
+    });
+    root.querySelector('.jq-slide')?.addEventListener('click', () => {
+      if ($) $(box).slideToggle(dur);
+    });
+  });
+</script>

@@ -4,6 +4,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import About from '../components/About.astro';
 import Footer from '../components/Footer.astro';
 import SideNav from '../components/SideNav.astro';
+import WorkPreview from '../components/WorkPreview.astro';
+import { imageForSlug } from '../lib/images';
 
 
 const projects = await getCollection('projects');
@@ -11,19 +13,24 @@ const order = ['serbia-inspire', 'bm-club', 'ecosoul', 'autobaza', 'omoda-espana
 const sorted = projects
   .filter((p) => p.data.featured)
   .sort((a, b) => {
+    // finished work first, coming-soon at the end
+    if (a.data.comingSoon !== b.data.comingSoon) return a.data.comingSoon ? 1 : -1;
     const ai = order.indexOf(a.slug);
     const bi = order.indexOf(b.slug);
     return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
   });
+
+const work = await getCollection('work');
+const imageFor = (slug: string) => imageForSlug(work, slug);
 ---
 
 <BaseLayout>
   <SideNav links={[{ href: '/projects', label: 'projects' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
-  <main class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-8 flex-1">
+  <main id="main" tabindex="-1" class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-8 flex-1">
     <About />
 
     <section class="mt-24 mb-16">
-      <p class="sr mb-2" style="font-family: 'Zalando Sans Expanded', sans-serif; font-size: 1.1rem; font-weight: 300; color: var(--accent);">Case Studies</p>
+      <p class="sr mb-2" style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 300; color: var(--accent);">Case Studies</p>
 
       <div class="border-t" style="border-color: var(--border);">
         {sorted.map((project, i) => (
@@ -41,9 +48,12 @@ const sorted = projects
               href={`/case-studies/${project.slug}`}
               class="sr cs-row flex items-center gap-4 py-3 border-b group"
               style={`border-color: var(--border); transition-delay: ${i * 80}ms;`}
+              data-preview-title={project.data.displayTitle ?? project.data.title}
+              data-preview-year={project.data.year}
+              data-preview-img={imageFor(project.slug) ?? ''}
             >
               <time class="text-xs tabular-nums shrink-0 w-10" style="color: var(--text-3);" datetime={String(project.data.year)}>{project.data.year}</time>
-              <span class="flex-1 text-sm" style="color: var(--text-1);">{project.data.title}</span>
+              <span class="flex-1 text-sm" style="color: var(--text-1);" transition:name={`cs-title-${project.slug}`}>{project.data.title}</span>
               <span class="text-xs shrink-0 link-accent">→</span>
             </a>
           )
@@ -53,4 +63,6 @@ const sorted = projects
 
     <Footer />
   </main>
+
+  <WorkPreview />
 </BaseLayout>

@@ -29,4 +29,14 @@ const work = defineCollection({
   }),
 });
 
-export const collections = { projects, work };
+const log = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.date(),
+    category: z.string(),
+    description: z.string().optional(),
+  }),
+});
+
+export const collections = { projects, work, log };

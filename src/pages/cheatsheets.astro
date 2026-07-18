@@ -2,14 +2,47 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Footer from '../components/Footer.astro';
 import SideNav from '../components/SideNav.astro';
+import DemoFlexbox from '../components/demos/DemoFlexbox.astro';
+import DemoCenter from '../components/demos/DemoCenter.astro';
+import DemoForgetTags from '../components/demos/DemoForgetTags.astro';
+import DemoInputs from '../components/demos/DemoInputs.astro';
+import DemoForms from '../components/demos/DemoForms.astro';
+import DemoDataAttrs from '../components/demos/DemoDataAttrs.astro';
+import DemoPseudo from '../components/demos/DemoPseudo.astro';
+import DemoCustomProps from '../components/demos/DemoCustomProps.astro';
+import DemoArrays from '../components/demos/DemoArrays.astro';
+import DemoAsync from '../components/demos/DemoAsync.astro';
+import DemoGrid from '../components/demos/DemoGrid.astro';
+import DemoMedia from '../components/demos/DemoMedia.astro';
+import DemoDom from '../components/demos/DemoDom.astro';
+import DemoJquery from '../components/demos/DemoJquery.astro';
 
 const tabs = ['html', 'css', 'js', 'jquery'] as const;
 type Tab = typeof tabs[number];
+
+const demoComponents = {
+  flexbox: DemoFlexbox,
+  center: DemoCenter,
+  forget: DemoForgetTags,
+  inputs: DemoInputs,
+  forms: DemoForms,
+  dataattrs: DemoDataAttrs,
+  pseudo: DemoPseudo,
+  customprops: DemoCustomProps,
+  arrays: DemoArrays,
+  async: DemoAsync,
+  grid: DemoGrid,
+  media: DemoMedia,
+  dom: DemoDom,
+  jquery: DemoJquery,
+} as const;
+type DemoId = keyof typeof demoComponents;
 
 interface Group {
   title: string;
   note: string;
   code: string;
+  demo?: DemoId;
 }
 
 // All code as plain strings — Astro auto-escapes {expressions} in templates.
@@ -23,7 +56,7 @@ const snippets = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="..." />
-    <title>Document</title>
+    <title>Naca's Portfolio</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -102,7 +135,83 @@ const snippets = {
 <abbr title="Cascading Style Sheets">CSS</abbr>
 
 <!-- native progress bar -->
-<progress value="70" max="100"></progress>`,
+<progress value="70" max="100"></progress>
+
+<!-- template: invisible to browser, cloned by js -->
+<template id="card-tpl">
+  <div class="card">
+    <h3 class="card-title"></h3>
+    <p class="card-body"></p>
+  </div>
+</template>
+
+const tpl   = document.getElementById('card-tpl');
+const clone = tpl.content.cloneNode(true);
+clone.querySelector('.card-title').textContent = 'hello';
+document.body.appendChild(clone);`,
+
+  htmlSemantic: `<!-- use these instead of divs. screen readers and seo notice -->
+<body>
+  <header>site-wide top: logo, nav, search</header>
+
+  <nav>
+    <a href="/">home</a>
+    <a href="/about">about</a>
+  </nav>
+
+  <main>
+    <!-- one per page. the primary content -->
+
+    <article>
+      <!-- self-contained. blog post, card, comment -->
+    </article>
+
+    <section>
+      <!-- thematic grouping. usually has a heading -->
+    </section>
+
+    <aside>
+      <!-- tangentially related. sidebar, callout, ad -->
+    </aside>
+  </main>
+
+  <footer>site-wide bottom: links, copyright</footer>
+</body>`,
+
+  htmlHead: `<head>
+  <!-- basics — already in the skeleton -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="page description here" />
+  <title>Page Title</title>
+
+  <!-- favicon -->
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- open graph. controls how links look when shared -->
+  <meta property="og:title"       content="Page Title" />
+  <meta property="og:description" content="page description" />
+  <meta property="og:image"       content="https://yoursite.com/og.png" />
+  <meta property="og:url"         content="https://yoursite.com/page" />
+  <meta property="og:type"        content="website" />
+
+  <!-- twitter/x card -->
+  <meta name="twitter:card"  content="summary_large_image" />
+  <meta name="twitter:title" content="Page Title" />
+  <meta name="twitter:image" content="https://yoursite.com/og.png" />
+
+  <!-- theme color. browser chrome on mobile -->
+  <meta name="theme-color" content="#111111" />
+
+  <!-- preconnect. start connection early for external origins -->
+  <link rel="preconnect"  href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://api.yoursite.com" />
+
+  <!-- canonical. the "real" url for this page -->
+  <link rel="canonical" href="https://yoursite.com/page" />
+</head>`,
 
   htmlData: `<!-- set in html -->
 <div data-user-id="42" data-role="admin" data-is-active="true">
@@ -627,21 +736,35 @@ const groups: Record<Tab, Group[]> = {
       title: 'input types',
       note: 'yes, there are way more than just type="text"',
       code: snippets.htmlInputTypes,
+      demo: 'inputs',
     },
     {
       title: 'forms (everyone hates them)',
       note: 'but they pay the bills, so here we are',
       code: snippets.htmlForms,
+      demo: 'forms',
+    },
+    {
+      title: 'semantic html',
+      note: 'divs are for layout. these are for meaning. use them and seo improves for free.',
+      code: snippets.htmlSemantic,
+    },
+    {
+      title: 'head elements',
+      note: 'the stuff you google every time. og tags, favicon, theme color, canonical, preconnect.',
+      code: snippets.htmlHead,
     },
     {
       title: 'tags you always forget exist',
-      note: 'details, dialog, figure, mark, progress. all real, all useful, all underused.',
+      note: 'details, dialog, figure, mark, progress, template. all real, all useful, all underused.',
       code: snippets.htmlForget,
+      demo: 'forget',
     },
     {
       title: 'data attributes',
       note: 'custom data that lives in the html and travels to js. surprisingly elegant.',
       code: snippets.htmlData,
+      demo: 'dataattrs',
     },
   ],
   css: [
@@ -649,31 +772,37 @@ const groups: Record<Tab, Group[]> = {
       title: 'how to center a div',
       note: "you're welcome. the search is over.",
       code: snippets.cssCenter,
+      demo: 'center',
     },
     {
       title: 'flexbox, explained simply',
       note: '1d layout. not as scary as it looks once you get it.',
       code: snippets.cssFlex,
+      demo: 'flexbox',
     },
     {
       title: 'grid, because flexbox is not enough',
       note: '2d layouts. genuinely great. criminally underused.',
       code: snippets.cssGrid,
+      demo: 'grid',
     },
     {
       title: 'custom properties (the good vars)',
       note: 'css variables that actually work everywhere. even in calc().',
       code: snippets.cssVars,
+      demo: 'customprops',
     },
     {
       title: 'media queries',
       note: 'responsive design. plus dark mode, print, and reduced motion. use all of them.',
       code: snippets.cssMedia,
+      demo: 'media',
     },
     {
       title: 'pseudo-class starter pack',
       note: ':hover :nth-child :not :has :is :where. all the colons you need.',
       code: snippets.cssPseudo,
+      demo: 'pseudo',
     },
   ],
   js: [
@@ -681,16 +810,19 @@ const groups: Record<Tab, Group[]> = {
       title: 'array methods that actually matter',
       note: 'map filter reduce and their friends. learn these. use these. love these.',
       code: snippets.jsArrays,
+      demo: 'arrays',
     },
     {
       title: 'async / await',
       note: 'promises were a mistake. this is better. fetch, parallel, settle. all here.',
       code: snippets.jsAsync,
+      demo: 'async',
     },
     {
       title: 'dom stuff you need weekly',
       note: 'select, create, insert, classes, attributes, events. the classic.',
       code: snippets.jsDom,
+      demo: 'dom',
     },
     {
       title: 'destructuring cheatsheet',
@@ -713,6 +845,7 @@ const groups: Record<Tab, Group[]> = {
       title: 'dom manipulation',
       note: '.html() .val() .addClass() and the rest of the old gang',
       code: snippets.jqDom,
+      demo: 'jquery',
     },
     {
       title: 'events',
@@ -730,7 +863,7 @@ const groups: Record<Tab, Group[]> = {
 
 <BaseLayout title="cheatsheets / naca" description="HTML, CSS, JS and jQuery cheatsheets. The stuff I always google, now in one place.">
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }]} />
-  <main class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-8 flex-1 flex flex-col">
+  <main id="main" tabindex="-1" class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-8 flex-1 flex flex-col">
 
     <!-- Header -->
     <section class="mb-12">
@@ -766,7 +899,7 @@ const groups: Record<Tab, Group[]> = {
             data-tab={tab}
             class="tab-btn"
             data-active={i === 0 ? '' : undefined}
-            style="font-family: 'Zalando Sans Expanded', sans-serif;"
+            style="font-family: var(--font-display);"
           >
             {tab}
           </button>
@@ -776,14 +909,14 @@ const groups: Record<Tab, Group[]> = {
 
     <!-- Sections -->
     <div class="flex-1">
-    <div id="no-results-msg" style="display:none; padding-top: 3rem; color: var(--text-3); font-size: 13px; font-family: 'Zalando Sans Expanded', sans-serif; letter-spacing: 0.04em;">
+    <div id="no-results-msg" style="display:none; padding-top: 3rem; color: var(--text-3); font-size: 13px; font-family: var(--font-display); letter-spacing: 0.04em;">
       kiki (the cat) has no idea what you're looking for.<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-left:4px;opacity:0.7;"><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.26A9.06 9.06 0 0 1 12 5Z"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/></svg>
     </div>
     {tabs.map((tab, tabIdx) => (
       <div id={`tab-${tab}`} class="tab-section" style={tabIdx > 0 ? 'display:none' : ''}>
 
         {tab === 'jquery' && (
-          <div class="pt-8 pb-2">
+          <div id="jquery-intro" class="pt-8 pb-2">
             <p class="text-sm leading-relaxed" style="color: var(--text-3);">
               because jQuery is on roughly{' '}
               <span style="color: var(--text-2);">78% of all websites on earth.</span>{' '}
@@ -793,23 +926,27 @@ const groups: Record<Tab, Group[]> = {
           </div>
         )}
 
-        {groups[tab].map((group, i) => (
-          <div class={i > 0 ? 'border-t' : 'pt-6'} style="border-color: var(--border);" data-group data-tab-name={tab}>
-            <div class="py-8">
-              <p
-                class="group-title text-xs uppercase tracking-[0.2em]"
-                style="font-family: 'Zalando Sans Expanded', sans-serif; color: var(--accent);"
-              >
-                {group.title}
-              </p>
-              <p class="group-note text-sm mt-1.5" style="color: var(--text-3);">{group.note}</p>
-              <div class="code-wrapper relative mt-4">
-                <button class="copy-btn" style="font-family: 'Zalando Sans Expanded', sans-serif;">copy</button>
-                <pre class="cheat-pre" style="display:block;width:100%;box-sizing:border-box;"><code class="cheat-code">{group.code}</code></pre>
+        {groups[tab].map((group, i) => {
+          const Demo = group.demo ? demoComponents[group.demo] : null;
+          return (
+            <div class={i > 0 ? 'border-t' : 'pt-6'} style="border-color: var(--border);" data-group data-tab-name={tab}>
+              <div class="py-8">
+                <p
+                  class="group-title text-xs uppercase tracking-[0.2em]"
+                  style="font-family: var(--font-display); color: var(--accent);"
+                >
+                  {group.title}
+                </p>
+                <p class="group-note text-sm mt-1.5" style="color: var(--text-3);">{group.note}</p>
+                <div class={`code-wrapper relative mt-4${Demo ? ' has-demo' : ''}`}>
+                  <button class="copy-btn" style="font-family: var(--font-display);">copy</button>
+                  <pre class="cheat-pre" style="display:block;width:100%;box-sizing:border-box;"><code class="cheat-code">{group.code}</code></pre>
+                  {Demo && <Demo />}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
       </div>
     ))}
@@ -881,6 +1018,11 @@ const groups: Record<Tab, Group[]> = {
     width: 100%;
     box-sizing: border-box;
   }
+  /* when a live demo hangs off the code block, the two read as one unit */
+  .code-wrapper.has-demo .cheat-pre {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
   .cheat-code {
     font-family: 'Fira Code', 'Cascadia Code', ui-monospace, 'Menlo', monospace;
     font-size: 12.5px;
@@ -945,7 +1087,7 @@ const groups: Record<Tab, Group[]> = {
     border-radius: 4px;
     padding: 0.6rem 2.25rem 0.6rem 2.25rem;
     font-size: 13px;
-    font-family: 'Zalando Sans Expanded', sans-serif;
+    font-family: var(--font-display);
     letter-spacing: 0.03em;
     color: var(--text-1);
     outline: none;
@@ -977,7 +1119,7 @@ const groups: Record<Tab, Group[]> = {
     flex-wrap: wrap;
   }
   .pill-btn {
-    font-family: 'Zalando Sans Expanded', sans-serif;
+    font-family: var(--font-display);
     font-size: 11px;
     letter-spacing: 0.06em;
     padding: 3px 10px;
@@ -1008,7 +1150,7 @@ const groups: Record<Tab, Group[]> = {
 
   #search-status {
     font-size: 11px;
-    font-family: 'Zalando Sans Expanded', sans-serif;
+    font-family: var(--font-display);
     letter-spacing: 0.06em;
     color: var(--text-3);
     margin-top: 0.5rem;
@@ -1051,6 +1193,7 @@ const groups: Record<Tab, Group[]> = {
     const searchStatus  = document.getElementById('search-status');
     const noResultsMsg  = document.getElementById('no-results-msg');
     const tabBarEl      = document.querySelector<HTMLElement>('.tab-bar');
+    const jqueryIntro   = document.getElementById('jquery-intro');
     const allGroups     = document.querySelectorAll<HTMLElement>('[data-group]');
     const pillBtns      = document.querySelectorAll<HTMLButtonElement>('.pill-btn');
 
@@ -1081,6 +1224,7 @@ const groups: Record<Tab, Group[]> = {
       if (searchPills)  searchPills.style.display = 'none';
       if (searchClear)  searchClear.style.display = 'none';
       if (tabBarEl)     tabBarEl.style.display = '';
+      if (jqueryIntro)  jqueryIntro.style.display = '';
       pillBtns.forEach(b => { b.setAttribute('data-active', ''); b.removeAttribute('data-disabled'); });
     }
 
@@ -1152,6 +1296,7 @@ const groups: Record<Tab, Group[]> = {
       if (searchPills) searchPills.style.display = 'flex';
       if (searchClear) searchClear.style.display = '';
       if (tabBarEl)    tabBarEl.style.display = 'none';
+      if (jqueryIntro) jqueryIntro.style.display = 'none';
       tabBtns.forEach(b => delete b.dataset.active);
 
       // Pass 1: count matches across ALL tabs
