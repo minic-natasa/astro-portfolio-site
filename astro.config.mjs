@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   integrations: [tailwind(), sitemap()],
-  site: 'https://naca.dev',
+  site: 'https://www.natasaminic.com',
   markdown: {
     shikiConfig: {
       themes: {
