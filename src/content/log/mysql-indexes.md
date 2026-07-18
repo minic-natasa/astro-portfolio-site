@@ -4,7 +4,7 @@ date: 2026-04-24
 category: mysql
 ---
 
-Autobaza has a lot of filterable fields. Make, model, year, mileage, fuel type, condition, price range, location, seller type. Users can combine any of them. When the listing count was low, every query was fast. As data grew, some filter combinations started dragging.
+Auto Baza has a lot of filterable fields. Make, model, year, mileage, fuel type, condition, price range, location, seller type. Users can combine any of them. When the listing count was low, every query was fast. As data grew, some filter combinations started dragging.
 
 The fix was indexes. I already knew what they were. I just underestimated how much they matter on tables that aren't enormous but have complex queries running against them.
 

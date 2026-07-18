@@ -9,7 +9,7 @@ import { imageForSlug } from '../lib/images';
 
 
 const projects = await getCollection('projects');
-const order = ['serbia-inspire', 'bm-club', 'ecosoul', 'autobaza', 'omoda-espana'];
+const order = ['serbia-inspire', 'bm-club', 'ecosoul', 'autobaza'];
 const sorted = projects
   .filter((p) => p.data.featured)
   .sort((a, b) => {

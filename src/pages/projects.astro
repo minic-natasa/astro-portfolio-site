@@ -16,17 +16,23 @@ const work = (await getCollection('work')).sort((a, b) => {
 // Exact per-item border removal (last column / last row of each breakpoint's
 // grid), computed from the real item count instead of nth-child(3n) math —
 // that assumes the total is divisible by the column count, which breaks the
-// grid lines whenever it isn't.
-function gridBorderClasses(index: number, total: number) {
-  const pos = index + 1;
+// grid lines whenever it isn't. Mobile and desktop get separate positions
+// and totals since some items (hideOnMobile) only render on desktop, so the
+// "last row" is a different set of items per breakpoint.
+function gridBorderClasses(mobilePos: number | null, mobileTotal: number, desktopPos: number, desktopTotal: number) {
   const mobileCols = 2, desktopCols = 3;
-  const mobileLastRowStart  = (Math.ceil(total / mobileCols)  - 1) * mobileCols  + 1;
-  const desktopLastRowStart = (Math.ceil(total / desktopCols) - 1) * desktopCols + 1;
+  const desktopLastRowStart = (Math.ceil(desktopTotal / desktopCols) - 1) * desktopCols + 1;
+  const desktopNoRight  = desktopPos % desktopCols === 0 || desktopPos === desktopTotal;
+  const desktopNoBottom = desktopPos >= desktopLastRowStart;
 
-  const mobileNoRight  = pos % mobileCols === 0  || pos === total;
-  const mobileNoBottom = pos >= mobileLastRowStart;
-  const desktopNoRight  = pos % desktopCols === 0 || pos === total;
-  const desktopNoBottom = pos >= desktopLastRowStart;
+  // hidden on mobile: only desktop borders matter, base classes stay as-is
+  if (mobilePos === null) {
+    return [desktopNoRight ? 'md:border-r-0' : 'md:border-r', desktopNoBottom ? 'md:border-b-0' : 'md:border-b'].join(' ');
+  }
+
+  const mobileLastRowStart = (Math.ceil(mobileTotal / mobileCols) - 1) * mobileCols + 1;
+  const mobileNoRight  = mobilePos % mobileCols === 0 || mobilePos === mobileTotal;
+  const mobileNoBottom = mobilePos >= mobileLastRowStart;
 
   const right = mobileNoRight
     ? (desktopNoRight ? 'border-r-0' : 'border-r-0 md:border-r')
@@ -37,6 +43,9 @@ function gridBorderClasses(index: number, total: number) {
 
   return [right, bottom].filter(Boolean).join(' ');
 }
+
+const mobileTotal = work.filter(w => !w.data.hideOnMobile).length;
+let mobileIndex = 0;
 ---
 
 <BaseLayout title="projects / naca">
@@ -48,9 +57,12 @@ function gridBorderClasses(index: number, total: number) {
 
     <div class="max-w-5xl mx-auto px-6">
       <div class="grid grid-cols-2 md:grid-cols-3 auto-rows-fr">
-        {work.map((item, i) => (
+        {work.map((item, i) => {
+          const mobilePos = item.data.hideOnMobile ? null : ++mobileIndex;
+          const display = item.data.hideOnMobile ? 'hidden md:flex' : 'flex';
+          return (
           <div
-            class={`group sr flex flex-col justify-between pt-6 px-3 md:px-6 pb-4 border-b border-r ${gridBorderClasses(i, work.length)}`}
+            class={`group sr ${display} flex-col justify-between pt-6 px-3 md:px-6 pb-4 border-b border-r ${gridBorderClasses(mobilePos, mobileTotal, i + 1, work.length)}`}
             style={`border-color: var(--border); background-color: var(--bg); transition-delay: ${Math.min(i * 50, 300)}ms;`}
             data-preview-title={!item.data.comingSoon ? item.data.title.replace(/\n/g, ' ') : undefined}
             data-preview-year={!item.data.comingSoon ? item.data.year : undefined}
@@ -117,7 +129,8 @@ function gridBorderClasses(index: number, total: number) {
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
 

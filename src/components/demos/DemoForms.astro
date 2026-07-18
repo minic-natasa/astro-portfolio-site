@@ -16,7 +16,7 @@ import DemoPanel from './DemoPanel.astro';
       <button type="submit" class="demo-pill">send it</button>
       <button type="reset" class="demo-pill">never mind</button>
     </div>
-    <p class="fm-status demo-readout" aria-live="polite">submit empty or with a broken email — the browser complains, not my code.</p>
+    <p class="fm-status demo-readout" aria-live="polite">submit empty or with a broken email. the browser complains, not my code.</p>
   </form>
 </DemoPanel>
 
@@ -75,7 +75,7 @@ import DemoPanel from './DemoPanel.astro';
       if (status) status.textContent = '✓ valid. nothing was sent anywhere, relax.';
     });
     form.addEventListener('reset', () => {
-      if (status) status.textContent = 'submit empty or with a broken email — the browser complains, not my code.';
+      if (status) status.textContent = 'submit empty or with a broken email. the browser complains, not my code.';
     });
   });
 </script>

@@ -54,7 +54,7 @@ const { title, slug, image, year, tags, liveUrl, readingTime, prevSlug, prevTitl
       </header>
 
       {image ? (
-        <div class="w-full rounded-sm mb-12 overflow-hidden" style="aspect-ratio: 16/9; background: var(--border);">
+        <div class="w-full mb-12 overflow-hidden" style="aspect-ratio: 16/9; background: var(--border); border: 1px solid var(--border); border-radius: 4px;">
           <img
             src={image}
             alt={`${title} screenshot`}
@@ -65,7 +65,7 @@ const { title, slug, image, year, tags, liveUrl, readingTime, prevSlug, prevTitl
           />
         </div>
       ) : (
-        <div class="w-full rounded-sm mb-12 overflow-hidden" style="aspect-ratio: 16/9; background: var(--border); display: flex; align-items: center; justify-content: center;">
+        <div class="w-full mb-12 overflow-hidden" style="aspect-ratio: 16/9; background: var(--border); border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
           <span style="font-family: var(--font-display); font-size: 12px; letter-spacing: 0.1em; color: var(--text-3);">hero screenshot</span>
         </div>
       )}
@@ -219,6 +219,12 @@ const { title, slug, image, year, tags, liveUrl, readingTime, prevSlug, prevTitl
   .prose h4 {
     font-family: var(--font-display);
     font-weight: 300;
+  }
+
+  /* content images match the site's bordered-box style */
+  .prose img {
+    border: 1px solid var(--border);
+    border-radius: 4px;
   }
 
   @media (min-width: 768px) {

@@ -1,7 +1,7 @@
 ---
 title: Business Makers Club
 displayTitle: BMC
-description: Membership platform for a Serbian entrepreneurial community. Handles member management, event participation, business matchmaking and role-based access across 40+ companies.
+description: Membership platform for a Serbian entrepreneurial community. Handles member management, event participation, business matchmaking and role-based access across 50+ companies.
 tags: ['Laravel', 'PHP', 'Tailwind CSS', 'MySQL']
 year: 2025
 liveUrl: 'https://bmclub.rs/'
@@ -10,17 +10,19 @@ featured: true
 
 ## Overview
 
-Business Makers Club is a Serbian professional community built around the belief that entrepreneurs grow faster when they're surrounded by the right people. The club connects business owners, creatives and leaders through events, mentorship and structured collaboration. By the time they came to me, the community had grown past 40 member companies and managing everything manually wasn't sustainable anymore.
+Business Makers Club is a Serbian professional community built around the belief that entrepreneurs grow faster when they're surrounded by the right people. The club connects business owners, creatives and leaders through events, mentorship and structured collaboration. By the time they came to me, the community had grown past 50 member companies and managing everything manually wasn't sustainable anymore.
 
 My role was development only. Direction and vision were already in place. I was there to build it.
 
 ## The Problem
 
-Without a platform, everything was manual. Member lists, event coordination, access control. As the community scaled, that stopped working. The club needed a system where members could manage their own profiles, admins could manage everyone else, and the software enforced the boundaries between those roles rather than relying on people to remember them.
+Without a platform, everything was manual. Member lists, event coordination, access control. As the community scaled, that stopped working. New members arrive through an application or a referral, pay an annual membership fee, and expect a working profile from day one. The club needed a system where members manage their own data, admins manage everyone else, and the software enforces the boundaries between those roles rather than relying on people to remember them.
 
 The permission model was the hardest part to get right. Three distinct roles, each with a different scope of what they can see and do, and none of them allowed to step into each other's territory.
 
 ## Architecture
+
+The platform is really two applications sharing one codebase: a public site that presents the club, its activities and member search, and a login-gated member area behind it. Everything past the login screen is protected. Visitors hitting the members section land on authentication, not on data.
 
 The application is built on Laravel 10 with a modular MVC structure and a clear separation between controllers, services and repositories. Business logic lives in the service layer. Data access is abstracted through repositories. Authorization happens at two levels: middleware blocks unauthorized requests before they reach the controllers, and policies handle permissions at the model level. If a user doesn't have access, they don't even reach the data.
 
@@ -38,30 +40,22 @@ app/
 
 **Authentication and Roles**
 
-Three roles, one clear hierarchy. Regular members can manage their own profiles and data. IT Admins get user management and role assignment on top of that. HR Admins inherit all IT Admin permissions and also own the Activities module, including full event management.
+Three roles, one clear hierarchy. Members can manage their own profiles and data. IT Admins get user management and role assignment on top of that. HR Admins inherit all IT Admin permissions and also own the Activities module.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin: 2rem 0;">
-  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-    <span style="font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
-  </div>
-  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-    <span style="font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
-  </div>
-  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-    <span style="font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
-  </div>
-  <div style="aspect-ratio: 4/3; background: var(--border); display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-    <span style="font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; color: var(--text-3);">screenshot</span>
-  </div>
+  <img src="/images/case-studies/bm-club/bm-club-1.webp" alt="BMC member login screen" width="1200" height="653" loading="lazy" style="margin: 0;" />
+  <img src="/images/case-studies/bm-club/bm-club-2.webp" alt="BMC admin panel with member and activity counts" width="1200" height="653" loading="lazy" style="margin: 0;" />
+  <img src="/images/case-studies/bm-club/bm-club-3.webp" alt="BMC club partners section" width="1200" height="653" loading="lazy" style="margin: 0;" />
+  <img src="/images/case-studies/bm-club/bm-club-4.webp" alt="BMC member search with profile cards" width="1200" height="653" loading="lazy" style="margin: 0;" />
 </div>
 
 **Member Directory**
 
-A searchable, filterable directory of 50+ member companies with dashboards tailored to each role. What a member sees and what an admin sees are deliberately different.
+A searchable, filterable directory of 50+ member companies with dashboards tailored to each role. Member search is available right on the public homepage; the full directory lives behind login. What a member sees and what an admin sees are deliberately different.
 
 **Activities Module**
 
-Full event management for HR Admins, with public event display and participation tracking. The club can publish events, manage attendance and keep the community active.
+A blog-style module where HR Admins publish club news and event recaps, with public display and search. The club runs it on their own, no developer in the loop. That was the goal.
 
 **Security**
 

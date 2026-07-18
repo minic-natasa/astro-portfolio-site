@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro';
-import { imageForSlug } from '../../lib/images';
+import { heroForSlug } from '../../lib/images';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -16,7 +16,7 @@ const { Content } = await project.render();
 const wordCount = (project.body ?? '').split(/\s+/).filter(Boolean).length;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-const order = ['serbia-inspire', 'bm-club', 'ecosoul', 'autobaza', 'omoda-espana'];
+const order = ['serbia-inspire', 'bm-club', 'ecosoul', 'autobaza'];
 const allProjects = (await getCollection('projects'))
   .filter(p => !p.data.comingSoon)
   .sort((a, b) => {
@@ -29,9 +29,7 @@ const prevProject = idx > 0 ? allProjects[idx - 1] : null;
 const nextProject = idx < allProjects.length - 1 ? allProjects[idx + 1] : null;
 
 const work = await getCollection('work');
-// ecosoul's only available image is thumbnail-res and looks soft blown up full-width —
-// hold the placeholder here until a proper hero screenshot exists
-const heroImage = project.slug === 'ecosoul' ? undefined : imageForSlug(work, project.slug);
+const heroImage = heroForSlug(work, project.slug);
 ---
 
 <CaseStudyLayout
