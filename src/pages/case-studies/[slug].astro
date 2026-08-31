@@ -35,6 +35,7 @@ const heroImage = heroForSlug(work, project.slug);
 <CaseStudyLayout
   title={project.data.displayTitle ?? project.data.title}
   slug={project.slug}
+  description={project.data.description}
   image={heroImage}
   year={project.data.year}
   tags={project.data.tags}

@@ -6,6 +6,7 @@ import SideNav from '../components/SideNav.astro';
 interface Props {
   title: string;
   slug?: string;
+  description?: string;
   image?: string;
   year: number;
   tags: string[];
@@ -17,10 +18,10 @@ interface Props {
   nextTitle?: string;
 }
 
-const { title, slug, image, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.props;
+const { title, slug, description, image, year, tags, liveUrl, readingTime, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.props;
 ---
 
-<BaseLayout title={`${title} / naca`}>
+<BaseLayout title={`${title} / naca`} description={description}>
   <div id="reading-progress" aria-hidden="true"></div>
   <SideNav links={[{ href: '/', label: 'home' }, { href: '/projects', label: 'projects' }, { href: '/cheatsheets', label: 'cheatsheets' }]} />
   <main id="main" tabindex="-1" class="w-full max-w-2xl mx-auto px-6 pt-4 md:pt-6 flex-1">
