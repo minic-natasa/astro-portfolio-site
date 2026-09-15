@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/case-studies/serbia-inspire",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/case-studies/serbia-inspire/",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

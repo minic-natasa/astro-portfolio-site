@@ -5,10 +5,14 @@ import { heroForSlug } from '../../lib/images';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
-  return projects.map((project) => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
+  // comingSoon projects have no body content yet — no page is built for them
+  // at all (see vercel.json for the redirect that sends their URL home)
+  return projects
+    .filter((project) => !project.data.comingSoon)
+    .map((project) => ({
+      params: { slug: project.slug },
+      props: { project },
+    }));
 }
 
 const { project } = Astro.props;
