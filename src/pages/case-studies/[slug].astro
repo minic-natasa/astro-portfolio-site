@@ -36,6 +36,7 @@ const heroImage = heroForSlug(work, project.slug);
   title={project.data.displayTitle ?? project.data.title}
   slug={project.slug}
   description={project.data.description}
+  noindex={project.data.comingSoon}
   image={heroImage}
   year={project.data.year}
   tags={project.data.tags}
