@@ -1,0 +1,208 @@
+---
+import RecruiterLayout from '../../layouts/RecruiterLayout.astro';
+
+const projects = [
+  {
+    slug: 'restoran-domace',
+    title: 'Restoran "Domaće"',
+    what: 'Campaign targeting model',
+    blurb:
+      'Which customers to spend a fixed €1,500 marketing budget on, decided from 18,095 transactions. RFM segmentation, Solver optimisation, and a recommendation tested against three regulatory scenarios.',
+    tags: ['Excel Solver', 'RFM', 'Decision analysis'],
+    scope: 'individual',
+    feature: true,
+  },
+  {
+    slug: 'dm-drogerije',
+    title: 'DM drogerije',
+    what: 'Consumer attitudes research',
+    blurb:
+      'How shoppers reacted when discounts were replaced with permanently lower prices. 258 respondents, analysed in SPSS with reliability testing, correlation, t-test, ANOVA and factor analysis.',
+    tags: ['SPSS', 'Survey design', 'Hypothesis testing'],
+    scope: 'individual',
+  },
+  {
+    slug: 'approved',
+    title: 'Approved',
+    what: 'User research into product definition',
+    blurb:
+      'Twenty interviews turned into a defined product, a market sized from national statistics, a pricing model and a channel plan.',
+    tags: ['User research', 'Market sizing', 'Pricing'],
+    scope: 'team of four',
+  },
+  {
+    slug: 'sbb',
+    title: 'SBB',
+    what: 'Integrated communications audit',
+    blurb:
+      'Communications audit of a telecoms operator with three million users. Stakeholder mapping, a public attitudes survey, measurable KPIs and a crisis response plan.',
+    tags: ['Stakeholder mapping', 'KPIs', 'Risk planning'],
+    scope: 'team of four',
+  },
+  {
+    slug: 'perfume-lab',
+    title: 'Perfume Lab',
+    what: 'Digital plan and build',
+    blurb:
+      'A digital strategy taken from personas and one measurable goal through the 7C framework to a working store and a scheduled content calendar.',
+    tags: ['7C', 'Journey mapping', 'WordPress'],
+    scope: 'team of five',
+  },
+];
+
+const skills = [
+  'Excel (Solver, pivot tables, VLOOKUP / COUNTIF / AVERAGEIF)',
+  'SPSS',
+  'Survey design',
+  'Hypothesis testing',
+  'RFM segmentation',
+  'Optimisation modelling',
+  'Decision analysis',
+  'Competitor analysis',
+  'Market sizing',
+  'KPI definition',
+  'Personas',
+  'Journey mapping',
+  'SQL basics',
+  'Requirements documentation',
+];
+
+const more = [
+  ['ASOS', 'E-business plan and online presence analysis for a global fashion retailer. Two separate courses, market segmentation, channel analysis and future development planning.'],
+  ['Dragon Beer', 'Brand management: positioning, target audience, competitor matrix across five brands, and an integrated communications plan mapped to funnel stages with KPIs.'],
+  ['Pretty Fix', 'Internet marketing plan for an e-commerce beauty business, including SWOT, business model, budget, timeline and analytics setup.'],
+];
+---
+
+<RecruiterLayout
+  title="Nataša Minić / analytical work"
+  description="Business and data analysis work from my master's in management: customer segmentation, optimisation modelling, survey research and communications strategy."
+  heading="analytical work."
+  isIndex={true}
+>
+
+  <p>
+    I'm Nataša. I build things for the web, and I have a master's in management from the Faculty of Organisational
+    Sciences in Belgrade, where most of my work was analytical: taking a business question, finding data that
+    actually answers it, and turning the answer into something someone can act on.
+  </p>
+
+  <p>
+    This page collects that work. It is coursework rather than a job title, and I would rather say so plainly than
+    dress it up. What it does show is how I approach a problem, which is the part that carries over.
+  </p>
+
+  <h2>what I work with</h2>
+  <div class="idx-pills">
+    {skills.map((s) => <span class="idx-pill">{s}</span>)}
+  </div>
+
+  <h2>projects</h2>
+
+  <div class="idx-list">
+    {projects.map((p) => (
+      <a href={`/for-recruiters/${p.slug}`} class="idx-card" data-feature={p.feature ? '' : undefined}>
+        <div class="idx-card-head">
+          <div>
+            <h3 class="idx-card-title">{p.title}</h3>
+            <p class="idx-card-what">{p.what}</p>
+          </div>
+          <span class="idx-scope">{p.scope}</span>
+        </div>
+        <p class="idx-card-blurb">{p.blurb}</p>
+        <div class="idx-card-foot">
+          <div class="idx-tags">
+            {p.tags.map((t) => <span class="idx-tag">{t}</span>)}
+          </div>
+          <span class="idx-go">read →</span>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <h2>also on the course</h2>
+  <ul>
+    {more.map(([name, text]) => (
+      <li><strong>{name}.</strong> {text}</li>
+    ))}
+  </ul>
+
+  <p class="rc-note">
+    I also work as a web developer, which is where the rest of my site goes. If you want that side instead, the
+    <a href="/">portfolio is here</a>.
+  </p>
+
+</RecruiterLayout>
+
+<style>
+  .idx-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem; }
+  .idx-pill {
+    font-size: 11px;
+    line-height: 1.5;
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+
+  .idx-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .idx-card {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.1rem 1.25rem;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .idx-card:hover { border-color: var(--border-h); }
+  .idx-card[data-feature] { border-left: 2px solid var(--accent); }
+
+  .idx-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+  }
+  .idx-card-title {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-1);
+    margin: 0;
+  }
+  .idx-card-what { font-size: 12px; color: var(--accent); margin: 0.15rem 0 0; }
+  .idx-scope {
+    font-size: 10.5px;
+    color: var(--text-3);
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 9px;
+    flex-shrink: 0;
+  }
+  .idx-card-blurb {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-2);
+    margin: 0 0 0.85rem;
+  }
+  .idx-card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .idx-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .idx-tag {
+    font-size: 10.5px;
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .idx-go { font-size: 12px; color: var(--accent); white-space: nowrap; }
+  .idx-card:hover .idx-go { color: var(--accent-h); }
+</style>

@@ -1,0 +1,139 @@
+---
+import RecruiterLayout from '../../layouts/RecruiterLayout.astro';
+import RfmModel from '../../components/RfmModel.astro';
+---
+
+<RecruiterLayout
+  title='Restoran "Domaće" / campaign targeting model'
+  description="Customer segmentation and budget optimisation for a restaurant loyalty campaign. RFM model, Solver optimisation and decision analysis over 18,095 transactions."
+  heading='restoran "domaće".'
+  course="Advanced Marketing Planning, MSc"
+  year="2022"
+  scope="individual project"
+  tools={['Excel', 'Solver (GRG Nonlinear)', 'Pivot tables', 'VLOOKUP / COUNTIF / AVERAGEIF', 'RFM segmentation', 'Decision analysis']}
+>
+
+  <h2>the brief</h2>
+
+  <p>
+    A restaurant with a membership card scheme running since 2013 had a fixed marketing budget of <strong>€1,500</strong>
+    and a database of past visits. Contacting one guest costs <strong>€5.75</strong>. The budget covers only a fraction
+    of the customer base, so the question was not how to run the campaign but who to spend it on.
+  </p>
+
+  <p>
+    The owner also had a second problem. Regulation on smoking in restaurants was expected to change, and nobody knew
+    which way. Any recommendation had to survive that uncertainty rather than assume it away.
+  </p>
+
+  <div class="rc-stats">
+    <div class="rc-stat"><span class="rc-stat-n">18,095</span><span class="rc-stat-l">transactions analysed</span></div>
+    <div class="rc-stat"><span class="rc-stat-n">2,320</span><span class="rc-stat-l">individual guests</span></div>
+    <div class="rc-stat"><span class="rc-stat-n">413</span><span class="rc-stat-l">days, Sep 2020 to Nov 2021</span></div>
+    <div class="rc-stat"><span class="rc-stat-n">€1,500</span><span class="rc-stat-l">budget to allocate</span></div>
+  </div>
+
+  <h2>approach</h2>
+
+  <h3>1. Understand the base</h3>
+  <p>
+    I started with descriptive work: revenue by day and by month, visit counts by month, and the ten highest-spending
+    guests. Some of it was immediately useful. The busiest months were also the highest-revenue months, which meant
+    volume rather than basket size was driving the business. One guest had visited 1,149 times and spent €35,630 in
+    410 days, which told me the customer base was extremely uneven and that an average would be a misleading thing
+    to plan around.
+  </p>
+
+  <h3>2. Segment with RFM</h3>
+  <p>
+    I scored every guest on three dimensions and split each into five bands using <code>VLOOKUP</code> against cutoff
+    tables I set myself:
+  </p>
+  <ul>
+    <li><strong>Recency</strong>, date of last visit</li>
+    <li><strong>Frequency</strong>, number of visits, banded at 0, 3, 7, 11 and 19</li>
+    <li><strong>Monetary</strong>, average spend, banded at 0, 23, 35, 49 and 61</li>
+  </ul>
+  <p>
+    Then three parameters per segment: how many customers it holds (<code>COUNTIF</code>), their average response
+    rate, and their average value (both <code>AVERAGEIF</code>).
+  </p>
+
+  <h3>3. Build the economics</h3>
+  <p>
+    Expected profit from contacting one guest in segment <em>i</em> is
+    <code>p<sub>i</sub>(V<sub>i</sub> − C) + (1 − p<sub>i</sub>)(−C)</code>, which simplifies to
+    <code>p<sub>i</sub>V<sub>i</sub> − C</code>. You pay the contact cost whether or not they respond. Across a whole
+    segment that becomes <code>N<sub>i</sub>(p<sub>i</sub>V<sub>i</sub> − C)</code>.
+  </p>
+  <p>
+    From there it is a constrained optimisation: choose what share <code>x<sub>i</sub></code> of each segment to
+    target so that total expected profit is maximised and total spend stays inside €1,500. I ran it in Solver both
+    ways, binary (target a segment or don't) and continuous (target part of a segment), for all three criteria and
+    all three regulatory scenarios. Eighteen model configurations in total.
+  </p>
+
+  <h3>4. Test whether the answer holds</h3>
+  <p>
+    Rather than take the highest number and stop, I put the six candidate strategies against the three possible
+    regulatory outcomes and evaluated them four ways: average payoff, aggressive (best case), conservative (worst
+    case), and minimax regret. Then I ran expected value across seven different probability weightings, from
+    0.4/0.3/0.3 through to treating the current rules as certain.
+  </p>
+
+  <h2>run it yourself</h2>
+
+  <p>
+    This is the model rebuilt in the browser, using the segment figures from the original workbook. Change the
+    criterion, the scenario, the budget or the contact cost and the allocation resolves again.
+  </p>
+
+  <RfmModel />
+
+  <h2>what came out of it</h2>
+
+  <p>
+    Segmenting by <strong>frequency</strong>, continuous, was the strongest option. The money goes to guests who have
+    visited 19 or more times, funding that segment completely, with what remains going to 56% of the 11-to-18 visit
+    segment. The whole budget gets used.
+  </p>
+
+  <div class="rc-result">
+    <p class="rc-result-label">the part worth reading</p>
+    <p>
+      Frequency-continuous came first under <strong>all four decision criteria</strong>, carried <strong>zero
+      regret in every regulatory scenario</strong>, and ranked first at <strong>every one of the seven probability
+      weightings</strong> I tested. The recommendation does not depend on guessing the regulation correctly.
+    </p>
+  </div>
+
+  <p>
+    That last point mattered more than the headline figure. A number that only works if you guess the legislation
+    right is not much use to the person who has to sign off on the spend.
+  </p>
+
+  <p>
+    The campaign I proposed followed from the analysis rather than from taste. Frequency was the criterion that
+    paid, so reward frequency: recognise loyal guests directly. Monetary value scored worst of the three, so lift
+    basket size separately, through an app where guests scan the bill and earn points against future visits, plus
+    personalised offers tied to what someone actually orders.
+  </p>
+
+  <h2>tools</h2>
+  <p>
+    One Excel workbook, 42 sheets, 9 pivot tables and 18 saved Solver configurations. Everything from the raw
+    transaction log through to the decision tree was built in it.
+  </p>
+
+  <p class="rc-note">
+    A note, because it is the honest version. Coming back to this workbook recently I audited all eighteen Solver
+    sheets against each other. Fourteen are correct. On four of them, the unchanged-state frequency and monetary
+    sheets, the objective cell points one column across at an empty reference where the contact cost should be, so
+    those four report gross return instead of return net of spend. Every scenario sheet is correct. The effect is
+    that the headline figure for the chosen option reads €126,599.53 gross where it should read €125,099.53 net of
+    the €1,500 spent. It does not change the recommendation: subtracting a constant leaves the segment ranking
+    untouched, so the allocation is identical, frequency still wins on every criterion, and it still carries zero
+    regret. The interactive model above is built the corrected way and reports both figures.
+  </p>
+
+</RecruiterLayout>

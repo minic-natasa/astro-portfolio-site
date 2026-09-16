@@ -1,0 +1,163 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Footer from '../components/Footer.astro';
+import SideNav from '../components/SideNav.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  heading: string;
+  course?: string;
+  year?: string;
+  scope?: string;
+  tools?: string[];
+  isIndex?: boolean;
+}
+
+const { title, description, heading, course, year, scope, tools = [], isIndex = false } = Astro.props;
+
+const links = isIndex
+  ? [{ href: '/', label: 'portfolio' }]
+  : [{ href: '/for-recruiters', label: 'back' }, { href: '/', label: 'portfolio' }];
+---
+
+<BaseLayout title={title} description={description} noindex={true}>
+  <SideNav links={links} />
+  <main id="main" tabindex="-1" class="pt-4 md:pt-8 flex-1">
+    <div class="max-w-2xl mx-auto px-6">
+      <h1 class="text-[28px] font-light tracking-tight mb-3" data-scramble style="color: var(--text-1);">{heading}</h1>
+
+      {(course || year || scope) && (
+        <div class="flex items-center gap-3 flex-wrap mb-8 text-base" style="color: var(--text-3);">
+          {course && <span>{course}</span>}
+          {course && year && <span aria-hidden="true">·</span>}
+          {year && <time datetime={year}>{year}</time>}
+          {(course || year) && scope && <span aria-hidden="true">·</span>}
+          {scope && <span>{scope}</span>}
+        </div>
+      )}
+
+      {tools.length > 0 && (
+        <div class="flex gap-1.5 flex-wrap mb-12">
+          {tools.map((t) => (
+            <span class="text-xs border px-2 py-0.5 rounded-sm" style="color: var(--text-3); border-color: var(--border);">{t}</span>
+          ))}
+        </div>
+      )}
+
+      <div class="rc-body">
+        <slot />
+      </div>
+
+      <Footer />
+    </div>
+  </main>
+
+  <style is:global>
+    .rc-body {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text-2);
+    }
+    .rc-body h2 {
+      font-family: var(--font-display);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 3rem 0 1rem;
+    }
+    .rc-body h2:first-child { margin-top: 0; }
+    .rc-body h3 {
+      font-size: 15px;
+      color: var(--text-1);
+      margin: 2rem 0 0.5rem;
+      font-weight: 400;
+    }
+    .rc-body p { margin-bottom: 1.1rem; }
+    .rc-body strong { color: var(--text-1); font-weight: 400; }
+    .rc-body ul { margin: 0 0 1.1rem 0; padding: 0; list-style: none; }
+    .rc-body ul li {
+      position: relative;
+      padding-left: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .rc-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.7em;
+      width: 4px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .rc-body a { color: var(--accent); text-decoration: none; }
+    .rc-body a:hover { color: var(--accent-h); }
+
+    /* Callout for the headline result of a project */
+    .rc-result {
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      background: var(--code-bg);
+    }
+    .rc-result .rc-result-label {
+      font-family: var(--font-display);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 0.4rem;
+    }
+    .rc-result p:last-child { margin-bottom: 0; }
+
+    /* Small stat grid */
+    .rc-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+    .rc-stat { background: var(--bg); padding: 0.9rem 1rem; }
+    .rc-stat-n {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--text-1);
+      display: block;
+      line-height: 1.2;
+    }
+    .rc-stat-l {
+      font-size: 11px;
+      color: var(--text-3);
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .rc-body figure { margin: 1.75rem 0; }
+    .rc-body figure img {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: block;
+    }
+    .rc-body figcaption {
+      font-size: 12px;
+      color: var(--text-3);
+      margin-top: 0.5rem;
+    }
+
+    .rc-note {
+      font-size: 13px;
+      color: var(--text-3);
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      margin-top: 2.5rem;
+    }
+  </style>
+</BaseLayout>

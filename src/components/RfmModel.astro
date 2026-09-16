@@ -1,0 +1,359 @@
+---
+// Segment parameters read directly from the original workbook
+// (Napredno planiranje u marketingu, Predlog marketinške kampanje.xlsx).
+// N = customers in segment, p = average response rate, V = average value.
+const data = {
+  R: {
+    label: 'Recency',
+    note: 'Segments by how recently a guest last visited. 1 is the least recent, 5 the most recent.',
+    bands: ['least recent', 'to Mar 2021', 'to Jun 2021', 'to Aug 2021', 'most recent'],
+    base: { N: [881, 509, 183, 204, 543], p: [0.501112, 0.520452, 0.494426, 0.512255, 0.496077], V: [33.2132, 59.8489, 119.3822, 201.6155, 575.1701] },
+    s1:   { N: [881, 509, 183, 204, 543], p: [0.56602, 0.592705, 0.538506, 0.579559, 0.56698],   V: [33.2132, 59.8489, 119.3822, 201.6155, 575.1701] },
+    s2:   { N: [881, 509, 183, 204, 543], p: [0.288317, 0.286726, 0.295608, 0.282987, 0.283486], V: [33.2132, 59.8489, 119.3822, 201.6155, 575.1701] },
+  },
+  F: {
+    label: 'Frequency',
+    note: 'Segments by number of visits in the period: 0 to 2, 3 to 6, 7 to 10, 11 to 18, and 19 or more.',
+    bands: ['0–2 visits', '3–6 visits', '7–10 visits', '11–18 visits', '19+ visits'],
+    base: { N: [1429, 420, 151, 135, 185], p: [0.506823, 0.513262, 0.520596, 0.489926, 0.465784], V: [36.3367, 138.0397, 225.0858, 350.1759, 1318.1308] },
+    s1:   { N: [1429, 420, 151, 135, 185], p: [0.57286, 0.582167, 0.565541, 0.569185, 0.538559],  V: [36.3367, 138.0397, 225.0858, 350.1759, 1318.1308] },
+    s2:   { N: [1429, 420, 151, 135, 185], p: [0.287052, 0.28973, 0.312117, 0.280049, 0.26427],   V: [36.3367, 138.0397, 225.0858, 350.1759, 1318.1308] },
+  },
+  M: {
+    label: 'Monetary',
+    note: 'Segments by average spend per visit: 0 to 22, 23 to 34, 35 to 48, 49 to 60, and 61 or more.',
+    bands: ['0–22', '23–34', '35–48', '49–60', '61+'],
+    base: { N: [1091, 501, 417, 155, 156], p: [0.492906, 0.53014, 0.496211, 0.496387, 0.535385], V: [139.9882, 231.6343, 250.6812, 195.06, 201.7532] },
+    s1:   { N: [1091, 501, 417, 155, 156], p: [0.562753, 0.590306, 0.561455, 0.577011, 0.587991], V: [139.9882, 231.6343, 250.6812, 195.06, 201.7532] },
+    s2:   { N: [1091, 501, 417, 155, 156], p: [0.279255, 0.300347, 0.28627, 0.27709, 0.309265],  V: [139.9882, 231.6343, 250.6812, 195.06, 201.7532] },
+  },
+};
+
+const scenarios = {
+  base: { label: 'unchanged', note: 'Current rules. Smoking and non-smoking sections stay as they are.' },
+  s1:   { label: 'smoking banned', note: 'Full smoking ban. Response from guests in the smoking section falls to a third, response from the non-smoking section doubles.' },
+  s2:   { label: 'smoking allowed', note: 'Sections removed, smoking allowed throughout. Response from the smoking section rises 10%, response from the non-smoking section falls to a third.' },
+};
+---
+
+<div class="rfm" data-rfm data-model={JSON.stringify(data)} data-scen={JSON.stringify(scenarios)}>
+  <p class="rfm-label">run the model</p>
+
+  <div class="rfm-controls">
+    <div class="rfm-row">
+      <span class="rfm-row-label">segment by</span>
+      <button class="rfm-pill" data-crit="R" aria-pressed="false">recency</button>
+      <button class="rfm-pill" data-crit="F" data-active aria-pressed="true">frequency</button>
+      <button class="rfm-pill" data-crit="M" aria-pressed="false">monetary</button>
+    </div>
+
+    <div class="rfm-row">
+      <span class="rfm-row-label">scenario</span>
+      <button class="rfm-pill" data-scen="base" data-active aria-pressed="true">unchanged</button>
+      <button class="rfm-pill" data-scen="s1" aria-pressed="false">smoking banned</button>
+      <button class="rfm-pill" data-scen="s2" aria-pressed="false">smoking allowed</button>
+    </div>
+
+    <div class="rfm-row">
+      <span class="rfm-row-label">budget</span>
+      <input type="range" class="rfm-range" data-budget min="250" max="12000" step="50" value="1500" aria-label="campaign budget in euros" />
+      <output class="rfm-out" data-budget-out>€1,500</output>
+    </div>
+
+    <div class="rfm-row">
+      <span class="rfm-row-label">cost per contact</span>
+      <input type="range" class="rfm-range" data-cost min="1" max="20" step="0.25" value="5.75" aria-label="cost to reach one customer in euros" />
+      <output class="rfm-out" data-cost-out>€5.75</output>
+    </div>
+  </div>
+
+  <p class="rfm-note" data-note aria-live="polite"></p>
+
+  <div class="rfm-table-wrap">
+    <table class="rfm-table">
+      <thead>
+        <tr>
+          <th scope="col">segment</th>
+          <th scope="col" class="num">N</th>
+          <th scope="col" class="num">p</th>
+          <th scope="col" class="num">V</th>
+          <th scope="col" class="num">profit / contact</th>
+          <th scope="col" class="num">x<sub>i</sub></th>
+          <th scope="col" class="num">spend</th>
+          <th scope="col" class="num">return</th>
+        </tr>
+      </thead>
+      <tbody data-rows></tbody>
+    </table>
+  </div>
+
+  <div class="rfm-totals" data-totals></div>
+
+  <p class="rfm-foot">
+    Maximises <code>Σ N<sub>i</sub> (p<sub>i</sub>V<sub>i</sub> − C) x<sub>i</sub></code>
+    subject to <code>Σ N<sub>i</sub> C x<sub>i</sub> ≤ B</code>, with <code>0 ≤ x<sub>i</sub> ≤ 1</code>.
+    Solved here the same way Excel's Solver does for a continuous problem of this shape: rank segments by profit per euro spent, fund them in order until the budget runs out.
+  </p>
+</div>
+
+<!-- Rows and totals are injected by the script below, so they never receive
+     Astro's scoped-style attribute. Every selector here is namespaced under
+     .rfm, so going global is safe and is what makes the injected markup style. -->
+<style is:global>
+  .rfm {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.1rem 1.25rem 1.25rem;
+    margin: 2rem 0;
+    font-size: 13px;
+  }
+  .rfm-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .rfm-controls { display: flex; flex-direction: column; gap: 0.65rem; }
+  .rfm-row { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .rfm-row-label {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+    min-width: 108px;
+  }
+  .rfm-pill {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .rfm-pill:hover { border-color: var(--border-h); color: var(--text-2); }
+  .rfm-pill[data-active] { color: var(--accent); border-color: var(--accent-d); background: var(--accent-d); }
+  .rfm-range { accent-color: var(--accent); max-width: 190px; flex: 1 1 130px; }
+  .rfm-out {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    min-width: 62px;
+  }
+  .rfm-note {
+    font-size: 12px;
+    color: var(--text-3);
+    line-height: 1.6;
+    margin: 1rem 0 0.25rem;
+  }
+
+  .rfm-table-wrap { overflow-x: auto; margin-top: 1rem; }
+  .rfm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+  /* Gap lives on the left of each cell so numeric columns keep their
+     separation when the table is scrolled on narrow screens. */
+  .rfm-table th,
+  .rfm-table td {
+    padding: 0.45rem 0 0.45rem 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .rfm-table th:first-child,
+  .rfm-table td:first-child { padding-left: 0; }
+  .rfm-table th {
+    text-align: left;
+    font-weight: 400;
+    color: var(--text-3);
+    font-size: 10.5px;
+  }
+  .rfm-table td { color: var(--text-2); }
+  .rfm-table .num { text-align: right; }
+  .rfm-table tr[data-funded] td { color: var(--text-1); }
+  .rfm-table tr[data-funded] td:first-child::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+  .rfm-table tr:not([data-funded]) td:first-child { padding-left: 12px; }
+
+  .rfm-totals {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-top: 1.25rem;
+    overflow: hidden;
+  }
+  .rfm-total { background: var(--bg); padding: 0.7rem 0.85rem; }
+  .rfm-total b {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-1);
+    display: block;
+    line-height: 1.25;
+  }
+  .rfm-total span {
+    font-size: 10.5px;
+    color: var(--text-3);
+    display: block;
+    margin-top: 0.2rem;
+  }
+  .rfm-total[data-hero] b { color: var(--accent); }
+
+  .rfm-foot {
+    font-size: 11.5px;
+    color: var(--text-3);
+    line-height: 1.65;
+    margin-top: 1.1rem;
+    border-top: 1px solid var(--border);
+    padding-top: 0.9rem;
+  }
+  .rfm-foot code {
+    font-family: ui-monospace, 'Menlo', monospace;
+    color: var(--text-2);
+    font-size: 11px;
+  }
+
+  @media (max-width: 500px) {
+    .rfm-row-label { min-width: 100%; }
+  }
+</style>
+
+<script>
+  function initRfm(root: HTMLElement) {
+    if (root.dataset.ready) return;
+    root.dataset.ready = '1';
+
+    const model = JSON.parse(root.dataset.model || '{}');
+    const scenarios = JSON.parse(root.dataset.scen || '{}');
+
+    let crit = 'F';
+    let scen = 'base';
+
+    const budgetEl = root.querySelector('[data-budget]') as HTMLInputElement;
+    const costEl = root.querySelector('[data-cost]') as HTMLInputElement;
+    const budgetOut = root.querySelector('[data-budget-out]') as HTMLElement;
+    const costOut = root.querySelector('[data-cost-out]') as HTMLElement;
+    const rowsEl = root.querySelector('[data-rows]') as HTMLElement;
+    const totalsEl = root.querySelector('[data-totals]') as HTMLElement;
+    const noteEl = root.querySelector('[data-note]') as HTMLElement;
+
+    const eur = (n: number, d = 0) =>
+      '€' + n.toLocaleString('en-GB', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+    function solve(seg: any, budget: number, C: number) {
+      const rows = seg.N.map((N: number, i: number) => {
+        const p = seg.p[i];
+        const V = seg.V[i];
+        const unit = p * V - C;
+        return { i, N, p, V, unit, capacity: N * C, x: 0 };
+      });
+      // Fractional knapsack: every segment costs the same C per customer, so
+      // ranking by profit per contact is the same as ranking by profit per euro.
+      const order = rows
+        .filter((r: any) => r.unit > 0)
+        .sort((a: any, b: any) => b.unit / C - a.unit / C);
+
+      let left = budget;
+      for (const r of order) {
+        if (left <= 0.0001) break;
+        const spend = Math.min(r.capacity, left);
+        r.x = r.capacity > 0 ? spend / r.capacity : 0;
+        left -= spend;
+      }
+      const spend = rows.reduce((s: number, r: any) => s + r.N * C * r.x, 0);
+      const gross = rows.reduce((s: number, r: any) => s + r.N * r.p * r.V * r.x, 0);
+      const net = rows.reduce((s: number, r: any) => s + r.N * r.unit * r.x, 0);
+      return { rows, spend, gross, net, unused: budget - spend };
+    }
+
+    function render() {
+      const budget = parseFloat(budgetEl.value);
+      const C = parseFloat(costEl.value);
+      const block = model[crit];
+      const seg = block[scen];
+
+      budgetOut.textContent = eur(budget);
+      costOut.textContent = eur(C, 2);
+      noteEl.textContent = block.note + ' ' + scenarios[scen].note;
+
+      const { rows, spend, gross, net, unused } = solve(seg, budget, C);
+
+      rowsEl.innerHTML = rows
+        .map((r: any) => {
+          const funded = r.x > 0.0001;
+          return `<tr${funded ? ' data-funded' : ''}>
+            <td>${r.i + 1} &nbsp;<span style="color:var(--text-3)">${block.bands[r.i]}</span></td>
+            <td class="num">${r.N.toLocaleString('en-GB')}</td>
+            <td class="num">${r.p.toFixed(3)}</td>
+            <td class="num">${r.V.toFixed(2)}</td>
+            <td class="num">${r.unit >= 0 ? '' : '−'}${eur(Math.abs(r.unit), 2)}</td>
+            <td class="num">${funded ? r.x.toFixed(3) : '0'}</td>
+            <td class="num">${funded ? eur(r.N * C * r.x) : '—'}</td>
+            <td class="num">${funded ? eur(r.N * r.unit * r.x) : '—'}</td>
+          </tr>`;
+        })
+        .join('');
+
+      const fundedCount = rows.filter((r: any) => r.x > 0.0001).length;
+      const partial = rows.find((r: any) => r.x > 0.0001 && r.x < 0.9999);
+
+      totalsEl.innerHTML = `
+        <div class="rfm-total" data-hero><b>${eur(net)}</b><span>expected profit, net of spend</span></div>
+        <div class="rfm-total"><b>${eur(gross)}</b><span>gross return</span></div>
+        <div class="rfm-total"><b>${eur(spend)}</b><span>budget used${unused > 1 ? ', ' + eur(unused) + ' left' : ', all of it'}</span></div>
+        <div class="rfm-total"><b>${fundedCount}</b><span>segment${fundedCount === 1 ? '' : 's'} funded${partial ? `, one at ${Math.round(partial.x * 100)}%` : ''}</span></div>
+      `;
+    }
+
+    root.querySelectorAll<HTMLButtonElement>('[data-crit]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        crit = btn.dataset.crit!;
+        root.querySelectorAll<HTMLButtonElement>('[data-crit]').forEach((b) => {
+          const on = b === btn;
+          b.toggleAttribute('data-active', on);
+          b.setAttribute('aria-pressed', String(on));
+        });
+        render();
+      });
+    });
+
+    root.querySelectorAll<HTMLButtonElement>('[data-scen]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        scen = btn.dataset.scen!;
+        root.querySelectorAll<HTMLButtonElement>('[data-scen]').forEach((b) => {
+          const on = b === btn;
+          b.toggleAttribute('data-active', on);
+          b.setAttribute('aria-pressed', String(on));
+        });
+        render();
+      });
+    });
+
+    budgetEl.addEventListener('input', render);
+    costEl.addEventListener('input', render);
+    render();
+  }
+
+  function boot() {
+    document.querySelectorAll<HTMLElement>('[data-rfm]').forEach(initRfm);
+  }
+  document.addEventListener('astro:page-load', boot);
+  boot();
+</script>

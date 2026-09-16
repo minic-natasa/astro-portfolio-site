@@ -17,7 +17,11 @@ export default defineConfig({
   integrations: [
     tailwind(),
     sitemap({
-      filter: (page) => !comingSoonSlugs.some((slug) => page.includes(`/case-studies/${slug}`)),
+      // /for-recruiters is a private section linked only from a CV, and every
+      // page in it is noindex — it must never be submitted to search engines.
+      filter: (page) =>
+        !page.includes('/for-recruiters') &&
+        !comingSoonSlugs.some((slug) => page.includes(`/case-studies/${slug}`)),
     }),
   ],
   site: 'https://www.natasaminic.com',
