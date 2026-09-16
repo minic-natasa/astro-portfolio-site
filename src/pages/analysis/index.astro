@@ -72,11 +72,11 @@ const skills = [
 ];
 
 const measurement = [
-  ['Google Analytics 4', 'Property and data stream setup, key events configured against what the client actually needs to know, and a check that the numbers are arriving before handover.'],
-  ['Google Search Console', 'Domain verification, sitemap submission, and working the coverage and indexing reports. Analytics tells you about people, Search Console tells you about Google, and you need both.'],
-  ['Google Business Profile', 'For local clients this is often higher leverage than the website. A couple of hours of correct setup changes how the business appears to everyone searching nearby.'],
-  ['Structured data', 'JSON-LD in the head so search results carry more than a blue link, validated before launch rather than hoped for afterwards.'],
-  ['Technical SEO', 'Meta descriptions, canonical URLs, sitemaps, robots.txt and Open Graph tags, set deliberately per page instead of inherited from a template.'],
+  ['Google Analytics 4', 'Property and data stream setup, configuring key events, and reading the reports. Mostly it comes down to deciding in advance which events matter, because anything you did not configure is simply not there later.'],
+  ['Google Search Console', 'Domain verification, sitemap submission, and the coverage and indexing reports. Analytics tells you about people, Search Console tells you about Google, and the two answer different questions.'],
+  ['Google Business Profile', 'For a local business the profile card is often what people actually see, ahead of the website. Largely a matter of getting the details right and keeping them right.'],
+  ['Structured data', 'JSON-LD so a search result can carry more than a blue link, and validating it rather than assuming it worked.'],
+  ['Technical SEO', 'Meta descriptions, canonical URLs, sitemaps, robots.txt and Open Graph tags, and what each one is actually for.'],
 ];
 
 const more = [
@@ -94,18 +94,23 @@ const more = [
 >
 
   <p>
-    I'm Nataša. I build things for the web, and I have a master's in management from the Faculty of Organisational
-    Sciences in Belgrade, where most of my work was analytical: taking a business question, finding data that
-    actually answers it, and turning the answer into something someone can act on.
+    Take a business question, find the data that actually answers it, then turn the answer into something someone
+    can act on. That is what most of my master's was, and it is the part I want to keep doing.
   </p>
 
   <p>
-    Most of what follows is coursework rather than a job title, and I would rather say so plainly than dress it up.
-    What it shows is how I approach a problem, which is the part that carries over. The measurement section further
-    down is the exception: that one is client work I do now.
+    The degree is <strong>Strategic Marketing and Communications</strong> at the Faculty of Organisational Sciences
+    in Belgrade, 60 ECTS, on the marketing engineering track: quantitative methods, research methodology, analytics,
+    and measuring whether what a business did actually worked. The faculty awards it as an engineering degree, which
+    is a fair description of how the work was assessed.
   </p>
 
-  <h2>what I work with</h2>
+  <p>
+    What follows is coursework rather than a job title, and I would rather say so plainly than dress it up. What it
+    shows is how I approach a problem, which is the part that carries over.
+  </p>
+
+  <h2>methods and tools</h2>
   <div class="idx-pills">
     {skills.map((s) => <span class="idx-pill">{s}</span>)}
   </div>
@@ -133,12 +138,12 @@ const more = [
     ))}
   </div>
 
-  <h2>measurement, from client work</h2>
+  <h2>measurement and analytics</h2>
 
   <p>
-    The projects above are academic. This part is not. Every site I ship has its measurement set up before it goes
-    live, because data you did not collect is not data you can analyse six months later when somebody finally asks
-    the question.
+    Separately from the coursework, these are the platforms I know my way around. Data you did not collect is not
+    data you can analyse six months later when somebody finally asks the question, so the useful part is knowing
+    what each of these can and cannot tell you before that point.
   </p>
 
   <div class="idx-meas">
