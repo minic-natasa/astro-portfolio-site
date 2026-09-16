@@ -65,6 +65,18 @@ const skills = [
   'Journey mapping',
   'SQL basics',
   'Requirements documentation',
+  'Google Analytics 4',
+  'Google Search Console',
+  'Google Business Profile',
+  'Structured data (JSON-LD)',
+];
+
+const measurement = [
+  ['Google Analytics 4', 'Property and data stream setup, key events configured against what the client actually needs to know, and a check that the numbers are arriving before handover.'],
+  ['Google Search Console', 'Domain verification, sitemap submission, and working the coverage and indexing reports. Analytics tells you about people, Search Console tells you about Google, and you need both.'],
+  ['Google Business Profile', 'For local clients this is often higher leverage than the website. A couple of hours of correct setup changes how the business appears to everyone searching nearby.'],
+  ['Structured data', 'JSON-LD in the head so search results carry more than a blue link, validated before launch rather than hoped for afterwards.'],
+  ['Technical SEO', 'Meta descriptions, canonical URLs, sitemaps, robots.txt and Open Graph tags, set deliberately per page instead of inherited from a template.'],
 ];
 
 const more = [
@@ -88,8 +100,9 @@ const more = [
   </p>
 
   <p>
-    This page collects that work. It is coursework rather than a job title, and I would rather say so plainly than
-    dress it up. What it does show is how I approach a problem, which is the part that carries over.
+    Most of what follows is coursework rather than a job title, and I would rather say so plainly than dress it up.
+    What it shows is how I approach a problem, which is the part that carries over. The measurement section further
+    down is the exception: that one is client work I do now.
   </p>
 
   <h2>what I work with</h2>
@@ -119,6 +132,28 @@ const more = [
       </a>
     ))}
   </div>
+
+  <h2>measurement, from client work</h2>
+
+  <p>
+    The projects above are academic. This part is not. Every site I ship has its measurement set up before it goes
+    live, because data you did not collect is not data you can analyse six months later when somebody finally asks
+    the question.
+  </p>
+
+  <div class="idx-meas">
+    {measurement.map(([name, text]) => (
+      <div class="idx-meas-row">
+        <span class="idx-meas-name">{name}</span>
+        <p class="idx-meas-text">{text}</p>
+      </div>
+    ))}
+  </div>
+
+  <p>
+    Deciding what to measure before anything gets built is the same discipline as writing requirements: you have to
+    know what question the business will ask, and make sure the answer will exist when they ask it.
+  </p>
 
   <h2>also on the course</h2>
   <ul>
@@ -205,4 +240,31 @@ const more = [
   }
   .idx-go { font-size: 12px; color: var(--accent); white-space: nowrap; }
   .idx-card:hover .idx-go { color: var(--accent-h); }
+
+  .idx-meas {
+    border-top: 1px solid var(--border);
+    margin: 1.25rem 0;
+  }
+  .idx-meas-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 1.25rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .idx-meas-name {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--text-1);
+    line-height: 1.5;
+  }
+  .idx-meas-text {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-2);
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .idx-meas-row { grid-template-columns: 1fr; gap: 0.3rem; }
+  }
 </style>
