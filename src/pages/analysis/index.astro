@@ -1,5 +1,5 @@
 ---
-import RecruiterLayout from '../../layouts/RecruiterLayout.astro';
+import AnalysisLayout from '../../layouts/AnalysisLayout.astro';
 
 const projects = [
   {
@@ -86,7 +86,7 @@ const more = [
 ];
 ---
 
-<RecruiterLayout
+<AnalysisLayout
   title="Nataša Minić / analytical work"
   description="Business and data analysis work from my master's in management: customer segmentation, optimisation modelling, survey research and communications strategy."
   heading="analytical work."
@@ -114,7 +114,7 @@ const more = [
 
   <div class="idx-list">
     {projects.map((p) => (
-      <a href={`/for-recruiters/${p.slug}`} class="idx-card" data-feature={p.feature ? '' : undefined}>
+      <a href={`/analysis/${p.slug}`} class="idx-card" data-feature={p.feature ? '' : undefined}>
         <div class="idx-card-head">
           <div>
             <h3 class="idx-card-title">{p.title}</h3>
@@ -167,7 +167,7 @@ const more = [
     <a href="/">portfolio is here</a>.
   </p>
 
-</RecruiterLayout>
+</AnalysisLayout>
 
 <style>
   .idx-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem; }

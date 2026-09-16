@@ -17,10 +17,10 @@ export default defineConfig({
   integrations: [
     tailwind(),
     sitemap({
-      // /for-recruiters is a private section linked only from a CV, and every
+      // /analysis is a private section linked only from a CV, and every
       // page in it is noindex — it must never be submitted to search engines.
       filter: (page) =>
-        !page.includes('/for-recruiters') &&
+        !page.includes('/analysis') &&
         !comingSoonSlugs.some((slug) => page.includes(`/case-studies/${slug}`)),
     }),
   ],
