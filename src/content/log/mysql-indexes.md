@@ -1,7 +1,8 @@
 ---
-title: "indexes: the one thing i wish i'd added earlier on autobaza"
+title: "indexes: the one thing i wish i'd added earlier on auto baza"
 date: 2026-04-24
 category: mysql
+description: complex filters on a modest table can still crawl. explain, index, explain again. before and after included.
 ---
 
 Auto Baza has a lot of filterable fields. Make, model, year, mileage, fuel type, condition, price range, location, seller type. Users can combine any of them. When the listing count was low, every query was fast. As data grew, some filter combinations started dragging.
@@ -32,6 +33,18 @@ EXPLAIN SELECT * FROM listings WHERE fuel_type = 'diesel' AND price < 20000;
 ```
 
 Look at the `type` column. `ALL` means full table scan. `ref` or `range` means an index is being used.
+
+Before and after, on the same query:
+
+```
+-- before the index
+type: ALL      rows: 48230    Extra: Using where
+
+-- after ADD INDEX idx_fuel_price (fuel_type, price)
+type: range    rows: 512      Extra: Using index condition
+```
+
+Same query, same data. One reads the entire table and throws most of it away, the other touches roughly one percent of it. That `rows` column is the whole story, and it's also the number that quietly grows every week as the client adds listings.
 
 **what not to over-index**
 

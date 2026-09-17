@@ -2,13 +2,14 @@
 title: wordpress hooks and why they're the whole point
 date: 2026-04-10
 category: wordpress
+description: actions do something, filters change something, and one missing return statement breaks your site quietly. quiz inside.
 ---
 
 Hooks are what make WordPress extensible without touching core files. Every plugin, every theme, every customization that doesn't involve editing WordPress itself works through hooks. Understanding them changes how you build.
 
 There are two types.
 
-**actions — do something**
+**actions: do something**
 
 An action fires at a specific point in WordPress's execution. You hook into it to run your own code at that moment.
 
@@ -34,7 +35,7 @@ add_action('wp_head', function() {
 
 Actions don't return values. They just run.
 
-**filters — modify something**
+**filters: modify something**
 
 A filter receives a value, lets you modify it, and expects the modified value back.
 
@@ -60,6 +61,26 @@ add_filter('body_class', function($classes) {
 ```
 
 Forgetting to `return` in a filter breaks the value silently. Always return.
+
+**quiz: what does the page look like after this?**
+
+```php
+add_filter('the_content', function($content) {
+    if (is_single()) {
+        $content .= '<p>thanks for reading.</p>';
+    }
+    // oops, no return
+});
+```
+
+<details>
+<summary>reveal answer</summary>
+
+Every post on the site renders with completely empty content. Not an error, not a warning. The filter received the post content, returned `null`, and WordPress faithfully displayed `null`.
+
+This is the classic filter bug: it doesn't fail loudly at the line you wrote, it fails quietly everywhere else. If content mysteriously vanishes and you recently touched a filter, check the return before you check anything else.
+
+</details>
 
 **priority and accepted_args**
 

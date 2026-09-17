@@ -158,6 +158,31 @@ const next = all[idx - 1] ?? null;
     font-weight: 300;
   }
 
+  /* collapsible reveals inside log entries, styled like the demo panels */
+  .prose details {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.65rem 0.9rem;
+    margin: 1.25rem 0;
+  }
+  .prose details summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+  }
+  .prose details summary:hover {
+    color: var(--accent-h);
+  }
+  .prose details[open] summary {
+    margin-bottom: 0.6rem;
+  }
+  .prose details > :last-child {
+    margin-bottom: 0.25rem;
+  }
+
   @media (min-width: 768px) {
     .prose h2 { font-size: 1.1rem; }
     .prose h3 { font-size: 1rem; }

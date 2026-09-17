@@ -5,14 +5,22 @@ const isProjects    = currentPath.startsWith('/projects');
 const isCheatsheets = currentPath.startsWith('/cheatsheets');
 const isCaseStudy   = currentPath.startsWith('/case-studies');
 const isLog         = currentPath.startsWith('/log');
+const isAnalysis    = currentPath.startsWith('/analysis');
 
-const links = [
-  { href: '/',            label: 'home',        active: isHome        },
-  { href: '/projects',    label: 'projects',    active: isProjects    },
-  { href: '/cheatsheets', label: 'cheatsheets', active: isCheatsheets },
-  // log hidden for v1 launch — restore alongside src/pages/_log rename
-  // { href: '/log',         label: 'log',         active: isLog         },
-];
+// /analysis is reached from a CV, so it does not offer the rest of the site.
+// SideNav (which carries the portfolio link on desktop) is hidden under 768px,
+// so the one link lives here instead, otherwise the toggle opens an empty panel.
+const links = isAnalysis
+  ? [
+      { href: '/', label: 'portfolio', active: false },
+    ]
+  : [
+      { href: '/',            label: 'home',        active: isHome        },
+      { href: '/projects',    label: 'projects',    active: isProjects    },
+      { href: '/cheatsheets', label: 'cheatsheets', active: isCheatsheets },
+      // log hidden for v1 launch — restore alongside src/pages/_log rename
+      // { href: '/log',         label: 'log',         active: isLog         },
+    ];
 ---
 
 <div id="mobile-nav" class="mobile-nav-wrap">

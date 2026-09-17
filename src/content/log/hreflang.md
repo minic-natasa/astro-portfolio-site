@@ -2,6 +2,7 @@
 title: hreflang, why it's easy to get wrong, and how i set it up
 date: 2026-03-19
 category: localization
+description: the tags that stop google showing serbian pages to spanish users. two rules, one spot-the-bug exercise.
 ---
 
 `hreflang` tells search engines which version of a page is intended for which language or region. Without it, Google has to guess, and it sometimes guesses wrong, showing the Serbian version to Spanish users or indexing only one version of a bilingual site.
@@ -29,6 +30,28 @@ Second: `x-default` marks the fallback for users who don't match any of the list
 **language vs region**
 
 `hreflang="es"` targets Spanish speakers in any country. `hreflang="es-ES"` targets Spanish speakers specifically in Spain. For most bilingual sites, language-only is enough. Use region codes when you have genuinely different content for different markets, like a site with separate pricing for Spain and Mexico.
+
+**spot the bug**
+
+This setup looks reasonable and is broken. Where?
+
+```html
+<!-- on the Serbian version -->
+<link rel="alternate" hreflang="sr" href="https://example.rs/" />
+<link rel="alternate" hreflang="en" href="https://example.rs/en/" />
+
+<!-- on the English version -->
+<link rel="alternate" hreflang="en" href="https://example.rs/en/" />
+```
+
+<details>
+<summary>reveal the bug</summary>
+
+The English page doesn't link back to the Serbian one. hreflang requires reciprocal annotations: every version lists every version, including itself. The Serbian page here claims a relationship the English page never confirms, so Google treats the whole set as invalid and ignores it. Not partially. Entirely.
+
+One missing line, and both pages behave as if you'd never set up hreflang at all. This is the single most common way these tags fail.
+
+</details>
 
 **how to verify it's working**
 

@@ -2,6 +2,7 @@
 title: soft deletes in laravel and when to actually use them
 date: 2026-04-17
 category: laravel
+description: deleted_at is not deleted. when the recoverable trash can helps, when it quietly becomes a gdpr problem.
 ---
 
 A soft delete doesn't remove the row. It sets a `deleted_at` timestamp. The row stays in the database, invisible to normal queries, recoverable if needed.
@@ -32,7 +33,7 @@ $member->forceDelete();            // actually delete it
 
 **when soft deletes are worth it**
 
-When accidental deletion needs to be recoverable. An admin removes a member by mistake — with soft deletes, that's a restore instead of a support incident.
+When accidental deletion needs to be recoverable. An admin removes a member by mistake, and with soft deletes that's a restore instead of a support incident.
 
 When you need an audit trail. Knowing that something existed, who deleted it, and when is often valuable.
 
@@ -42,9 +43,22 @@ When related records reference the deleted row. Hard-deleting a user with foreig
 
 GDPR and data deletion requests. A soft delete is not a delete. If a user requests their data be erased, `deleted_at` doesn't satisfy that. You need `forceDelete()` or a separate anonymization step.
 
-Truly temporary data — sessions, logs, cache entries. Soft deletes add overhead with no benefit.
+Truly temporary data like sessions, logs and cache entries. Soft deletes add overhead with no benefit.
 
 High-volume tables where the deleted rows accumulate and slow queries down. `withTrashed()` queries scan everything.
+
+**quiz: a user asks you to delete their account**
+
+Your `User` model uses SoftDeletes. You run `$user->delete()` and reply "done, all your data is erased." True?
+
+<details>
+<summary>reveal answer</summary>
+
+False, and legally so. `delete()` set a timestamp. The email, the name, every row they ever created is still sitting in the database, one `withTrashed()` away. A GDPR erasure request needs `forceDelete()`, plus a look at related tables, backups policy, and anything you've synced to third parties like a mailing list.
+
+Soft deletes answer "oops, undo." They do not answer "erase me." Confusing the two is how a convenience feature turns into a compliance finding.
+
+</details>
 
 **the thing to remember**
 

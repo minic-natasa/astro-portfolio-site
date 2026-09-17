@@ -13,6 +13,7 @@ interface Props {
   title?: string;
   description?: string;
   showNav?: boolean;
+  showNavLinks?: boolean;
   noindex?: boolean;
 }
 
@@ -20,6 +21,7 @@ const {
   title = 'naca',
   description = 'portfolio of Nataša Minić, web developer. fast, clean and maintainable. the kind of work that holds up.',
   showNav = true,
+  showNavLinks = true,
   noindex = false,
 } = Astro.props;
 ---
@@ -85,9 +87,9 @@ const {
   </head>
   <body style="background-color: var(--bg); color: var(--text-1); font-family: var(--font-sans); font-weight: 300;" class="antialiased min-h-screen flex flex-col">
     <a href="#main" class="skip-link">skip to content</a>
-    {showNav && <Navbar />}
+    {showNav && <Navbar showLinks={showNavLinks} />}
     <slot />
-    {showNav && <MobileNav />}
+    <MobileNav /}
     <SpeedInsights />
   </body>
 </html>

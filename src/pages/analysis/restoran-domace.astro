@@ -4,9 +4,9 @@ import RfmModel from '../../components/RfmModel.astro';
 ---
 
 <AnalysisLayout
-  title='Restoran "Domaće" / campaign targeting model'
+  title="Guest segmentation / campaign targeting model"
   description="Customer segmentation and budget optimisation for a restaurant loyalty campaign. RFM model, Solver optimisation and decision analysis over 18,095 transactions."
-  heading='restoran "domaće".'
+  heading="guest segmentation."
   course="Advanced Marketing Planning, MSc"
   year="2022"
   scope="individual project"
@@ -22,7 +22,7 @@ import RfmModel from '../../components/RfmModel.astro';
   </p>
 
   <p>
-    The owner also had a second problem. Regulation on smoking in restaurants was expected to change, and nobody knew
+    The owner also had a second problem. Regulation on smoking in restaurants was expected to change and nobody knew
     which way. Any recommendation had to survive that uncertainty rather than assume it away.
   </p>
 
@@ -37,7 +37,7 @@ import RfmModel from '../../components/RfmModel.astro';
 
   <h3>1. Understand the base</h3>
   <p>
-    I started with descriptive work: revenue by day and by month, visit counts by month, and the ten highest-spending
+    I started with descriptive work: revenue by day and by month, visit counts by month and the ten highest-spending
     guests. Some of it was immediately useful. The busiest months were also the highest-revenue months, which meant
     volume rather than basket size was driving the business. One guest had visited 1,149 times and spent €35,630 in
     410 days, which told me the customer base was extremely uneven and that an average would be a misleading thing
@@ -56,7 +56,7 @@ import RfmModel from '../../components/RfmModel.astro';
   </ul>
   <p>
     Then three parameters per segment: how many customers it holds (<code>COUNTIF</code>), their average response
-    rate, and their average value (both <code>AVERAGEIF</code>).
+    rate and their average value (both <code>AVERAGEIF</code>).
   </p>
 
   <h3>3. Build the economics</h3>
@@ -77,7 +77,7 @@ import RfmModel from '../../components/RfmModel.astro';
   <p>
     Rather than take the highest number and stop, I put the six candidate strategies against the three possible
     regulatory outcomes and evaluated them four ways: average payoff, aggressive (best case), conservative (worst
-    case), and minimax regret. Then I ran expected value across seven different probability weightings, from
+    case) and minimax regret. Then I ran expected value across seven different probability weightings, from
     0.4/0.3/0.3 through to treating the current rules as certain.
   </p>
 
@@ -102,7 +102,7 @@ import RfmModel from '../../components/RfmModel.astro';
     <p class="rc-result-label">the part worth reading</p>
     <p>
       Frequency-continuous came first under <strong>all four decision criteria</strong>, carried <strong>zero
-      regret in every regulatory scenario</strong>, and ranked first at <strong>every one of the seven probability
+      regret in every regulatory scenario</strong> and ranked first at <strong>every one of the seven probability
       weightings</strong> I tested. The recommendation does not depend on guessing the regulation correctly.
     </p>
   </div>
@@ -132,7 +132,7 @@ import RfmModel from '../../components/RfmModel.astro';
     those four report gross return instead of return net of spend. Every scenario sheet is correct. The effect is
     that the headline figure for the chosen option reads €126,599.53 gross where it should read €125,099.53 net of
     the €1,500 spent. It does not change the recommendation: subtracting a constant leaves the segment ranking
-    untouched, so the allocation is identical, frequency still wins on every criterion, and it still carries zero
+    untouched, so the allocation is identical, frequency still wins on every criterion and it still carries zero
     regret. The interactive model above is built the corrected way and reports both figures.
   </p>
 

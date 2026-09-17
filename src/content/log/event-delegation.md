@@ -2,6 +2,7 @@
 title: event delegation and why it matters on dynamic lists
 date: 2026-03-30
 category: js
+description: one listener on the parent instead of a hundred on the children. how bubbling makes dynamic lists just work.
 ---
 
 The standard way to handle click events on a list of items:
@@ -27,6 +28,32 @@ document.querySelector('.listings-grid').addEventListener('click', (e) => {
 One listener. Works for every `.listing-card` that exists now and every one that gets added later. If the list re-renders after a filter, no re-setup needed.
 
 `closest()` is the key piece here. `e.target` is whatever was actually clicked, which might be a nested `<img>` or `<span>` inside the card. `closest('.listing-card')` walks up the DOM until it finds the matching ancestor, so you always get the card regardless of which child was clicked.
+
+Quick check that you've got the mental model:
+
+```html
+<ul id="list">
+  <li class="item"><strong>bold text</strong></li>
+</ul>
+```
+
+```js
+list.addEventListener('click', (e) => {
+  console.log(e.target.tagName);
+  console.log(e.currentTarget.tagName);
+});
+```
+
+You click directly on the bold text. What logs?
+
+<details>
+<summary>reveal answer</summary>
+
+`STRONG`, then `UL`.
+
+`e.target` is the element that was actually clicked, however deep. `e.currentTarget` is the element the listener is attached to. Delegation lives in the gap between those two: the click happened down there, you caught it up here, and `closest()` bridges the distance.
+
+</details>
 
 A few things to watch for:
 

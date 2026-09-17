@@ -2,6 +2,7 @@
 title: the difference between aria-label, aria-labelledby, and aria-describedby
 date: 2026-05-17
 category: accessibility
+description: three similar attributes, three different jobs. mixing them up means redundant announcements or missing context.
 ---
 
 These three attributes look similar and do related things, but they're not interchangeable. Getting them mixed up leads to either redundant announcements or missing context for screen reader users.
@@ -59,3 +60,22 @@ Provides supplementary description, not the primary label. Screen readers announ
 - `aria-describedby`: you're adding context beyond the label, like hints or errors
 
 When both a label and `aria-labelledby` are present, `aria-labelledby` wins. When in doubt, prefer referencing real visible text over writing hidden labels.
+
+**check yourself**
+
+Three situations, one attribute each. Decide before revealing:
+
+1. An icon-only trash button in a table row
+2. A settings panel whose visible heading says "Notifications"
+3. A password field with the rule "minimum 8 characters" shown below it
+
+<details>
+<summary>reveal answers</summary>
+
+1. `aria-label="Delete item"`. No visible text exists, so you write the label yourself.
+2. `aria-labelledby` pointing at the heading's id. The label already exists on screen, reference it instead of duplicating it.
+3. The rule goes in `aria-describedby`. The label is still "Password"; the character rule is supplementary context, announced after the label.
+
+If you picked `aria-label` for number 2, you now maintain the same text in two places, and they will drift apart. That's the practical reason referencing wins.
+
+</details>

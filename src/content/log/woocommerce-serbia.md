@@ -2,6 +2,7 @@
 title: what nobody tells you about woocommerce payment gateways in serbia
 date: 2026-05-19
 category: wordpress
+description: 3d secure is mandatory, sandbox lies a little, and the docs assume a country you're not in. field notes from ecosoul.
 ---
 
 When I integrated card payments for ECOSOUL, I expected it to be a plugin install and some API keys. It was not.
@@ -23,5 +24,24 @@ Sandbox environments don't always replicate the exact behavior of domestic bank 
 **keep the checkout flow simple**
 
 The more steps between "buy" and "paid", the more drop-off. 3DS adds a redirect by definition, so everything else in the checkout should be as frictionless as possible.
+
+**the pre-launch payment checklist**
+
+The tests I run before any store goes live, in order:
+
+<details>
+<summary>open the checklist</summary>
+
+1. Successful payment with a domestic card, 3DS challenge completed
+2. Declined card: does the order status land on failed, and does the customer see a usable message?
+3. 3DS challenge abandoned halfway: no orphaned "processing" orders left behind
+4. Gateway timeout: order doesn't get stuck in limbo, customer isn't charged silently
+5. Refund from the WooCommerce admin: reaches the bank, updates the order
+6. Order confirmation email actually delivers (to Gmail and to a domestic provider inbox)
+7. Every one of the above, once more, on mobile
+
+Number 3 and 4 are the ones nobody tests and everybody eventually meets in production.
+
+</details>
 
 It works once you understand what you're configuring. The documentation just assumes you already know the local context.

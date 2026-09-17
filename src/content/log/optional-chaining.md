@@ -2,6 +2,7 @@
 title: optional chaining and why it's not just shorter code
 date: 2026-05-15
 category: js
+description: the ?. operator, where to put it, where people put it wrong, and one quiz that catches almost everyone.
 ---
 
 Before optional chaining, accessing a nested property safely looked like this:
@@ -49,6 +50,29 @@ const val = document.querySelector('.field')?.value;
 **what it doesn't do**
 
 It doesn't catch errors thrown inside a method. It only handles null/undefined in the chain. For runtime errors, you still need try/catch.
+
+**the quiz that catches almost everyone**
+
+`user` exists, but `user.profile` is `undefined`. What happens here?
+
+```js
+const avatar = user?.profile.avatar;
+```
+
+<details>
+<summary>reveal answer</summary>
+
+It throws. `TypeError: Cannot read properties of undefined (reading 'avatar')`.
+
+`?.` only guards the spot where it's written. `user?.` protects against `user` being missing, and then `.avatar` is a plain unguarded access on `undefined`. The chain needed to be:
+
+```js
+const avatar = user?.profile?.avatar;
+```
+
+Each link you want protected gets its own `?.`. The operator is not a force field around the whole expression.
+
+</details>
 
 Combined with `??`, it covers most defensive access patterns cleanly:
 

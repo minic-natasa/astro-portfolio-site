@@ -2,11 +2,16 @@
 title: skip links and why keyboard users need them
 date: 2026-05-22
 category: accessibility
+description: one hidden link saves keyboard users a dozen tab presses per page. this site has one, try it right now.
 ---
 
-A skip link is a hidden anchor at the very top of the page that jumps directly to the main content. Keyboard users — and screen reader users — have to Tab through every navigation item on every single page load before they reach the actual content. On a site with a header, logo, and ten nav links, that's twelve Tab presses before anything useful.
+A skip link is a hidden anchor at the very top of the page that jumps directly to the main content. Keyboard users, and screen reader users, have to Tab through every navigation item on every single page load before they reach the actual content. On a site with a header, logo, and ten nav links, that's twelve Tab presses before anything useful.
 
 A skip link lets them press Tab once and jump straight past all of it.
+
+**try it on this page, right now**
+
+Click anywhere on this page, then press Tab once. A "skip to content" link appears in the top left corner. Press Enter and focus jumps straight into the content, past the whole navigation. That's the feature. You've now used a skip link, which puts you ahead of most people who build them.
 
 ```html
 <a href="#main-content" class="skip-link">skip to main content</a>

@@ -2,6 +2,7 @@
 title: what working at usablenet changed about how i write html
 date: 2026-05-24
 category: accessibility
+description: habits from auditing sites for wcag all day. semantic elements, keyboard tests, and why placeholder is not a label.
 ---
 
 UsableNet sits at the intersection of quality and accessibility. We audit sites, fix issues, and help companies meet WCAG standards. After spending time in that work, I write HTML differently than I did before.
@@ -27,5 +28,22 @@ Tab through the page. Can you reach every interactive element? Is the focus orde
 **form inputs always have labels**
 
 `placeholder` is not a label. It disappears when the user starts typing. Every input needs a `<label>` connected via `for`/`id`. Every time.
+
+**the 60-second audit you can run on any site**
+
+No tools, no extensions:
+
+<details>
+<summary>open the audit</summary>
+
+1. Press Tab ten times. Can you see where focus is at every step? If focus vanishes at any point, something is broken.
+2. Check the first Tab press: does a skip link appear? (Try it on this site. It does.)
+3. Find a clickable thing that isn't a link or a button. Right-click, inspect. If it's a `div` with an onclick, keyboard users can't reach it.
+4. Find any image. Does the alt text describe it, or is it `IMG_2024_final_v3.jpg`?
+5. Click into a form field. Is there a label above it, or only placeholder text that's about to disappear?
+
+Five checks, one minute, and you'll have a rough but honest picture of how much the site's builders cared. Most sites fail at step 1.
+
+</details>
 
 None of this is hard. It's just habits. Build them early enough and you stop thinking about it.

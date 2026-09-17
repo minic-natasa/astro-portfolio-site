@@ -2,9 +2,10 @@
 title: google business profile and why local clients need it set up properly
 date: 2026-05-08
 category: seo
+description: for local businesses the profile card often beats the website. two hours of setup, highest leverage seo there is.
 ---
 
-For a local business — a salon, a clinic, a restaurant, a consultant — Google Business Profile often drives more inbound traffic than the website itself. It's the card that appears when someone searches the business name, or when someone searches "service near me." Getting it right matters more than most technical SEO work on the site.
+For a local business like a salon, a clinic, a restaurant or a consultant, Google Business Profile often drives more inbound traffic than the website itself. It's the card that appears when someone searches the business name, or when someone searches "service near me." Getting it right matters more than most technical SEO work on the site.
 
 **what to fill in completely**
 
@@ -20,11 +21,24 @@ Businesses with photos get significantly more clicks than those without. For a r
 
 **reviews**
 
-Respond to every review, positive and negative. For negative reviews, respond calmly and offer to resolve the issue offline. The response isn't for the reviewer — it's for everyone else reading it. A business that responds thoughtfully to criticism looks more trustworthy than one that ignores it or argues.
+Respond to every review, positive and negative. For negative reviews, respond calmly and offer to resolve the issue offline. The response isn't for the reviewer. It's for everyone else reading it. A business that responds thoughtfully to criticism looks more trustworthy than one that ignores it or argues.
+
+<details>
+<summary>a review response, done badly and done well</summary>
+
+The review: "Waited 40 minutes past my appointment. Won't be back."
+
+Badly: "That's not true, you arrived late and we explained this to you at the time."
+
+Well: "We're sorry about the wait, that's not the experience we want anyone to have. Please call us at [number] so we can make it right."
+
+The first response wins the argument and loses every future customer who reads it. The second might not win the reviewer back, and it doesn't need to. It's a message to the next hundred readers about what kind of business this is.
+
+</details>
 
 **posts**
 
-Google Business has a posts feature — short updates that appear on the profile. Most businesses ignore this. Using it occasionally signals that the profile is actively managed, which helps visibility.
+Google Business has a posts feature: short updates that appear on the profile. Most businesses ignore this. Using it occasionally signals that the profile is actively managed, which helps visibility.
 
 **the thing to verify**
 

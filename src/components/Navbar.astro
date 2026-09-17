@@ -1,4 +1,12 @@
 ---
+interface Props {
+  // Hide the page links but keep the theme toggle. Used by pages that are
+  // reached directly rather than browsed to, where the 404 path is arbitrary
+  // so it cannot be matched on below.
+  showLinks?: boolean;
+}
+const { showLinks = true } = Astro.props;
+
 const currentPath = Astro.url.pathname;
 const isHome        = currentPath === '/';
 const isProjects    = currentPath.startsWith('/projects');
@@ -32,7 +40,7 @@ const navItems = [
   </button>
 
   <!-- Nav links -->
-  <div class="flex items-center gap-5" style={(isHome || isProjects || isCheatsheets || isCaseStudy || isLog) ? 'display:none' : ''}>
+  <div class="flex items-center gap-5" style={(!showLinks || isHome || isProjects || isCheatsheets || isCaseStudy || isLog) ? 'display:none' : ''}>
     {navItems.map((item, i) => (
       item.active ? (
         <span

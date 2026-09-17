@@ -2,6 +2,7 @@
 title: aspect-ratio replaced a hack i used for years
 date: 2026-05-05
 category: css
+description: goodbye padding-top percentages. one property, any element, and a live box you can drag to prove it.
 ---
 
 For a long time, making an element maintain a specific ratio as it resized meant the padding-top hack:
@@ -35,7 +36,15 @@ It worked. It was also unintuitive, required a wrapper element, and the math mad
 }
 ```
 
-It works on anything — images, videos, iframes, divs, cards.
+Here it is live. Drag the bottom-right corner of this box (desktop) and watch the inner element hold 16/9 at any width:
+
+<div style="resize: horizontal; overflow: hidden; width: 75%; min-width: 150px; max-width: 100%; border: 1px dashed var(--border-h); border-radius: 4px; padding: 0.5rem;">
+  <div style="aspect-ratio: 16 / 9; background: var(--accent-d); border-radius: 4px; display: grid; place-items: center; color: var(--accent); font-size: 0.85rem; font-family: ui-monospace, monospace;">aspect-ratio: 16 / 9</div>
+</div>
+
+No JavaScript in that demo. The outer box is just `resize: horizontal` and the inner one is one line of CSS.
+
+It works on anything: images, videos, iframes, divs, cards.
 
 ```css
 /* square thumbnails */
@@ -56,7 +65,7 @@ It works on anything — images, videos, iframes, divs, cards.
 }
 ```
 
-`object-fit: cover` pairs naturally with it for images — fills the ratio without distortion, crops from the center.
+`object-fit: cover` pairs naturally with it for images: fills the ratio without distortion, crops from the center.
 
 ```css
 img {

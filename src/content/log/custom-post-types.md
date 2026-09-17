@@ -2,6 +2,7 @@
 title: custom post types and when pages aren't enough
 date: 2026-04-28
 category: wordpress
+description: posts and pages cover a blog and a brochure. real projects need their own content types. here's the line i use.
 ---
 
 WordPress ships with posts and pages. Posts for chronological content, pages for static content. That covers a blog and a brochure site. It doesn't cover most real projects.
@@ -35,5 +36,20 @@ The combination is what makes this powerful. Register the post type to define wh
 **when to use CPT UI plugin vs code**
 
 For simple projects or when the client might need to adjust settings later, the CPT UI plugin is fine. For anything production with version control, I register post types in code. It's predictable, portable, and doesn't depend on a database record.
+
+**the test i actually run**
+
+Not sure if something deserves its own post type? Answer these:
+
+<details>
+<summary>the three questions</summary>
+
+1. Will there be more than a handful of them? Five team members today, thirty next year: post type. One about page: page.
+2. Do they share a repeating structure? If every entry has the same fields (price, year, location), that's structured data pretending to be a page.
+3. Does it need its own archive or URL pattern? `/listings/`, `/team/`, `/projects/` with index pages: post type territory.
+
+Two or more yes answers and I register a post type without thinking further. It costs fifteen lines of PHP now and saves a migration later, because moving thirty hand-formatted pages into structured data after the fact is nobody's favorite afternoon.
+
+</details>
 
 If a content type has more than three fields and will have more than a handful of entries, it probably deserves its own post type.

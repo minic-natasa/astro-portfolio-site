@@ -7,19 +7,19 @@ const projects = [
     title: 'Restoran "Domaće"',
     what: 'Campaign targeting model',
     blurb:
-      'Which customers to spend a fixed €1,500 marketing budget on, decided from 18,095 transactions. RFM segmentation, Solver optimisation, and a recommendation tested against three regulatory scenarios.',
+      'Which customers to spend a fixed €1,500 marketing budget on, decided from 18,095 transactions. RFM segmentation, Solver optimisation and a recommendation tested against three regulatory scenarios.',
     tags: ['Excel Solver', 'RFM', 'Decision analysis'],
     scope: 'individual',
     feature: true,
   },
   {
     slug: 'dm-drogerije',
-    title: 'DM drogerije',
+    title: 'DM drugstores',
     what: 'Consumer attitudes research',
     blurb:
       'How shoppers reacted when discounts were replaced with permanently lower prices. 258 respondents, analysed in SPSS with reliability testing, correlation, t-test, ANOVA and factor analysis.',
     tags: ['SPSS', 'Survey design', 'Hypothesis testing'],
-    scope: 'individual',
+    scope: 'team of three',
   },
   {
     slug: 'approved',
@@ -35,7 +35,7 @@ const projects = [
     title: 'SBB',
     what: 'Integrated communications audit',
     blurb:
-      'Communications audit of a telecoms operator with three million users. Stakeholder mapping, a public attitudes survey, measurable KPIs and a crisis response plan.',
+      'Communications audit of a national telecoms operator. Stakeholder mapping, a public attitudes survey, measurable KPIs and a crisis response plan.',
     tags: ['Stakeholder mapping', 'KPIs', 'Risk planning'],
     scope: 'team of four',
   },
@@ -51,7 +51,9 @@ const projects = [
 ];
 
 const skills = [
-  'Excel (Solver, pivot tables, VLOOKUP / COUNTIF / AVERAGEIF)',
+  'Excel',
+  'Solver',
+  'Pivot tables',
   'SPSS',
   'Survey design',
   'Hypothesis testing',
@@ -61,53 +63,49 @@ const skills = [
   'Competitor analysis',
   'Market sizing',
   'KPI definition',
-  'Personas',
+  'Persona development',
   'Journey mapping',
-  'SQL basics',
-  'Requirements documentation',
-  'Google Analytics 4',
+  'SQL',
+  'Report writing',
+  'Google Analytics',
   'Google Search Console',
   'Google Business Profile',
-  'Structured data (JSON-LD)',
 ];
 
 const measurement = [
-  ['Google Analytics 4', 'Property and data stream setup, configuring key events, and reading the reports. Mostly it comes down to deciding in advance which events matter, because anything you did not configure is simply not there later.'],
-  ['Google Search Console', 'Domain verification, sitemap submission, and the coverage and indexing reports. Analytics tells you about people, Search Console tells you about Google, and the two answer different questions.'],
+  ['Google Analytics 4', 'Mostly it comes down to deciding in advance which events matter, because anything you did not configure is simply not there later.'],
+  ['Google Search Console', 'Domain verification, sitemap submission and the coverage and indexing reports. Analytics tells you about people. Search Console tells you about Google. The two answer different questions.'],
   ['Google Business Profile', 'For a local business the profile card is often what people actually see, ahead of the website. Largely a matter of getting the details right and keeping them right.'],
-  ['Structured data', 'JSON-LD so a search result can carry more than a blue link, and validating it rather than assuming it worked.'],
-  ['Technical SEO', 'Meta descriptions, canonical URLs, sitemaps, robots.txt and Open Graph tags, and what each one is actually for.'],
+  ['Technical SEO', 'Meta descriptions, canonical URLs, sitemaps, robots.txt and Open Graph tags. Knowing what each one is actually for is most of the job.'],
 ];
 
 const more = [
-  ['ASOS', 'E-business plan and online presence analysis for a global fashion retailer. Two separate courses, market segmentation, channel analysis and future development planning.'],
-  ['Dragon Beer', 'Brand management: positioning, target audience, competitor matrix across five brands, and an integrated communications plan mapped to funnel stages with KPIs.'],
-  ['Pretty Fix', 'Internet marketing plan for an e-commerce beauty business, including SWOT, business model, budget, timeline and analytics setup.'],
+  ['ASOS', 'A global fashion retailer, analysed twice for two different courses. The first took apart how ASOS actually reaches people: segmentation across demographic, psychographic, behavioural and geographic lines, then each channel assessed in turn, website, app, Facebook, Instagram and YouTube. The second was a full internet business plan. The useful part was seeing one company through two lenses, one asking how it communicates and the other asking whether the model holds up.'],
+  ['Dragon Beer', 'Brand management for a beer brand, worked out from positioning and target audience through to a competitor matrix comparing five real brands against the same criteria. The communications plan was mapped to funnel stages, with a channel, an objective and a KPI attached to each stage, so it could be measured afterwards rather than just presented.'],
+  ['Pretty Fix', 'An internet marketing plan for a small beauty e-commerce business, taken through SWOT, competitor analysis and business model to the parts most plans skip: a budget, a dated timeline and the analytics setup needed to tell later whether any of it worked.'],
 ];
 ---
 
 <AnalysisLayout
   title="Nataša Minić / analytical work"
-  description="Business and data analysis work from my master's in management: customer segmentation, optimisation modelling, survey research and communications strategy."
+  description="Analytical work from my master's in Marketing Engineering and Communications: customer segmentation, optimisation modelling, survey research and communications strategy."
   heading="analytical work."
   isIndex={true}
 >
 
   <p>
     Take a business question, find the data that actually answers it, then turn the answer into something someone
-    can act on. That is what most of my master's was, and it is the part I want to keep doing.
+    can act on. That is what most of my master's was.
   </p>
 
   <p>
-    The degree is <strong>Strategic Marketing and Communications</strong> at the Faculty of Organisational Sciences
-    in Belgrade, 60 ECTS, on the marketing engineering track: quantitative methods, research methodology, analytics,
-    and measuring whether what a business did actually worked. The faculty awards it as an engineering degree, which
-    is a fair description of how the work was assessed.
+    The degree is <strong>Marketing Engineering and Communications</strong> at the Faculty of Organisational
+    Sciences in Belgrade. It is taught as an engineering programme and assessed like one, which is a fair
+    description of how the work felt: define the question, get the data, show the reasoning.
   </p>
 
   <p>
-    What follows is coursework rather than a job title, and I would rather say so plainly than dress it up. What it
-    shows is how I approach a problem, which is the part that carries over.
+    What follows is coursework. What it shows is how I approach a problem, which is the part that carries over.
   </p>
 
   <h2>methods and tools</h2>
@@ -140,12 +138,6 @@ const more = [
 
   <h2>measurement and analytics</h2>
 
-  <p>
-    Separately from the coursework, these are the platforms I know my way around. Data you did not collect is not
-    data you can analyse six months later when somebody finally asks the question, so the useful part is knowing
-    what each of these can and cannot tell you before that point.
-  </p>
-
   <div class="idx-meas">
     {measurement.map(([name, text]) => (
       <div class="idx-meas-row">
@@ -155,21 +147,27 @@ const more = [
     ))}
   </div>
 
+  <h2>also on the course</h2>
+  <div class="idx-more">
+    {more.map(([name, text]) => (
+      <div class="idx-more-row">
+        <h3 class="idx-more-name">{name}</h3>
+        <p class="idx-more-text">{text}</p>
+      </div>
+    ))}
+  </div>
+
+  <h2>source documents</h2>
+
   <p>
-    Deciding what to measure before anything gets built is the same discipline as writing requirements: you have to
-    know what question the business will ask, and make sure the answer will exist when they ask it.
+    The original decks and reports behind everything on this page are in
+    <a href="https://drive.google.com/drive/folders/1_3J6rciHKBjv20mW5RnoinNMZuiv_UUo?usp=sharing" target="_blank" rel="noopener noreferrer">one shared folder</a>.
+    They are in Serbian, which is the language they were written and assessed in.
   </p>
 
-  <h2>also on the course</h2>
-  <ul>
-    {more.map(([name, text]) => (
-      <li><strong>{name}.</strong> {text}</li>
-    ))}
-  </ul>
-
   <p class="rc-note">
-    I also work as a web developer, which is where the rest of my site goes. If you want that side instead, the
-    <a href="/">portfolio is here</a>.
+    I currently work as a web developer, which is where the rest of my site goes.<br />
+    If you want that side, the <a href="/">portfolio is here</a>.
   </p>
 
 </AnalysisLayout>
@@ -271,5 +269,20 @@ const more = [
   }
   @media (max-width: 600px) {
     .idx-meas-row { grid-template-columns: 1fr; gap: 0.3rem; }
+  }
+
+  .idx-more { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.25rem; }
+  .idx-more-name {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-1);
+    margin: 0 0 0.35rem;
+  }
+  .idx-more-text {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text-2);
+    margin: 0;
   }
 </style>

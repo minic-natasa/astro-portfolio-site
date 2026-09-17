@@ -2,6 +2,7 @@
 title: "?? vs || and why the difference catches real bugs"
 date: 2026-05-01
 category: js
+description: both operators hand you a fallback. one of them also eats your zeros, empty strings and false. pop quiz included.
 ---
 
 Both `||` and `??` return the right side when the left side isn't "there." The difference is in what "not there" means.
@@ -10,13 +11,38 @@ Both `||` and `??` return the right side when the left side isn't "there." The d
 
 `??` only treats `null` and `undefined` as "not there."
 
-This distinction causes real bugs:
+Before reading further, try to call these:
+
+```js
+0 || 10        // ?
+0 ?? 10        // ?
+'' || 'untitled'   // ?
+'' ?? 'untitled'   // ?
+false ?? true      // ?
+```
+
+<details>
+<summary>reveal answers</summary>
+
+```js
+0 || 10        // 10  (0 is falsy, || replaces it)
+0 ?? 10        // 0   (0 is not null/undefined, ?? keeps it)
+'' || 'untitled'   // 'untitled'
+'' ?? 'untitled'   // ''
+false ?? true      // false
+```
+
+If any of these surprised you, that surprise is exactly the bug this entry is about.
+
+</details>
+
+The distinction causes real bugs:
 
 ```js
 const count = userCount || 10;
 ```
 
-If `userCount` is `0` — a perfectly valid value meaning zero — this returns `10`. You silently replaced a real value with a default. Same problem with empty strings and `false`.
+If `userCount` is `0`, a perfectly valid value meaning zero, this returns `10`. You silently replaced a real value with a default. Same problem with empty strings and `false`.
 
 ```js
 const count = userCount ?? 10;  // 0 stays 0
@@ -28,9 +54,9 @@ const flag  = isActive ?? true;    // false stays false
 
 **when to use which**
 
-`??` — default values. When you want to substitute only for missing data, not for all falsy values.
+`??`: default values. When you want to substitute only for missing data, not for all falsy values.
 
-`||` — boolean-style fallbacks. When any falsy value should trigger the fallback, like a feature flag or a truthy check.
+`||`: boolean-style fallbacks. When any falsy value should trigger the fallback, like a feature flag or a truthy check.
 
 ```js
 // good uses of ||
