@@ -75,10 +75,11 @@ import RfmModel from '../../components/RfmModel.astro';
 
   <h3>4. Test whether the answer holds</h3>
   <p>
-    Rather than take the highest number and stop, I put the six candidate strategies against the three possible
-    regulatory outcomes and evaluated them four ways: average payoff, aggressive (best case), conservative (worst
-    case) and minimax regret. Then I ran expected value across seven different probability weightings, from
-    0.4/0.3/0.3 through to treating the current rules as certain.
+    Rather than take the highest number and stop, I put all six candidate strategies against the three possible
+    regulatory outcomes. The continuous version matched or beat its binary counterpart every time, so I carried the
+    three continuous strategies forward and evaluated them four ways: average payoff, aggressive (best case),
+    conservative (worst case) and minimax regret. Then I ran expected value across seven different probability
+    weightings, from 0.4/0.3/0.3 through to treating the current rules as certain.
   </p>
 
   <h2>run it yourself</h2>
@@ -126,14 +127,16 @@ import RfmModel from '../../components/RfmModel.astro';
   </p>
 
   <p class="rc-note">
-    A note, because it is the honest version. Coming back to this workbook recently I audited all eighteen Solver
-    sheets against each other. Fourteen are correct. On four of them, the unchanged-state frequency and monetary
-    sheets, the objective cell points one column across at an empty reference where the contact cost should be, so
-    those four report gross return instead of return net of spend. Every scenario sheet is correct. The effect is
-    that the headline figure for the chosen option reads €126,599.53 gross where it should read €125,099.53 net of
-    the €1,500 spent. It does not change the recommendation: subtracting a constant leaves the segment ranking
-    untouched, so the allocation is identical, frequency still wins on every criterion and it still carries zero
-    regret. The interactive model above is built the corrected way and reports both figures.
+    Coming back to this workbook recently I audited all eighteen Solver sheets against each other. Thirteen are
+    correct. On four of them, the unchanged-state frequency and monetary sheets, the objective cell points one column
+    across at an empty reference where the contact cost should be, so those four report gross return instead of
+    return net of spend. The headline figure for the chosen option reads €126,599.53 gross where it should read
+    €125,099.53 net of the €1,500 spent. On the fifth, monetary continuous under the smoking ban, Solver was told to
+    maximise one segment's cell instead of the total, so it stopped after funding a single segment and returned the
+    binary answer. Solved properly it comes to about €35,216 rather than €18,212. Neither error changes the
+    recommendation. Subtracting a constant leaves the segment ranking untouched and the corrected monetary figure
+    still ranks last under every criterion, so frequency still wins everywhere and still carries zero regret. The
+    interactive model above is built the corrected way and reports both figures.
   </p>
 
 </AnalysisLayout>
